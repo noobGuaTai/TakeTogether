@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -16,6 +19,8 @@ public class MapGenerator : MonoBehaviour
 
     [Range(0, 100)]
     public int randomFillPercent = 45;
+    public int roomNums = 5;
+    public int roomSize = 30;
 
     int[,] map;
     public List<Room> rooms;
@@ -33,20 +38,50 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    void PrintMap()
+    List<Room> GenerateRooms(int numberOfRooms)
     {
-        string mapString = "";
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                mapString += map[x, y] + " ";
-            }
-            mapString += "\n";
-        }
-        Debug.Log(mapString);
-    }
+        List<Room> rooms = new List<Room>();
+        int attemptLimit = 1000;//最大1000次循环
 
+        for (int i = 0; i < numberOfRooms; i++)
+        {
+            bool isPlaced = false;
+            int attempts = 0;
+            while (!isPlaced && attempts < attemptLimit)
+            {
+                Vector2Int center = new Vector2Int(UnityEngine.Random.Range(roomSize / 2, Math.Min(width, height) - roomSize / 2), UnityEngine.Random.Range(roomSize / 2, Math.Min(width, height) - roomSize / 2));
+                Vector2Int bottomLeft = new Vector2Int(center.x - roomSize / 2, center.y - roomSize / 2);
+                Vector2Int topRight = new Vector2Int(center.x + roomSize / 2, center.y + roomSize / 2);
+                Room newRoom = new Room(bottomLeft, topRight);
+
+                isPlaced = true;
+                foreach (Room room in rooms)
+                {
+                    if ((newRoom.Center - room.Center).magnitude <= roomSize)
+                    {
+                        isPlaced = false;
+                        break;
+                    }
+                }
+
+                if (isPlaced)
+                {
+                    rooms.Add(newRoom);
+                    break;
+                }
+
+                attempts++;
+            }
+
+            if(attempts == attemptLimit)
+            {
+                Debug.LogError("Failed to place room after " + attemptLimit + " attempts.");
+                return rooms;
+            }
+        }
+
+        return rooms;
+    }
 
     IEnumerator GenerateMapCoroutine()
     {
@@ -61,6 +96,8 @@ public class MapGenerator : MonoBehaviour
         }
         wallTilemap.ClearAllTiles();
         groundTilemap.ClearAllTiles();
+
+        rooms = GenerateRooms(roomNums);
 
         foreach (var room in rooms)
         {
@@ -78,12 +115,6 @@ public class MapGenerator : MonoBehaviour
         //在所有房间生成完毕后连接它们
         ConnectRooms();
 
-        // //重新填充地图，以确保路径被正确渲染
-        // foreach (var room in rooms)
-        // {
-        //FillTilemap(new Vector2Int(width, width), new Vector2Int(height, height));
-        // }
-        // PrintMap();
     }
 
 
@@ -131,7 +162,6 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-
     void FillTilemap(Vector2Int bottomLeft, Vector2Int topRight)
     {
         for (int x = bottomLeft.x; x < topRight.x; x++)
@@ -161,8 +191,6 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-
-
     bool IsBorder(int x, int y)
     {
         if (map[x, y] != 0) return false; // 当前位置如果不是地板，则直接返回false
@@ -187,13 +215,11 @@ public class MapGenerator : MonoBehaviour
         return false; // 如果周围没有墙壁，则不是边缘
     }
 
-
     void SetBorderWalls(int x, int y)
     {
         Vector3Int position = new Vector3Int(x, y, 0);
         wallTilemap.SetTile(position, wallTile); // 在当前地板位置放置墙壁
     }
-
 
     int GetSurroundingWallCount(int gridX, int gridY)
     {
@@ -220,13 +246,55 @@ public class MapGenerator : MonoBehaviour
 
     void ConnectRooms()
     {
-        for (int i = 0; i < rooms.Count - 1; i++)
-        {
-            Vector2Int roomCenterA = rooms[i].Center;
-            Vector2Int roomCenterB = rooms[i + 1].Center;
+        // 使用Prim's算法生成最小生成树（MST），这里简化表示
+        if (rooms.Count < 2) return;
 
-            // 生成两个中心点之间的路径
-            GeneratePath(roomCenterA, roomCenterB);
+        bool[] inMST = new bool[rooms.Count];
+        float[] key = new float[rooms.Count];
+        int[] parent = new int[rooms.Count];
+
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            key[i] = float.MaxValue;
+            inMST[i] = false;
+        }
+
+        key[0] = 0;
+        parent[0] = -1; // 第一个点没有父节点
+
+        for (int count = 0; count < rooms.Count - 1; count++)
+        {
+            // 选取未在MST中且键值最小的顶点u
+            float min = float.MaxValue;
+            int u = -1;
+
+            for (int v = 0; v < rooms.Count; v++)
+            {
+                if (!inMST[v] && key[v] < min)
+                {
+                    min = key[v];
+                    u = v;
+                }
+            }
+
+            inMST[u] = true;
+
+            for (int v = 0; v < rooms.Count; v++)
+            {
+                // 对每个顶点，如果v未在MST中且u-v权重小于v的key值，则更新v的parent为u，key值为该权重
+                float weight = Vector2.Distance(rooms[u].Center, rooms[v].Center);
+                if (!inMST[v] && weight < key[v])
+                {
+                    parent[v] = u;
+                    key[v] = weight;
+                }
+            }
+        }
+
+        // 根据生成的最小生成树连接房间
+        for (int i = 1; i < rooms.Count; i++)
+        {
+            GeneratePath(rooms[parent[i]].Center, rooms[i].Center);
         }
     }
 
@@ -304,44 +372,24 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-    // void OnDrawGizmos()
-    // {
-    //     if (map != null)
-    //     {
-    //         for (int x = 0; x < width; x++)
-    //         {
-    //             for (int y = 0; y < height; y++)
-    //             {
-    //                 Gizmos.color = (map[x, y] == 1) ? Color.black : Color.white;
-    //                 Vector3 pos = new Vector3(-width / 2 + x + 0.5f, 0, -height / 2 + y + 0.5f);
-    //                 Gizmos.DrawCube(pos, Vector3.one);
-    //             }
-    //         }
-    //     }
-    // }
-
     [System.Serializable]
     public class Room
     {
         public Vector2Int bottomLeft; // 房间左下角坐标
         public Vector2Int topRight;   // 房间右上角坐标
-        public string seed; // 为每个房间指定的种子，以生成随机填充
+        string seed; // 为每个房间指定的种子，以生成随机填充
 
         public Room(Vector2Int _bottomLeft, Vector2Int _topRight, string _seed)
         {
             bottomLeft = _bottomLeft;
             topRight = _topRight;
             seed = _seed;
+        }
+
+        public Room(Vector2Int _bottomLeft, Vector2Int _topRight)
+        {
+            bottomLeft = _bottomLeft;
+            topRight = _topRight;
         }
 
         public Vector2Int Center
