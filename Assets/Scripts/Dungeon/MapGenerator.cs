@@ -21,13 +21,16 @@ public class MapGenerator : MonoBehaviour
     public int randomFillPercent = 45;
     public int roomNums = 5;
     public int roomSize = 30;
-
-    int[,] map;
     public List<Room> rooms;
+
+    public GameObject player;
+    int[,] map;
+    
 
     void Start()
     {
         StartCoroutine(GenerateMapCoroutine());
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
@@ -114,6 +117,7 @@ public class MapGenerator : MonoBehaviour
 
         //在所有房间生成完毕后连接它们
         ConnectRooms();
+        player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
 
     }
 
