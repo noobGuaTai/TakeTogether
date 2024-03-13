@@ -17,7 +17,7 @@ public class DungeonGenerator : MonoBehaviour
     [Range(0, 100)]
     public int randomFillPercent = 45;
 
-    int[,] map;
+    private int[,] map;
 
     void Start()
     {

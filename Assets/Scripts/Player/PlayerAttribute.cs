@@ -4,21 +4,7 @@ using UnityEngine;
 
 public class PlayerAttribute : MonoBehaviour
 {
-
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    public virtual void ChangeHP(){}
+    public virtual void ChangeMP(){}
+    public virtual void ChangeTP(){}
 }
