@@ -57,40 +57,29 @@ public class KnightMove : PlayerMove
         }
     }
 
-    public override void Attack2() // 假设这是冲刺方法
+    public override void Attack2()
     {
         if (Input.GetButtonDown("Attack2") && !isDashing)
         {
-            StartCoroutine(DashWithTrail());
+            StartCoroutine(Dash());
         }
     }
 
-    IEnumerator DashWithTrail()
+    IEnumerator Dash()
     {
         isDashing = true;
         dashTimeLeft = dashTime;
         anim.SetBool("dash", true);
         rb.velocity = moveInput* dashSpeed;
 
-        // 冲刺开始时生成第一个残影
         SpawnTrail();
-
-        // 等待冲刺时间的一半
         yield return new WaitForSeconds(dashTime / 2);
-
-        // 冲刺进行到一半时，如果仍在冲刺状态，则生成第二个残影
-        if (isDashing)
-        {
-            SpawnTrail();
-        }
-
-        // 等待冲刺剩余时间
-        float secondHalf = dashTime - (dashTime / 2);
-        yield return new WaitForSeconds(secondHalf);
+        SpawnTrail();
+        yield return new WaitForSeconds(dashTime / 2);
         SpawnTrail();
 
         // 结束冲刺，重置状态
-        rb.velocity = Vector2.zero; // 根据需要停止移动
+        rb.velocity = Vector2.zero;
         isDashing = false;
         anim.SetBool("dash", false);
     }
@@ -108,12 +97,12 @@ public class KnightMove : PlayerMove
         trail.transform.position = transform.position;
         trail.transform.localScale = transform.localScale;
 
-        // 设置残影的渲染层级确保它在角色下方，并适当调整颜色和透明度
+        // 设置残影的渲染层级确保它在角色下方
         trailRenderer.sortingLayerID = GetComponent<SpriteRenderer>().sortingLayerID;
         trailRenderer.sortingOrder = GetComponent<SpriteRenderer>().sortingOrder - 1;
 
         // 使残影在短时间后消失
-        Destroy(trail, 0.5f);
+        Destroy(trail, 1f);
     }
 
     public override void Attack()
@@ -128,10 +117,12 @@ public class KnightMove : PlayerMove
     {
         isAttacking = true;
         anim.SetBool("attack", true);
+        GameObject.Find("KnightAttackTect").GetComponent<Collider2D>().enabled = true;
 
         yield return new WaitForSeconds(attackDuration); // 等待攻击动画完成
 
         isAttacking = false;
         anim.SetBool("attack", false);
+        GameObject.Find("KnightAttackTect").GetComponent<Collider2D>().enabled = false;
     }
 }

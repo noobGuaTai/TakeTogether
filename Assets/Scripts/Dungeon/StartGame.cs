@@ -17,7 +17,6 @@ public class StartGame : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) // 注意是Collider2D
     {
-        Debug.Log(other.tag);
         // 检测进入碰撞的是不是玩家
         if (other.CompareTag("Player")) // 确保你的玩家对象有一个"Player"的标签
         {

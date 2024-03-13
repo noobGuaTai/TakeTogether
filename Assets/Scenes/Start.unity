@@ -2281,8 +2281,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1360174075}
   - component: {fileID: 1360174076}
+  - component: {fileID: 1360174077}
   m_Layer: 6
-  m_Name: PlayerAttack2Tect
+  m_Name: KnightAttack2Tect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2310,7 +2311,7 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360174074}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -2340,6 +2341,18 @@ CapsuleCollider2D:
   m_Offset: {x: 0.10065704, y: -0.015623703}
   m_Size: {x: 0.60065806, y: 0.4496737}
   m_Direction: 1
+--- !u!114 &1360174077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360174074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17bf7a5b2700f8547bad517e16fe3591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1572515656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2399,6 +2412,8 @@ GameObject:
   - component: {fileID: 1836201719}
   - component: {fileID: 1836201722}
   - component: {fileID: 1836201721}
+  - component: {fileID: 1836201724}
+  - component: {fileID: 1836201723}
   m_Layer: 7
   m_Name: Enemy1
   m_TagString: Untagged
@@ -2525,13 +2540,45 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.011338949, y: -0.037796825}
   m_Size: {x: 0.3266096, y: 0.44440633}
   m_Direction: 0
+--- !u!114 &1836201723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836201718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85038c90f32a8d4c9b481e34fddd2f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRadius: 5
+  moveSpeed: 2
+  randomMoveDistance: 2
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &1836201724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836201718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6decc8442a9f06c4ba3943e94a906099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 100
+  ATK: 10
 --- !u!1 &1916867406
 GameObject:
   m_ObjectHideFlags: 0
@@ -2542,8 +2589,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1916867407}
   - component: {fileID: 1916867408}
+  - component: {fileID: 1916867409}
   m_Layer: 6
-  m_Name: PlayerAttackTect
+  m_Name: KnightAttackTect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2571,7 +2619,7 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1916867406}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -2601,6 +2649,18 @@ CapsuleCollider2D:
   m_Offset: {x: 0.10065704, y: -0.015623703}
   m_Size: {x: 0.60065806, y: 0.4496737}
   m_Direction: 1
+--- !u!114 &1916867409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916867406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5590da619757a1d47a509ef90118c1d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1963993513
 GameObject:
   m_ObjectHideFlags: 0
@@ -110053,7 +110113,7 @@ GameObject:
   - component: {fileID: 2006265537}
   - component: {fileID: 2006265536}
   m_Layer: 6
-  m_Name: Player
+  m_Name: Knight
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110244,3 +110304,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa8642205c9d3442a02fe53a3561816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 0
+  ATK: 0

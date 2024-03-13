@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class KnightAttribute : PlayerAttribute
 {
+
     void Awake()
     {
+        HP = 100f;
+        ATK = 10f;
         DontDestroyOnLoad(gameObject);
     }
     void Start()

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyAttribute : MonoBehaviour
 {
-    public virtual void ChangeHP(){}
-    
+    public float HP;
+    public float ATK;
+    public virtual void ChangeHP(float value){}
+    public virtual void Die(){}
+
 }

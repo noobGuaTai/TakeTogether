@@ -5,5 +5,4 @@ using UnityEngine;
 public class EnemyMove : MonoBehaviour
 {
     public virtual void Move(){}
-    public virtual void Death(){}
 }
