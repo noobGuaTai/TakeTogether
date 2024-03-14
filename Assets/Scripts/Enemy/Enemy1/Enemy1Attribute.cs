@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy1Attribute : EnemyAttribute
 {
     private Animator anim;
+    private Rigidbody2D rb;
     void Awake()
     {
         HP = 100f;
@@ -14,6 +15,7 @@ public class Enemy1Attribute : EnemyAttribute
     void Start()
     {
         anim = GetComponentInParent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
 
@@ -33,6 +35,8 @@ public class Enemy1Attribute : EnemyAttribute
         {
             anim.SetBool("death", true);
             GetComponent<EnemyMove>().enabled = false;
+            GetComponent<Collider2D>().enabled = false;
+            rb.velocity = Vector2.zero;
             Destroy(gameObject, 1f);
         }
         

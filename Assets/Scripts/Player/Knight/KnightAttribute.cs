@@ -19,6 +19,11 @@ public class KnightAttribute : PlayerAttribute
     
     void Update()
     {
+        
+    }
 
+    public override void ChangeHP(float value)
+    {
+        HP += value;
     }
 }

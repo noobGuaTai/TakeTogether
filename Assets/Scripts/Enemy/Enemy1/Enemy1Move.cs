@@ -1,4 +1,5 @@
 using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Enemy1Move : EnemyMove
@@ -13,29 +14,32 @@ public class Enemy1Move : EnemyMove
     private Vector3 randomDestination;
     private float moveTimer = 3f;
     private bool canMove = false; // 控制敌人是否可以开始移动的标志
+    private Rigidbody2D rb;
 
     void Start()
     {
         // 延迟开始搜索和移动
         StartCoroutine(DelayMovement(2f));
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        // 如果canMove标志为false，敌人不会开始搜索玩家
+        Move();
+    }
+
+    public override void Move()
+    {
         if (!canMove) return;
 
-        // 搜索玩家
         isPlayerDetected = Physics2D.OverlapCircle(transform.position, detectionRadius, playerLayer);
         if (isPlayerDetected)
         {
-            // 获取玩家的位置并移动向玩家
             playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             MoveTowards(playerTransform.position);
         }
         else
         {
-            // 随机移动
             if (moveTimer <= 0)
             {
                 moveTimer = 3f;
@@ -52,25 +56,22 @@ public class Enemy1Move : EnemyMove
 
     private void MoveTowards(Vector3 target)
     {
-        // 计算移动步长
-        float step = moveSpeed * Time.deltaTime;
-
-        // 确定移动方向
         Vector3 moveDirection = (target - transform.position).normalized;
+        rb.velocity = moveDirection * moveSpeed;
 
-        // 移动敌人
-        transform.position = Vector3.MoveTowards(transform.position, target, step);
+        // 设置一个死区阈值，避免玩家和敌人非常接近时的快速翻转
+        float flipDeadZone = 0.1f;
 
-        // 检查移动方向并翻转Sprite
-        if (moveDirection.x > 0)
+        if (Mathf.Abs(target.x - transform.position.x) > flipDeadZone)
         {
-            // 向右移动，确保localScale的x为正值
-            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-        }
-        else if (moveDirection.x < 0)
-        {
-            // 向左移动，确保localScale的x为负值
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            if (moveDirection.x > 0)
+            {
+                transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            }
+            else if (moveDirection.x < 0)
+            {
+                transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            }
         }
     }
 
@@ -89,4 +90,6 @@ public class Enemy1Move : EnemyMove
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
+
+
 }
