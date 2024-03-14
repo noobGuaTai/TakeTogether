@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class KnightAttackTect : MonoBehaviour
 {
-    private EnemyAttribute enemyAttribute;
-    private float ATK;
     public float knockbackForce = 5f; // 击退力量
     public float knockbackDuration = 0.2f; // 击退时间
+
+    private EnemyAttribute enemyAttribute;
+    private float ATK;
 
     void Start()
     {
         ATK = GetComponentInParent<PlayerAttribute>().ATK;
+    }
+
+    void Update()
+    {
+        
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -33,6 +39,12 @@ public class KnightAttackTect : MonoBehaviour
                 // 应用力
                 enemyRb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
             }
+
+            GetComponentInParent<PlayerAttribute>().enemyHPUI.SetActive(true);
+            GetComponentInParent<PlayerAttribute>().enemyHPUI.GetComponent<EnemyHPUI>().ActivateEnemyHPUI(other.GetComponent<EnemyAttribute>(), other.GetComponent<SpriteRenderer>());
+
+
+
         }
     }
 

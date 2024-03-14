@@ -12,7 +12,7 @@ public class CameraFollow : MonoBehaviour
     // public MapGenerator mapGenerator;
     void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        //target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     
@@ -37,6 +37,10 @@ public class CameraFollow : MonoBehaviour
                 //targetPosition.y = Mathf.Clamp(targetPosition.y, minPosition.y, maxPosition.y);
                 transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
             }
+        }
+        else
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
         }
     }
     

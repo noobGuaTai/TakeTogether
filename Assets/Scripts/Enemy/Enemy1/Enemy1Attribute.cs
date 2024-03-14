@@ -13,6 +13,7 @@ public class Enemy1Attribute : EnemyAttribute
     void Awake()
     {
         HP = 100f;
+        MAXHP = 100f;
         ATK = 10f;
     }
 

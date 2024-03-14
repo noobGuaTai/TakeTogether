@@ -16,26 +16,26 @@ public class MapGenerator : MonoBehaviour
     public Tilemap wallTilemap;
     public Tile wallTile;
     public Tile floorTile;
-
     [Range(0, 100)]
     public int randomFillPercent = 45;
     public int roomNums = 5;
     public int roomSize = 30;
     public List<Room> rooms;
-
     public GameObject player;
+    public GameObject enemyPrefab;
+
     int[,] map;
-    
+
 
     void Start()
     {
         StartCoroutine(GenerateMapCoroutine());
-        player = GameObject.FindGameObjectWithTag("Player");
+        //player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             StartCoroutine(GenerateMapCoroutine());
         }
@@ -76,7 +76,7 @@ public class MapGenerator : MonoBehaviour
                 attempts++;
             }
 
-            if(attempts == attemptLimit)
+            if (attempts == attemptLimit)
             {
                 Debug.LogError("Failed to place room after " + attemptLimit + " attempts.");
                 return rooms;
@@ -105,21 +105,58 @@ public class MapGenerator : MonoBehaviour
         foreach (var room in rooms)
         {
             RandomFillMap(room.bottomLeft, room.topRight);
+            
 
             for (int i = 0; i < 5; i++)
             {
                 SmoothMap(room.bottomLeft, room.topRight);
             }
             FillTilemap(room.bottomLeft, room.topRight);
+            GenerateEnemies(room.bottomLeft, room.topRight, 10);
+
+            //PrintMap();
 
             yield return new WaitForSeconds(0.5f); // 暂停0.5秒
         }
 
         //在所有房间生成完毕后连接它们
         ConnectRooms();
-        player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
+        
+        Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
+        //player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
 
     }
+
+    void PrintMap()
+    {
+        string mapString = "";
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                mapString += map[x, y] + " ";
+            }
+            mapString += "\n";
+        }
+        Debug.Log(mapString);
+    }
+
+    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums)
+    {
+        for (int i = 0; i < nums; i++)
+        {
+            int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
+            int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
+            if (map[x, y] == 0 && !IsBorder(x,y)) // 确保选定位置是地板
+            {
+                Debug.Log("map[x, y]"+map[x, y]);
+                Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
+                Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
+                Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
+            }
+        }
+    }
+
 
 
     void RandomFillMap(Vector2Int bottomLeft, Vector2Int topRight)

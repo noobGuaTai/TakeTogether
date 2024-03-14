@@ -19,12 +19,15 @@ public class KnightMove : PlayerMove
     private bool isDashing;
     private float dashTimeLeft;
     private bool isAttacking;
+    private float restoreSpeedMP = 1f;
+    private float lastRestoreMPTime;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerAttribute = GetComponent<PlayerAttribute>();
+        lastRestoreMPTime = Time.time;
     }
 
     void Update()
@@ -35,6 +38,12 @@ public class KnightMove : PlayerMove
 
         Attack();
         Attack2();
+
+        if(Time.time - lastRestoreMPTime > restoreSpeedMP)
+        {
+            playerAttribute.ChangeMP(1f);
+            lastRestoreMPTime = Time.time;
+        }
     }
 
     void FixedUpdate()
@@ -61,7 +70,7 @@ public class KnightMove : PlayerMove
 
     public override void Attack2()
     {
-        if (Input.GetButtonDown("Attack2") && !isDashing)
+        if (Input.GetButtonDown("Attack2") && !isDashing && playerAttribute.MP >= playerAttribute.MPConsume)
         {
             StartCoroutine(Dash());
         }
@@ -71,6 +80,7 @@ public class KnightMove : PlayerMove
     {
         isDashing = true;
         playerAttribute.isInvincible = true;//冲刺期间无敌
+        playerAttribute.ChangeMP(-playerAttribute.MPConsume);
         GameObject.Find("KnightAttack2Tect").GetComponent<Collider2D>().enabled = true;
         dashTimeLeft = dashTime;
         anim.SetBool("dash", true);

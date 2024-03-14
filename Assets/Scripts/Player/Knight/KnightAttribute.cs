@@ -12,13 +12,19 @@ public class KnightAttribute : PlayerAttribute
     void Awake()
     {
         HP = 100f;
+        MAXHP = 100f;
+        MP = 10f;
+        MAXMP = 10f;
+        MPConsume = 3f;
         ATK = 10f;
         isInvincible = false;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
     void Start()
     {
         UI = GameObject.Find("UI").transform;
+        enemyHPUI = GameObject.Find("EnemyHPUI");
+        enemyHPUI.SetActive(false);
     }
 
 
@@ -43,5 +49,18 @@ public class KnightAttribute : PlayerAttribute
             damageTextInstance.GetComponent<PlayerUnderAttackText>().SetText(Math.Abs(value).ToString());
         }
 
+    }
+
+    public override void ChangeMP(float value)
+    {
+        MP += value;
+        if(MP < 0)
+        {
+            MP = 0;
+        }
+        if(MP > MAXMP)
+        {
+            MP = MAXMP;
+        }
     }
 }
