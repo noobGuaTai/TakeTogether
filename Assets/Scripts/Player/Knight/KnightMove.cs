@@ -14,6 +14,7 @@ public class KnightMove : PlayerMove
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Animator anim;
+    private PlayerAttribute playerAttribute;
 
     private bool isDashing;
     private float dashTimeLeft;
@@ -23,6 +24,7 @@ public class KnightMove : PlayerMove
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        playerAttribute = GetComponent<PlayerAttribute>();
     }
 
     void Update()
@@ -68,6 +70,8 @@ public class KnightMove : PlayerMove
     IEnumerator Dash()
     {
         isDashing = true;
+        playerAttribute.isInvincible = true;//冲刺期间无敌
+        GameObject.Find("KnightAttack2Tect").GetComponent<Collider2D>().enabled = true;
         dashTimeLeft = dashTime;
         anim.SetBool("dash", true);
         rb.velocity = moveInput* dashSpeed;
@@ -81,6 +85,8 @@ public class KnightMove : PlayerMove
         // 结束冲刺，重置状态
         rb.velocity = Vector2.zero;
         isDashing = false;
+        playerAttribute.isInvincible = false;
+        GameObject.Find("KnightAttack2Tect").GetComponent<Collider2D>().enabled = false;
         anim.SetBool("dash", false);
     }
 

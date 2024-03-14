@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KnightAttackEffect : MonoBehaviour
+public class KnightAttackTect : MonoBehaviour
 {
     private EnemyAttribute enemyAttribute;
     private float ATK;
