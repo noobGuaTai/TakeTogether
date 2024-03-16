@@ -39,7 +39,7 @@ public class EnemyHPUI : MonoBehaviour
     {
         if (enemyAttribute != null)
         {
-            if (enemyAttribute.HP > 0)
+            if (enemyAttribute.HP >= 0)
             {
                 // 更新HP UI的fillAmount
                 enemyHPImage.fillAmount = enemyAttribute.HP / enemyAttribute.MAXHP;

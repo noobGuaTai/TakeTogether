@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7503977683181647192}
   - component: {fileID: 8116510583806733817}
   - component: {fileID: 3447527588840383791}
+  - component: {fileID: 8899048498008746864}
   m_Layer: 6
   m_Name: Knight
   m_TagString: Player
@@ -59,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: daa42acc8775a954ebe2a19b9f060ee4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -190,8 +191,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
+  MAXHP: 0
+  MP: 0
+  MAXMP: 0
+  MPConsume: 0
   ATK: 0
   isInvincible: 0
+  enemyHPUI: {fileID: 0}
   damageTextPrefab: {fileID: 4281288399244367145, guid: c0067bcb474f7bd488e0a22ea00d05a9, type: 3}
 --- !u!114 &3447527588840383791
 MonoBehaviour:
@@ -211,6 +217,18 @@ MonoBehaviour:
   attackDuration: 0.3
   trailMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   trailSpawnInterval: 0.05
+--- !u!114 &8899048498008746864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861076680170244730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e10c389abc3aa034396eb8e3a26e43df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2497902044989194437
 GameObject:
   m_ObjectHideFlags: 0
