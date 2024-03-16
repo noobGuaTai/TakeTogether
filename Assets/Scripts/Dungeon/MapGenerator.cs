@@ -22,7 +22,8 @@ public class MapGenerator : MonoBehaviour
     public int roomSize = 30;
     public List<Room> rooms;
     public GameObject player;
-    public GameObject enemyPrefab;
+    public GameObject enemy1Prefab;
+    public GameObject enemy2Prefab;
 
     int[,] map;
 
@@ -112,7 +113,8 @@ public class MapGenerator : MonoBehaviour
                 SmoothMap(room.bottomLeft, room.topRight);
             }
             FillTilemap(room.bottomLeft, room.topRight);
-            GenerateEnemies(room.bottomLeft, room.topRight, 10);
+            GenerateEnemies(room.bottomLeft, room.topRight, 10, enemy1Prefab);
+            GenerateEnemies(room.bottomLeft, room.topRight, 5, enemy2Prefab);
 
             //PrintMap();
 
@@ -141,7 +143,7 @@ public class MapGenerator : MonoBehaviour
         Debug.Log(mapString);
     }
 
-    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums)
+    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, GameObject enemyPrefab)
     {
         for (int i = 0; i < nums; i++)
         {

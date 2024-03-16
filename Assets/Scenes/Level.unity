@@ -528,13 +528,10 @@ MonoBehaviour:
   randomFillPercent: 37
   roomNums: 5
   roomSize: 25
-  rooms:
-  - bottomLeft: {x: 0, y: 0}
-    topRight: {x: 30, y: 30}
-  - bottomLeft: {x: 40, y: 40}
-    topRight: {x: 70, y: 70}
+  rooms: []
   player: {fileID: 1861076680170244730, guid: 860dfcb3fdb04a44db70c3bd6eeba1a4, type: 3}
-  enemyPrefab: {fileID: 7689738140122501342, guid: f18eabc6227fe734780476e69d1495f9, type: 3}
+  enemy1Prefab: {fileID: 7689738140122501342, guid: f18eabc6227fe734780476e69d1495f9, type: 3}
+  enemy2Prefab: {fileID: 6690183160596734015, guid: 4d8e480113db2d449a25cab9d5fa7d9f, type: 3}
 --- !u!4 &228491317
 Transform:
   m_ObjectHideFlags: 0

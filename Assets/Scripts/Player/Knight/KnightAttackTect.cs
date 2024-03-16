@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class KnightAttackTect : MonoBehaviour
 {
-    public float knockbackForce = 5f; // 击退力量
-    public float knockbackDuration = 0.2f; // 击退时间
+    public float knockbackForce = 1f; // 击退力量
+    public float knockbackDuration = 0.15f; // 击退时间
 
     private EnemyAttribute enemyAttribute;
     private float ATK;

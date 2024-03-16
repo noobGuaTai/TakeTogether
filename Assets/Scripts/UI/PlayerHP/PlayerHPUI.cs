@@ -41,6 +41,7 @@ public class PlayerHPUI : MonoBehaviour
     void Init()
     {
         player = GameObject.FindWithTag("Player");
+        if (player == null) return;
         playerImageBorder = GameObject.Find("PlayerImageBorder");
         playerImage = GameObject.Find("PlayerImage");
         playerHPImage = GameObject.Find("PlayerHPImage").GetComponent<Image>();

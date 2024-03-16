@@ -9,19 +9,34 @@ public class EnemyBarrage : MonoBehaviour
     private float timer = 0f; // 计时器
     private GameObject player;
     private Transform playerTransform; // 玩家的Transform
+    private EnemyMove enemyMove;
 
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
-        player = GameObject.FindWithTag("Player");
-        if (player != null)
-        {
-            playerTransform = player.transform;
-        }
-        ps.trigger.SetCollider(0, playerTransform);
+        enemyMove = GetComponentInParent<EnemyMove>();
     }
 
     void Update()
+    {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                playerTransform = player.transform;
+                ps.trigger.SetCollider(0, playerTransform);
+            }
+        }
+
+        if (enemyMove.canEmission == true)
+        {
+            Emission();
+        }
+
+    }
+
+    void Emission()
     {
         timer += Time.deltaTime;
 
@@ -38,13 +53,11 @@ public class EnemyBarrage : MonoBehaviour
             EmitParticlesTowardsPlayer();
             timer = 0f;
         }
-
     }
 
 
     void EmitParticlesTowardsPlayer()
     {
-        // 确保ParticleSystem.Emit的参数正确配置以发射3个粒子
         var emitParams = new ParticleSystem.EmitParams();
         ps.Emit(emitParams, 3);
     }
