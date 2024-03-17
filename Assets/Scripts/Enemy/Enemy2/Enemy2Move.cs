@@ -14,7 +14,7 @@ public class Enemy2Move : EnemyMove
 
     void Awake()
     {
-        canEmission = false;
+        isAttacking = false;
     }
 
     void Start()
@@ -47,7 +47,7 @@ public class Enemy2Move : EnemyMove
         Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
         if (distanceToPlayer <= detectionRangeA)
         {
-            canEmission = true;
+            isAttacking = true;
             if (distanceToPlayer > stopChaseRangeB)
             {
                 // 使用速度来移动
@@ -61,7 +61,7 @@ public class Enemy2Move : EnemyMove
         }
         else
         {
-            canEmission = false;
+            isAttacking = false;
             // 玩家不在A范围内时停止
             rb.velocity = Vector2.zero;
         }

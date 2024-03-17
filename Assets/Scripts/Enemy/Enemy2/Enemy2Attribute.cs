@@ -50,7 +50,7 @@ public class Enemy2Attribute : EnemyAttribute
             anim.SetBool("death", true);
             GetComponent<EnemyMove>().enabled = false;
             GetComponent<Collider2D>().enabled = false;
-            GetComponent<EnemyMove>().canEmission = false;
+            GetComponent<EnemyMove>().isAttacking = false;
             rb.velocity = Vector2.zero;
             Destroy(gameObject, 1f);
         }

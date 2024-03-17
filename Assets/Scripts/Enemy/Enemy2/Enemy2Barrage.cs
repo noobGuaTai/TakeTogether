@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBarrage : MonoBehaviour
+public class Enemy2Barrage : MonoBehaviour
 {
     public float shootInterval = 2.0f; // 发射间隔时间，以秒为单位
     private ParticleSystem ps; // 粒子系统组件
@@ -29,7 +29,7 @@ public class EnemyBarrage : MonoBehaviour
             }
         }
 
-        if (enemyMove.canEmission == true)
+        if (enemyMove.isAttacking == true)
         {
             Emission();
         }
