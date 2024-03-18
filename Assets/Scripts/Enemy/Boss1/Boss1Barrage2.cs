@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy2Barrage : MonoBehaviour
+public class Boss1Barrage2 : MonoBehaviour
 {
-    public float shootInterval = 2.0f; // 发射间隔时间，以秒为单位
-    private ParticleSystem ps; // 粒子系统组件
-    private float timer = 0f; // 计时器
+    public ParticleSystem ps; // 粒子系统组件引用
+    public float speed = 5f; // 粒子速度
+    public int particlesToEmit = 10; // 每次发射的粒子数
+    public bool canEmission = false;
+
     private GameObject player;
-    private Transform playerTransform; // 玩家的Transform
-    private EnemyMove enemyMove;
+    private Transform playerTransform;
 
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
-        enemyMove = GetComponentInParent<EnemyMove>();
     }
 
     void Update()
@@ -29,38 +29,56 @@ public class Enemy2Barrage : MonoBehaviour
             }
         }
 
-        if (enemyMove.isAttacking == true)
+        if (canEmission == true)
         {
             Emission();
+            canEmission = false;
         }
-
     }
 
     void Emission()
     {
-        timer += Time.deltaTime;
-
         if (playerTransform != null)
         {
             Vector3 directionToPlayer = playerTransform.position - transform.position;
             float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
 
-            transform.rotation = Quaternion.Euler(0f, 0f, angle - 15);
+            transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
 
-        if (timer >= shootInterval)
-        {
-            EmitParticlesTowardsPlayer();
-            timer = 0f;
-        }
+        EmitParticlesTowardsPlayer();
+
     }
-
 
     void EmitParticlesTowardsPlayer()
     {
         var emitParams = new ParticleSystem.EmitParams();
-        ps.Emit(emitParams, 3);
+        ps.Emit(emitParams, particlesToEmit);
+
+        StartCoroutine(RotateOverTime(6f));//旋转父物体
+
     }
+
+    IEnumerator RotateOverTime(float duration)
+    {
+        float startRotation = transform.eulerAngles.z; // 获取当前Z轴旋转角度
+        float endRotation = startRotation + 360f; // 最终旋转角度
+        float currentTime = 0f;
+
+        while (currentTime <= duration)
+        {
+            float t = currentTime / duration; // 计算当前时间占总时长的比例
+            float angle = Mathf.Lerp(startRotation, endRotation, t); // 根据比例计算当前应旋转到的角度
+            transform.rotation = Quaternion.Euler(0f, 0f, angle); // 应用旋转
+            currentTime += Time.deltaTime; // 更新已过时间
+            yield return null; // 等待下一帧
+        }
+
+        // 为了避免浮点数计算误差，确保旋转精确设置到360度后的起始位置
+        transform.rotation = Quaternion.Euler(0f, 0f, startRotation);
+    }
+
+
 
     void OnParticleTrigger()
     {
@@ -73,13 +91,11 @@ public class Enemy2Barrage : MonoBehaviour
             // 设置粒子的剩余生命时间为0，使其立即消失
             p.remainingLifetime = 0;
             inside[i] = p;
-            float atk = GetComponentInParent<EnemyAttribute>().ATK;
+            float atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
             player.GetComponent<PlayerAttribute>().ChangeHP(-atk);
         }
 
         // 应用更改回粒子系统
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, inside);
     }
-
-    
 }

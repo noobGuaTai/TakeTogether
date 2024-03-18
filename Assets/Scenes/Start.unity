@@ -636,7 +636,7 @@ GameObject:
   - component: {fileID: 692552059}
   m_Layer: 0
   m_Name: Barrage1
-  m_TagString: Untagged
+  m_TagString: Boss1Barrage1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1307,7 +1307,7 @@ ParticleSystem:
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
@@ -7750,7 +7750,7 @@ GameObject:
   - component: {fileID: 1398741645}
   m_Layer: 0
   m_Name: Boss1
-  m_TagString: Untagged
+  m_TagString: Boss1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7862,6 +7862,8 @@ MonoBehaviour:
   detectionRangeA: 10
   stopChaseRangeB: 8
   moveSpeed: 2
+  chooseAttack: 0
+  barrage2: {fileID: 2263960870291288537, guid: b000134a98bf2ed428ab6f12a1c475e9, type: 3}
 --- !u!114 &1398741646
 MonoBehaviour:
   m_ObjectHideFlags: 0

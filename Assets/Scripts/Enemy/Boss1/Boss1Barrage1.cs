@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss1Barrage : MonoBehaviour
+public class Boss1Barrage1 : MonoBehaviour
 {
     public GameObject subEmitterPrefab;
     public float subEmitInterval = 2.0f; // 子粒子系统发射间隔，以秒为单位
