@@ -9,6 +9,13 @@ using Random = UnityEngine.Random;
 
 public class MapGenerator : MonoBehaviour
 {
+    public enum GridType
+    {
+        VOID,
+        FLOOR,
+        WALL
+    }
+
     public int width = 100;
     public int height = 100;
     public string seed;
@@ -49,7 +56,7 @@ public class MapGenerator : MonoBehaviour
 
     void Start()
     {
-        enemies = GameObject.Find("/Enemies");
+        enemies = transform.Find("/Enemies").gameObject;
         LoadEnemyPrefabs();
         StartCoroutine(GenerateMapCoroutine());
         //player = GameObject.FindGameObjectWithTag("Player");
