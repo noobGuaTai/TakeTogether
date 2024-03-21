@@ -21,25 +21,47 @@ public class MapGenerator : MonoBehaviour
     public int roomNums = 5;
     public int roomSize = 30;
     public List<Room> rooms;
-    public GameObject player;
+    public GameObject playerPrefab;
     public GameObject enemy1Prefab;
     public GameObject enemy2Prefab;
+    public GameObject boss1Prefab;
+    public Room furthestRoom;
 
     int[,] map;
-
+    private Vector3 playerPosition;
+    private GameObject bossHPUI;
+    private float loadTime;//加载时间
 
     void Start()
     {
         StartCoroutine(GenerateMapCoroutine());
-        //player = GameObject.FindGameObjectWithTag("Player");
+        bossHPUI = GameObject.Find("BossHPUI");
+        bossHPUI.SetActive(false);
+        loadTime = GameObject.Find("LoadScene").GetComponent<LoadScene>().duration;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        // if (Input.GetKeyDown(KeyCode.G))
+        // {
+        //     StartCoroutine(GenerateMapCoroutine());
+        // }
+        //等待加载后再开始搜索
+        if (Time.time > loadTime)
         {
-            StartCoroutine(GenerateMapCoroutine());
+            playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+            if (IsPlayerInRoom(furthestRoom, playerPosition))
+            {
+                bossHPUI.SetActive(true);
+                bossHPUI.GetComponent<BossHPUI>().ActivateBossHPUI();
+            }
+            else
+            {
+                bossHPUI.SetActive(false);
+            }
         }
+
+
     }
 
     List<Room> GenerateRooms(int numberOfRooms)
@@ -87,6 +109,47 @@ public class MapGenerator : MonoBehaviour
         return rooms;
     }
 
+    Room FindFurthestRoomFromRoom0(List<Room> rooms)//找到最远的房间（相对于房间0）
+    {
+        Room room0 = rooms[0]; // 假定房间0是列表中的第一个房间
+        furthestRoom = null;
+        float maxDistance = 0;
+
+        for (int i = 1; i < rooms.Count; i++) // 从第二个房间开始比较
+        {
+            float distance = (rooms[i].Center - room0.Center).magnitude; // 计算每个房间与房间0的距离
+            if (distance > maxDistance) // 如果当前房间离房间0更远
+            {
+                maxDistance = distance; // 更新最大距离
+                furthestRoom = rooms[i]; // 更新最远的房间
+            }
+        }
+
+        return furthestRoom; // 返回最远的房间
+    }
+
+    public bool IsPlayerInRoom(Room room, Vector3 playerPosition)
+    {
+        // 将房间的Tilemap坐标转换为世界坐标
+        Vector3Int bottomLeftTilePosition = new Vector3Int(room.bottomLeft.x, room.bottomLeft.y, 0);
+        Vector3Int topRightTilePosition = new Vector3Int(room.topRight.x, room.topRight.y, 0);
+
+        Vector3 roomBottomLeftWorld = groundTilemap.CellToWorld(bottomLeftTilePosition);
+        Vector3 roomTopRightWorld = groundTilemap.CellToWorld(topRightTilePosition);
+
+        // 因为CellToWorld通常给出的是Tile的左下角位置，所以对于topRight坐标，我们需要做一些调整以确保包含整个Tile
+        roomTopRightWorld += new Vector3(groundTilemap.cellSize.x, groundTilemap.cellSize.y, 0);
+
+        // 在世界坐标中检查玩家位置
+        return playerPosition.x >= roomBottomLeftWorld.x &&
+               playerPosition.x <= roomTopRightWorld.x &&
+               playerPosition.y >= roomBottomLeftWorld.y &&
+               playerPosition.y <= roomTopRightWorld.y;
+    }
+
+
+
+
     IEnumerator GenerateMapCoroutine()
     {
         map = new int[width, height];
@@ -106,7 +169,7 @@ public class MapGenerator : MonoBehaviour
         foreach (var room in rooms)
         {
             RandomFillMap(room.bottomLeft, room.topRight);
-            
+
 
             for (int i = 0; i < 5; i++)
             {
@@ -123,8 +186,11 @@ public class MapGenerator : MonoBehaviour
 
         //在所有房间生成完毕后连接它们
         ConnectRooms();
-        
-        Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
+
+        Room farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
+        GenerateBoss(farRoom.bottomLeft, farRoom.topRight, 1, boss1Prefab);
+
+        Instantiate(playerPrefab, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
         //player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
 
     }
@@ -149,9 +215,9 @@ public class MapGenerator : MonoBehaviour
         {
             int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
             int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
-            if (map[x, y] == 0 && !IsBorder(x,y)) // 确保选定位置是地板
+            if (map[x, y] == 0 && !IsBorder(x, y)) // 确保选定位置是地板
             {
-                Debug.Log("map[x, y]"+map[x, y]);
+                Debug.Log("map[x, y]" + map[x, y]);
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
                 Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
                 Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
@@ -159,7 +225,22 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-
+    void GenerateBoss(Vector2Int bottomLeft, Vector2Int topRight, int nums, GameObject bossPrefab)
+    {
+        while (nums > 0)
+        {
+            int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
+            int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
+            if (map[x, y] == 0 && !IsBorder(x, y)) // 确保选定位置是地板
+            {
+                Debug.Log("map[x, y]" + map[x, y]);
+                Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
+                Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
+                Instantiate(bossPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
+                nums--;
+            }
+        }
+    }
 
     void RandomFillMap(Vector2Int bottomLeft, Vector2Int topRight)
     {

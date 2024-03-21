@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 8194398673889044334}
   m_Layer: 7
   m_Name: Enemy1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d85038c90f32a8d4c9b481e34fddd2f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAttacking: 0
   detectionRadius: 5
   moveSpeed: 2
   randomMoveDistance: 2

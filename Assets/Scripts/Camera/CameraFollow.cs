@@ -10,12 +10,14 @@ public class CameraFollow : MonoBehaviour
     // public Vector2 minPosition;
     // public Vector2 maxPosition;
     // public MapGenerator mapGenerator;
+    private float loadTime;
     void Start()
     {
         //target = GameObject.FindGameObjectWithTag("Player").transform;
+        loadTime = GameObject.Find("LoadScene").GetComponent<LoadScene>().duration;
     }
 
-    
+
     void Update()
     {
         // if(mapGenerator.rooms != null)
@@ -23,25 +25,30 @@ public class CameraFollow : MonoBehaviour
         //     minPosition = mapGenerator.rooms[0].bottomLeft;
         //     maxPosition = mapGenerator.rooms[0].topRight;
         // }
-        
+
     }
 
     void LateUpdate()
     {
-        if(target != null)
+        //等待加载后再开始搜索
+        if (Time.time > loadTime)
         {
-            if(transform.position != target.position)
+            if (target != null)
             {
-                Vector3 targetPosition = target.position;
-                //targetPosition.x = Mathf.Clamp(targetPosition.x, minPosition.x, maxPosition.x);
-                //targetPosition.y = Mathf.Clamp(targetPosition.y, minPosition.y, maxPosition.y);
-                transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
+                if (transform.position != target.position)
+                {
+                    Vector3 targetPosition = target.position;
+                    //targetPosition.x = Mathf.Clamp(targetPosition.x, minPosition.x, maxPosition.x);
+                    //targetPosition.y = Mathf.Clamp(targetPosition.y, minPosition.y, maxPosition.y);
+                    transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
+                }
+            }
+            else
+            {
+                target = GameObject.FindGameObjectWithTag("Player").transform;
             }
         }
-        else
-        {
-            target = GameObject.FindGameObjectWithTag("Player").transform;
-        }
+
     }
-    
+
 }
