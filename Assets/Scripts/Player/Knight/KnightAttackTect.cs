@@ -17,13 +17,13 @@ public class KnightAttackTect : MonoBehaviour
 
     void Update()
     {
-
+        
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         enemyAttribute = other.GetComponent<EnemyAttribute>();
-        if (enemyAttribute != null)
+        if(enemyAttribute != null)
         {
             enemyAttribute.ChangeHP(-ATK);
             Debug.Log(enemyAttribute.HP);
@@ -32,19 +32,19 @@ public class KnightAttackTect : MonoBehaviour
 
             // 应用击退效果
             Rigidbody2D enemyRb = other.GetComponent<Rigidbody2D>();
-            if (enemyRb != null)
+            if(enemyRb != null)
             {
                 // 计算击退方向
                 Vector2 knockbackDirection = (other.transform.position - transform.position).normalized;
                 // 应用力
                 enemyRb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
             }
-            if (other.tag == "Enemy")
-            {
-                GetComponentInParent<PlayerAttribute>().enemyHPUI.SetActive(true);
-                GetComponentInParent<PlayerAttribute>().enemyHPUI.GetComponent<EnemyHPUI>().ActivateEnemyHPUI(other.GetComponent<EnemyAttribute>(), other.GetComponent<SpriteRenderer>());
 
-            }
+            GetComponentInParent<PlayerAttribute>().enemyHPUI.SetActive(true);
+            GetComponentInParent<PlayerAttribute>().enemyHPUI.GetComponent<EnemyHPUI>().ActivateEnemyHPUI(other.GetComponent<EnemyAttribute>(), other.GetComponent<SpriteRenderer>());
+
+
+
         }
     }
 

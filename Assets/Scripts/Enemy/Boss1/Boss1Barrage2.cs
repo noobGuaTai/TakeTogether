@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Boss1Barrage2 : MonoBehaviour
 {
-    public ParticleSystem ps;
-    public float speed = 5f;
-    public int particlesToEmit = 10;
+    public ParticleSystem ps; // 粒子系统组件引用
+    public float speed = 5f; // 粒子速度
+    public int particlesToEmit = 10; // 每次发射的粒子数
     public bool canEmission = false;
 
     private GameObject player;
@@ -74,6 +74,7 @@ public class Boss1Barrage2 : MonoBehaviour
             yield return null; // 等待下一帧
         }
 
+        // 为了避免浮点数计算误差，确保旋转精确设置到360度后的起始位置
         transform.rotation = Quaternion.Euler(0f, 0f, startRotation);
     }
 
@@ -87,10 +88,10 @@ public class Boss1Barrage2 : MonoBehaviour
         for (int i = 0; i < numEnter; i++)
         {
             ParticleSystem.Particle p = inside[i];
-            // 设置粒子的剩余生命时间为0立即消失
+            // 设置粒子的剩余生命时间为0，使其立即消失
             p.remainingLifetime = 0;
             inside[i] = p;
-            float atk = GameObject.FindGameObjectWithTag("Boss").GetComponent<EnemyAttribute>().ATK;
+            float atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
             player.GetComponent<PlayerAttribute>().ChangeHP(-atk);
         }
 

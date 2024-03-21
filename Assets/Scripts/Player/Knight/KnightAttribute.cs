@@ -54,11 +54,11 @@ public class KnightAttribute : PlayerAttribute
     public override void ChangeMP(float value)
     {
         MP += value;
-        if (MP < 0)
+        if(MP < 0)
         {
             MP = 0;
         }
-        if (MP > MAXMP)
+        if(MP > MAXMP)
         {
             MP = MAXMP;
         }

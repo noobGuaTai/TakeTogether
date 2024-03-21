@@ -5,8 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Canvas
-  - Enemy
-  - Boss
+  - Boss1Barrage1
+  - Boss1
   layers:
   - Default
   - TransparentFX
