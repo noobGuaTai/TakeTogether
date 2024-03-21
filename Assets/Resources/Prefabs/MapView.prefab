@@ -91,6 +91,12 @@ MonoBehaviour:
   gridLength: 16
   totX: 0
   totY: 0
+  material: {fileID: 2100000, guid: b48c7cae098f1eb458f211ae08379cc4, type: 2}
+  matrixs: []
+  bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  argsBufferArray: 0000000000000000000000000000000000000000
 --- !u!1 &5063913124754365662
 GameObject:
   m_ObjectHideFlags: 0

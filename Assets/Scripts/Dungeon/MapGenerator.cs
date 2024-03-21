@@ -36,6 +36,8 @@ public class MapGenerator : MonoBehaviour
     public Room furthestRoom;
     public float mapGenerateProcess = 0;
 
+    public MapGridsRenderer mapGridsRenderer;
+
     private int[,] map;
     private GameObject bossHPUI;
     private bool isFinish = false;//是否加载完成
@@ -59,12 +61,14 @@ public class MapGenerator : MonoBehaviour
 
     void Start()
     {
-        enemies = GameObject.Find("/Enemies");
+        mapGridsRenderer = transform.Find("/UI/MapView/MapGrids").GetComponent<MapGridsRenderer>();
+        enemies = transform.Find("/Enemies").gameObject;
         LoadEnemyPrefabs();
         StartCoroutine(GenerateMapCoroutine());
         bossHPUI = GameObject.Find("BossHPUI");
         bossHPUI.SetActive(false);
         //loadTime = GameObject.Find("LoadScene").GetComponent<LoadScene>().duration;
+        mapGridsRenderer.GenMap(width, height);
     }
 
     void Update()

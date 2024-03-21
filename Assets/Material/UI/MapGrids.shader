@@ -1,14 +1,22 @@
-Shader "Hidden/MapGrids"
+Shader "MapGrids"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        float 
+        
     }
     SubShader
     {
-        // No culling or depth
-        Cull Off ZWrite Off ZTest Always
+        Tags
+        {
+            "Queue"="Transparent"
+            "IgnoreProjector"="True"
+            "RenderType"="Transparent"
+            "PreviewType"="Plane"
+            "CanUseSpriteAtlas"="True"
+        }
+        Cull Off
+        Lighting Off
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
@@ -28,23 +36,34 @@ Shader "Hidden/MapGrids"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                int type : COLOR0;
             };
 
-            v2f vert (appdata v)
+            struct InstanceData
             {
+                float2 pos;
+                int type;
+            };
+
+            StructuredBuffer<InstanceData> instanceData;
+
+            v2f vert (appdata v, uint id:SV_INSTANCEID)
+            {
+                float2 pos = v.vertex.xy + instanceData[id].pos;
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vertex = UnityObjectToClipPos(float4(pos, 0, 0));
                 o.uv = v.uv;
+                o.type = instanceData[id].type;
                 return o;
             }
 
-            sampler2D _MainTex;
-
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_TARGET
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // just invert the colors
-                col.rgb = 1 - col.rgb;
+                fixed4 col;
+                if(i.type == 0)
+                    col = fixed4(1, 0, 0, 1);
+                else
+                    col = fixed4(0, 1, 0, 1);
                 return col;
             }
             ENDCG
