@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -21,15 +22,34 @@ public class MapGenerator : MonoBehaviour
     public int roomNums = 5;
     public int roomSize = 30;
     public List<Room> rooms;
+
     public GameObject player;
-    public GameObject enemy1Prefab;
-    public GameObject enemy2Prefab;
+    public Dictionary<string, GameObject> enemyPrefabs;
+    public GameObject enemies;
 
     int[,] map;
 
+    public float mapGenerateProcess = 0;
+
+    void LoadEnemyPrefabs() {
+        enemyPrefabs = new Dictionary<string, GameObject>();
+        var folderPath = "Assets/Resources/Prefabs/Enemies";
+        var resPrefix = "Prefabs/Enemies/";
+        string[] files =
+            Directory.GetFiles(folderPath, "*.prefab");
+        foreach (var filePath in files)
+        {
+            string enemyName = Path.GetFileNameWithoutExtension(filePath);
+            GameObject prefab = Resources.Load<GameObject>(
+                resPrefix + enemyName);
+            enemyPrefabs[enemyName] = prefab;
+        }
+    }
 
     void Start()
     {
+        enemies = GameObject.Find("/Enemies");
+        LoadEnemyPrefabs();
         StartCoroutine(GenerateMapCoroutine());
         //player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -89,6 +109,7 @@ public class MapGenerator : MonoBehaviour
 
     IEnumerator GenerateMapCoroutine()
     {
+        mapGenerateProcess = 0;
         map = new int[width, height];
         // 初始化map为全-1
         for (int x = 0; x < width; x++)
@@ -103,6 +124,7 @@ public class MapGenerator : MonoBehaviour
 
         rooms = GenerateRooms(roomNums);
 
+        mapGenerateProcess = 10;
         foreach (var room in rooms)
         {
             RandomFillMap(room.bottomLeft, room.topRight);
@@ -113,20 +135,22 @@ public class MapGenerator : MonoBehaviour
                 SmoothMap(room.bottomLeft, room.topRight);
             }
             FillTilemap(room.bottomLeft, room.topRight);
-            GenerateEnemies(room.bottomLeft, room.topRight, 10, enemy1Prefab);
-            GenerateEnemies(room.bottomLeft, room.topRight, 5, enemy2Prefab);
+
+            GenerateEnemies(room.bottomLeft, room.topRight, 10, "Enemy1");
+            GenerateEnemies(room.bottomLeft, room.topRight, 5, "Enemy2");
 
             //PrintMap();
-
-            yield return new WaitForSeconds(0.5f); // 暂停0.5秒
+            mapGenerateProcess += 80.0f / rooms.Count;
+            yield return new WaitForSeconds(0.1f); // 暂停0.5秒
         }
 
+        mapGenerateProcess = 90;
         //在所有房间生成完毕后连接它们
         ConnectRooms();
         
         Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
         //player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
-
+        mapGenerateProcess = 100;
     }
 
     void PrintMap()
@@ -143,6 +167,9 @@ public class MapGenerator : MonoBehaviour
         Debug.Log(mapString);
     }
 
+    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, String enemyName) {
+        GenerateEnemies(bottomLeft, topRight, nums, enemyPrefabs[enemyName]);
+    }
     void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, GameObject enemyPrefab)
     {
         for (int i = 0; i < nums; i++)
@@ -154,7 +181,8 @@ public class MapGenerator : MonoBehaviour
                 Debug.Log("map[x, y]"+map[x, y]);
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
                 Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
-                Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
+                var enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
+                enemy.transform.parent = enemies.transform;
             }
         }
     }

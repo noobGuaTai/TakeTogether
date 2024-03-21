@@ -40,7 +40,11 @@ public class CameraFollow : MonoBehaviour
         }
         else
         {
-            target = GameObject.FindGameObjectWithTag("Player").transform;
+            var player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                target = GameObject.FindGameObjectWithTag("Player").transform;
+            }
         }
     }
     
