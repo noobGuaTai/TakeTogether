@@ -16,6 +16,7 @@ public class Boss1Move : EnemyMove
     private GameObject barrage1;
     private float attackCoolDown = 3f;
     private float lastAttackTime = 0f;
+    private Animator anim;
 
     void Awake()
     {
@@ -26,7 +27,8 @@ public class Boss1Move : EnemyMove
     {
         spriteRenderer = GetComponent<SpriteRenderer>(); // 获取SpriteRenderer组件
         rb = GetComponent<Rigidbody2D>(); // 获取Rigidbody2D组件 
-        barrage1 = GameObject.FindGameObjectWithTag("Boss1Barrage1");
+        barrage1 = GameObject.Find("Boss1Barrage1");
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -44,15 +46,23 @@ public class Boss1Move : EnemyMove
             Move();
         }
 
-        if (isAttacking && Time.time - lastAttackTime > attackCoolDown)
+        if(isAttacking && Time.time - lastAttackTime > attackCoolDown - 1.3f)
         {
-            chooseAttack = RandomChooseAttack();
-            Attack();
-            
-            //攻击后记录清0
-            chooseAttack = 0;
-            lastAttackTime = Time.time;
+            anim.SetBool("attack", true);
+            if (Time.time - lastAttackTime > attackCoolDown)
+            {
+                chooseAttack = RandomChooseAttack();
+                Attack();
+
+                //攻击后记录清0
+                chooseAttack = 0;
+                lastAttackTime = Time.time;
+                anim.SetBool("attack", false);
+                attackCoolDown = Random.Range(3f, 6f);//随机攻击间隔
+            }
         }
+
+
 
     }
 
@@ -109,6 +119,7 @@ public class Boss1Move : EnemyMove
             case 2:
                 GameObject instance = Instantiate(barrage2, transform.position, Quaternion.identity);
                 instance.GetComponent<Boss1Barrage2>().canEmission = true;
+                Destroy(instance, 6f);
                 break;
 
             default:

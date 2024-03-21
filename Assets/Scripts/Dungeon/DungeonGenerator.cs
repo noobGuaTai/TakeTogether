@@ -109,7 +109,6 @@ public class DungeonGenerator : MonoBehaviour
                         groundTilemap.SetTile(position, floorTile);
                     }
                 }
-                // 对于非地板（墙壁）区域，不执行任何操作，保持为空
             }
         }
     }
@@ -122,7 +121,7 @@ public class DungeonGenerator : MonoBehaviour
             {
                 int nx = x + dx;
                 int ny = y + dy;
-                // 确保检查点在地图范围内
+
                 if (nx >= 0 && nx < width && ny >= 0 && ny < height)
                 {
                     if (map[nx, ny] == 1) // 如果相邻位置是墙壁，则当前位置是边缘

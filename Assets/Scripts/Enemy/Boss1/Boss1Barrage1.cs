@@ -5,15 +5,14 @@ using UnityEngine;
 public class Boss1Barrage1 : MonoBehaviour
 {
     public GameObject subEmitterPrefab;
-    public float subEmitInterval = 2.0f; // 子粒子系统发射间隔，以秒为单位
-    public int mainParticleNums = 3;//主粒子数量
-    public bool canEmission = false; // 是否可以发射
+    public float subEmitInterval = 2.0f; // 子粒子系统发射间隔
+    public int mainParticleNums = 3;
+    public bool canEmission = false;
 
-    private ParticleSystem ps; // 粒子系统组件
+    private ParticleSystem ps; 
     private GameObject player;
-    private Transform playerTransform; // 玩家的Transform
+    private Transform playerTransform;
     private EnemyMove enemyMove;
-    private float subEmitTimer = 0f; // 子粒子系统计时器
 
 
     void Start()
@@ -69,11 +68,9 @@ public class Boss1Barrage1 : MonoBehaviour
 
     IEnumerator TriggerSubEmittersAfterDelay(float delay)
     {
-        // 等待指定的延时
         yield return new WaitForSeconds(delay);
 
         ParticleSystem.Particle[] particles = new ParticleSystem.Particle[mainParticleNums];
-        // 检查预制体是否被赋值
         if (subEmitterPrefab != null)
         {
             int numParticlesAlive = ps.GetParticles(particles);
@@ -90,6 +87,7 @@ public class Boss1Barrage1 : MonoBehaviour
                     //emitParams.position = transform.position;
                     subPs.Emit(emitParams, 8); // 这里的8是要发射的粒子数量，根据需要调整
                 }
+                Destroy(instance, 6f);
             }
 
         }
