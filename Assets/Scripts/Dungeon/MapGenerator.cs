@@ -6,6 +6,7 @@ using System.IO;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class MapGenerator : MonoBehaviour
@@ -136,7 +137,7 @@ public class MapGenerator : MonoBehaviour
                 return rooms;
             }
         }
-
+        Image
         return rooms;
     }
 
