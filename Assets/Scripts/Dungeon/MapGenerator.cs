@@ -31,7 +31,8 @@ public class MapGenerator : MonoBehaviour
 
     public float mapGenerateProcess = 0;
 
-    void LoadEnemyPrefabs() {
+    void LoadEnemyPrefabs()
+    {
         enemyPrefabs = new Dictionary<string, GameObject>();
         var folderPath = "Assets/Resources/Prefabs/Enemies";
         var resPrefix = "Prefabs/Enemies/";
@@ -128,7 +129,7 @@ public class MapGenerator : MonoBehaviour
         foreach (var room in rooms)
         {
             RandomFillMap(room.bottomLeft, room.topRight);
-            
+
 
             for (int i = 0; i < 5; i++)
             {
@@ -147,7 +148,8 @@ public class MapGenerator : MonoBehaviour
         mapGenerateProcess = 90;
         //在所有房间生成完毕后连接它们
         ConnectRooms();
-        
+        //PrintMap();
+
         Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
         //player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
         mapGenerateProcess = 100;
@@ -167,7 +169,8 @@ public class MapGenerator : MonoBehaviour
         Debug.Log(mapString);
     }
 
-    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, String enemyName) {
+    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, String enemyName)
+    {
         GenerateEnemies(bottomLeft, topRight, nums, enemyPrefabs[enemyName]);
     }
     void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, GameObject enemyPrefab)
@@ -176,9 +179,9 @@ public class MapGenerator : MonoBehaviour
         {
             int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
             int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
-            if (map[x, y] == 0 && !IsBorder(x,y)) // 确保选定位置是地板
+            if (map[x, y] == 0 && !IsBorder(x, y)) // 确保选定位置是地板
             {
-                Debug.Log("map[x, y]"+map[x, y]);
+                Debug.Log("map[x, y]" + map[x, y]);
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
                 Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
                 var enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
@@ -240,7 +243,7 @@ public class MapGenerator : MonoBehaviour
             for (int y = bottomLeft.y; y < topRight.y; y++)
             {
                 Vector3Int position = new Vector3Int(x, y, 0);
-                if (map[x, y] == 0) // 如果当前位置是地板
+                if (map[x, y] == 1) // 如果当前位置不是地板
                 {
                     if (IsBorder(x, y))
                     {
@@ -248,14 +251,14 @@ public class MapGenerator : MonoBehaviour
                         // wallTilemap.SetTile(position, null); // 首先清除该位置上可能存在的瓦片
                         wallTilemap.SetTile(position, wallTile); // 然后放置新的墙壁瓦片
                     }
-                    else
-                    {
-                        // 否则，放置地板
-                        // wallTilemap.SetTile(position, null);
-                        // groundTilemap.SetTile(position, null); // 首先清除该位置上可能存在的瓦片
-                        groundTilemap.SetTile(position, floorTile); // 然后放置新的地板瓦片
-                    }
 
+                }
+                if (map[x, y] == 0)
+                {
+                    // 放置地板
+                    //     // wallTilemap.SetTile(position, null);
+                    //     // groundTilemap.SetTile(position, null); // 首先清除该位置上可能存在的瓦片
+                    groundTilemap.SetTile(position, floorTile); // 然后放置新的地板瓦片
                 }
 
             }
@@ -264,7 +267,7 @@ public class MapGenerator : MonoBehaviour
 
     bool IsBorder(int x, int y)
     {
-        if (map[x, y] != 0) return false; // 当前位置如果不是地板，则直接返回false
+        if (map[x, y] == 0) return false; // 当前位置如果是地板，则直接返回false
 
         for (int dx = -1; dx <= 1; dx++)
         {
@@ -276,14 +279,14 @@ public class MapGenerator : MonoBehaviour
                 if (dx == 0 && dy == 0) continue;
                 if (nx >= 0 && nx < width && ny >= 0 && ny < height)
                 {
-                    if (map[nx, ny] == 1) // 如果相邻位置是墙壁，则当前位置是边缘
+                    if (map[nx, ny] == 0) // 如果相邻位置是地板，则当前位置是边缘
                     {
                         return true;
                     }
                 }
             }
         }
-        return false; // 如果周围没有墙壁，则不是边缘
+        return false; // 如果周围没有地板，则不是边缘
     }
 
     void SetBorderWalls(int x, int y)
