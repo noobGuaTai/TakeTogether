@@ -48,7 +48,7 @@ public class MapGenerator : MonoBehaviour
 
     void Start()
     {
-        enemies = GameObject.Find("/Enemies");
+        enemies = transform.Find("/Enemies").gameObject;
         LoadEnemyPrefabs();
         StartCoroutine(GenerateMapCoroutine());
         //player = GameObject.FindGameObjectWithTag("Player");

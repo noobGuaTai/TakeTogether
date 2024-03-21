@@ -19,7 +19,8 @@ public class LoadScene : MonoBehaviour
         characterRect = GameObject.Find("Character").GetComponent<RectTransform>();
         sliderImage = GameObject.Find("Slider").GetComponent<Image>();
         textPercent = GameObject.Find("LoadPercent").GetComponent<TextMeshProUGUI>();
-        mapGenerator = GameObject.Find("/MapGenerator").GetComponent<MapGenerator>();
+        //mapGenerator = GameObject.Find("/MapGenerator").GetComponent<MapGenerator>();
+        mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
         Vector2 startPosition = characterRect.anchoredPosition;
         Vector2 endPosition = new Vector2(startPosition.x + 1214f, startPosition.y);
 
@@ -51,7 +52,6 @@ public class LoadScene : MonoBehaviour
             textPercent.text = Mathf.RoundToInt(normalizedTime * 100) + "%";
             yield return null;
         }
-
 
         characterRect.anchoredPosition = end;
         sliderImage.fillAmount = 1f;
