@@ -13,7 +13,7 @@ public class MapGenerator : MonoBehaviour
 {
     public enum GridType
     {
-        VOID,
+        VOID=-1,
         FLOOR,
         WALL
     }
@@ -39,7 +39,7 @@ public class MapGenerator : MonoBehaviour
 
     public MapGridsRenderer mapGridsRenderer;
 
-    private int[,] map;
+    private GridType[,] map;
     private GameObject bossHPUI;
     private bool isFinish = false;//是否加载完成
     private Vector3 playerPosition;
@@ -69,7 +69,7 @@ public class MapGenerator : MonoBehaviour
         bossHPUI = GameObject.Find("BossHPUI");
         bossHPUI.SetActive(false);
         //loadTime = GameObject.Find("LoadScene").GetComponent<LoadScene>().duration;
-        mapGridsRenderer.GenMap(width, height);
+        
     }
 
     void Update()
@@ -184,13 +184,13 @@ public class MapGenerator : MonoBehaviour
     IEnumerator GenerateMapCoroutine()
     {
         mapGenerateProcess = 0;
-        map = new int[width, height];
+        map = new GridType[width, height];
         // 初始化map为全-1
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                map[x, y] = -1;
+                map[x, y] = GridType.VOID;
             }
         }
         wallTilemap.ClearAllTiles();
@@ -229,6 +229,8 @@ public class MapGenerator : MonoBehaviour
         //player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
         mapGenerateProcess = 100;
         isFinish = true;
+
+        mapGridsRenderer.GenMap(map);
     }
 
     void PrintMap()
@@ -255,7 +257,7 @@ public class MapGenerator : MonoBehaviour
         {
             int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
             int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
-            if (map[x, y] == 0 && !IsBorder(x, y)) // 确保选定位置是地板
+            if (map[x, y] == GridType.FLOOR && !IsBorder(x, y)) // 确保选定位置是地板
             {
                 Debug.Log("map[x, y]" + map[x, y]);
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
@@ -277,7 +279,7 @@ public class MapGenerator : MonoBehaviour
         {
             int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
             int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
-            if (map[x, y] == 0 && !IsBorder(x, y)) // 确保选定位置是地板
+            if (map[x, y] == GridType.FLOOR && !IsBorder(x, y)) // 确保选定位置是地板
             {
                 Debug.Log("map[x, y]" + map[x, y]);
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
@@ -303,11 +305,11 @@ public class MapGenerator : MonoBehaviour
             {
                 if (x == bottomLeft.x || x == topRight.x - 1 || y == bottomLeft.y || y == topRight.y - 1)
                 {
-                    map[x, y] = 1;
+                    map[x, y] = GridType.WALL;
                 }
                 else
                 {
-                    map[x, y] = (pseudoRandom.Next(0, 100) < randomFillPercent) ? 1 : 0;
+                    map[x, y] = (pseudoRandom.Next(0, 100) < randomFillPercent) ? GridType.WALL : GridType.FLOOR;
                 }
             }
         }
@@ -325,9 +327,9 @@ public class MapGenerator : MonoBehaviour
                 int neighbourWallTiles = GetSurroundingWallCount(x, y);
 
                 if (neighbourWallTiles > 4)
-                    map[x, y] = 1;
+                    map[x, y] = GridType.WALL;
                 else if (neighbourWallTiles < 4)
-                    map[x, y] = 0;
+                    map[x, y] = GridType.FLOOR;
             }
         }
     }
@@ -339,7 +341,7 @@ public class MapGenerator : MonoBehaviour
             for (int y = bottomLeft.y; y < topRight.y; y++)
             {
                 Vector3Int position = new Vector3Int(x, y, 0);
-                if (map[x, y] == 1) // 如果当前位置不是地板
+                if (map[x, y] == GridType.WALL) // 如果当前位置不是地板
                 {
                     if (IsBorder(x, y))
                     {
@@ -349,7 +351,7 @@ public class MapGenerator : MonoBehaviour
                     }
 
                 }
-                if (map[x, y] == 0)
+                if (map[x, y] == GridType.FLOOR)
                 {
                     // 放置地板
                     //     // wallTilemap.SetTile(position, null);
@@ -363,7 +365,7 @@ public class MapGenerator : MonoBehaviour
 
     bool IsBorder(int x, int y)
     {
-        if (map[x, y] == 0) return false; // 当前位置如果是地板，则直接返回false
+        if (map[x, y] == GridType.FLOOR) return false; // 当前位置如果是地板，则直接返回false
 
         for (int dx = -1; dx <= 1; dx++)
         {
@@ -375,7 +377,7 @@ public class MapGenerator : MonoBehaviour
                 if (dx == 0 && dy == 0) continue;
                 if (nx >= 0 && nx < width && ny >= 0 && ny < height)
                 {
-                    if (map[nx, ny] == 0) // 如果相邻位置是地板，则当前位置是边缘
+                    if (map[nx, ny] == GridType.FLOOR) // 如果相邻位置是地板，则当前位置是边缘
                     {
                         return true;
                     }
@@ -402,7 +404,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (neighbourX != gridX || neighbourY != gridY)
                     {
-                        wallCount += map[neighbourX, neighbourY];
+                        wallCount += (map[neighbourX, neighbourY] == GridType.WALL ? 1 : 0);
                     }
                 }
                 else
@@ -492,7 +494,7 @@ public class MapGenerator : MonoBehaviour
         // 设置中间的路为地板
         wallTilemap.SetTile(new Vector3Int(position.x, position.y, 0), null);
         groundTilemap.SetTile(new Vector3Int(position.x, position.y, 0), floorTile);
-        map[position.x, position.y] = 0;
+        map[position.x, position.y] = GridType.FLOOR;
 
         // 设置当前方向的墙壁
         Vector2Int[] directions = {
@@ -507,9 +509,9 @@ public class MapGenerator : MonoBehaviour
             Vector3Int wallPos = new Vector3Int(position.x + dir.x, position.y + dir.y, 0);
             if (wallPos.x >= 0 && wallPos.x < width && wallPos.y >= 0 && wallPos.y < height)
             {
-                if (map[wallPos.x, wallPos.y] != 0) // 如果不是地板，则设置为墙壁
+                if (map[wallPos.x, wallPos.y] != GridType.FLOOR) // 如果不是地板，则设置为墙壁
                 {
-                    map[wallPos.x, wallPos.y] = 1; // 墙壁标记为1
+                    map[wallPos.x, wallPos.y] = GridType.WALL; // 墙壁标记为1
                     wallTilemap.SetTile(wallPos, wallTile);
                 }
             }
@@ -533,9 +535,9 @@ public class MapGenerator : MonoBehaviour
             Vector3Int cornerPos = new Vector3Int(position.x + dir.x, position.y + dir.y, 0);
             if (cornerPos.x >= 0 && cornerPos.x < width && cornerPos.y >= 0 && cornerPos.y < height)
             {
-                if (map[cornerPos.x, cornerPos.y] != 0) // 如果不是地板，则设置为墙壁
+                if (map[cornerPos.x, cornerPos.y] != GridType.FLOOR) // 如果不是地板，则设置为墙壁
                 {
-                    map[cornerPos.x, cornerPos.y] = 1; // 墙壁标记为1
+                    map[cornerPos.x, cornerPos.y] = GridType.WALL; // 墙壁标记为1
                     wallTilemap.SetTile(cornerPos, wallTile);
                 }
             }

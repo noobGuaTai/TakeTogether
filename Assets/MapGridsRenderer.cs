@@ -52,19 +52,25 @@ public class MapGridsRenderer : MonoBehaviour
         
     }
 
-    public void GenMap(int totX, int totY)
+    public void GenMap(GridType[,] map)
     {
+        var totX = map.GetLength(0);
+        var totY = map.GetLength(1);
+
         GenGrid();
         this.totX = totX;  this.totY = totY;
         instanceData = new InstanceData[totX * totY];
         bounds = new Bounds(transform.position, new Vector3(100000, 100000, 100000));
         materialBuffer = new ComputeBuffer(totX * totY, InstanceData.Size());
+        var totSize = new Vector2(totX, totY) * gridLength;
+        var blPos = new Vector2(0, 0) * gridLength - 0.5f * totSize;
+        var trPos = new Vector2(totX, totY) * gridLength - 0.5f * totSize;
 
         for (int i = 0; i < totX; i++) { 
             for(int j = 0; j < totY; j++)
             {
-                var pos = new Vector2(i, j) * 20;
-                var type = 0;
+                var pos = new Vector2(i, j) * gridLength - 0.5f * totSize;
+                var type = (int)map[i, j];
                 var index = GetIndex(i, j);
                 instanceData[index].pos = pos;
                 instanceData[index].type = type;
@@ -73,6 +79,8 @@ public class MapGridsRenderer : MonoBehaviour
         materialBuffer.SetData(instanceData);
         material.SetBuffer("instanceData", materialBuffer);
         material.SetMatrix("local2Wolrd", transform.localToWorldMatrix);
+        material.SetVector("_border", new Vector4(blPos.x, blPos.y, trPos.x, trPos.y));
+        Debug.Log("blPos:" + material.GetFloatArray("blPos"));
 
         argsBuffer = new ComputeBuffer(1, 5 * sizeof(uint), ComputeBufferType.IndirectArguments);
         argsBufferArray[0] = (uint)grid.GetIndexCount(0);
