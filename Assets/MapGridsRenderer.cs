@@ -72,6 +72,7 @@ public class MapGridsRenderer : MonoBehaviour
         }
         materialBuffer.SetData(instanceData);
         material.SetBuffer("instanceData", materialBuffer);
+        material.SetMatrix("local2Wolrd", transform.localToWorldMatrix);
 
         argsBuffer = new ComputeBuffer(1, 5 * sizeof(uint), ComputeBufferType.IndirectArguments);
         argsBufferArray[0] = (uint)grid.GetIndexCount(0);
@@ -86,6 +87,7 @@ public class MapGridsRenderer : MonoBehaviour
     {
         if (grid != null)
         {
+            material.SetMatrix("local2World", transform.localToWorldMatrix);
             Graphics.DrawMeshInstancedIndirect(grid, 0, material, bounds, argsBuffer, 0, 
                 null, UnityEngine.Rendering.ShadowCastingMode.Off, false, gameObject.layer);
         }
