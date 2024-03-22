@@ -86,7 +86,8 @@ public class MapGridsRenderer : MonoBehaviour
     {
         if (grid != null)
         {
-            Graphics.DrawMeshInstancedIndirect(grid, 0, material, bounds, argsBuffer);
+            Graphics.DrawMeshInstancedIndirect(grid, 0, material, bounds, argsBuffer, 0, 
+                null, UnityEngine.Rendering.ShadowCastingMode.Off, false, gameObject.layer);
         }
     }
 }

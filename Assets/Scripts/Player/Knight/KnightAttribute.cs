@@ -43,8 +43,9 @@ public class KnightAttribute : PlayerAttribute
             // 实例化伤害文本预设
             Vector2 pos = new Vector2(transform.position.x, transform.position.y + 0.4f);//生成的文本在玩家头上
             Vector2 screenPosition = Camera.main.WorldToScreenPoint(pos);
-            GameObject damageTextInstance = Instantiate(damageTextPrefab, screenPosition, Quaternion.identity, UI.transform);
+            GameObject damageTextInstance = Instantiate(damageTextPrefab, Vector3.zero, Quaternion.identity, UI.transform);
             damageTextInstance.transform.SetParent(UI);
+            damageTextInstance.transform.position = screenPosition;
             // 设置伤害值
             damageTextInstance.GetComponent<PlayerUnderAttackText>().SetText(Math.Abs(value).ToString());
         }

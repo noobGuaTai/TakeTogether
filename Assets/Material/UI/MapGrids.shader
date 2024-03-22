@@ -17,6 +17,7 @@ Shader "MapGrids"
         Cull Off
         Lighting Off
         Blend SrcAlpha OneMinusSrcAlpha
+        ZTest [unity_GUIZTestMode]
 
         Pass
         {
@@ -51,7 +52,9 @@ Shader "MapGrids"
             {
                 float2 pos = v.vertex.xy + instanceData[id].pos;
                 v2f o;
-                o.vertex = UnityObjectToClipPos(float4(pos, 0, 0));
+                o.vertex = UnityObjectToClipPos(float4(pos, 0, 1));
+
+                //o.vertex = float4(pos, 0, 0);
                 o.uv = v.uv;
                 o.type = instanceData[id].type;
                 return o;
