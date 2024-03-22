@@ -98,9 +98,11 @@ Material:
     - _UVSec: 0
     - _UseUIAlphaClip: 0
     - _ZWrite: 1
+    - _noiseDiff: 1.2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _border: {r: -480, g: -480, b: 480, a: 480}
   m_BuildTextureStacks: []
