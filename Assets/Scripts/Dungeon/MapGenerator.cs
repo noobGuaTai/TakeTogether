@@ -137,7 +137,6 @@ public class MapGenerator : MonoBehaviour
                 return rooms;
             }
         }
-        Image
         return rooms;
     }
 
