@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using static MapGenerator;
 
 public class MapGridsRenderer : MonoBehaviour
@@ -30,6 +31,7 @@ public class MapGridsRenderer : MonoBehaviour
     public ComputeBuffer materialBuffer;
     public ComputeBuffer argsBuffer;
     public uint[] argsBufferArray = new uint[5] { 0, 0, 0, 0, 0 };
+    public GameObject knight = null;
     // Start is called before the first frame update
 
     int GetIndex(int x, int y) {
@@ -49,7 +51,11 @@ public class MapGridsRenderer : MonoBehaviour
     }
     void Start()
     {
-        
+        gameObject.SetActive(false);
+        knight = transform.Find("/knight(clone)").gameObject;
+        if (knight == null) { 
+            
+        }
     }
 
     public void GenMap(GridType[,] map)
@@ -96,6 +102,7 @@ public class MapGridsRenderer : MonoBehaviour
         if (grid != null)
         {
             material.SetMatrix("local2World", transform.localToWorldMatrix);
+            material.SetVector("playerPosition", knight.transform.position);
             Graphics.DrawMeshInstancedIndirect(grid, 0, material, bounds, argsBuffer, 0, 
                 null, UnityEngine.Rendering.ShadowCastingMode.Off, false, gameObject.layer);
         }
