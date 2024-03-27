@@ -95,7 +95,7 @@ Shader "MapGrids"
                 // render player's position
                 float dis = distance(i.uvGlobalCon * 100, _playerMapUV.xy * 100);
                 float maxDis = 2;
-                float ratio = lerp(0, 1, maxDis - clamp(dis, 0, maxDis));
+                float ratio = lerp(0, 1, (maxDis - clamp(dis, 0, maxDis))/maxDis);
                 ratio = ratio * ratio * ratio;
                 col += float4(ratio, 0,0,0);
                 //col = float4(1 / dis, 0, 0, 1);
