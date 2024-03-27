@@ -39,6 +39,8 @@ public class MapGenerator : MonoBehaviour
 
     public MapGridsRenderer mapGridsRenderer;
 
+    public Vector3 gridSize;
+    public Grid grid = null;
     private GridType[,] map;
     private GameObject bossHPUI;
     private bool isFinish = false;//是否加载完成
@@ -62,8 +64,10 @@ public class MapGenerator : MonoBehaviour
 
     void Start()
     {
+        grid = transform.Find("/Grid").GetComponent<Grid>();
         mapGridsRenderer = transform.Find("/UI/MapView/MapGrids").GetComponent<MapGridsRenderer>();
         enemies = transform.Find("/Enemies").gameObject;
+        gridSize = grid.cellSize;
         LoadEnemyPrefabs();
         StartCoroutine(GenerateMapCoroutine());
         bossHPUI = GameObject.Find("BossHPUI");
@@ -225,7 +229,7 @@ public class MapGenerator : MonoBehaviour
         Room farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
         GenerateBoss(farRoom.bottomLeft, farRoom.topRight, 1, "Boss1");
 
-        Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
+        Instantiate(player, new Vector3(rooms[0].Center.x* gridSize.x, rooms[0].Center.y* gridSize.y), Quaternion.identity);
         //player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
         mapGenerateProcess = 100;
         isFinish = true;

@@ -30,15 +30,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1861076680170244730}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87, y: 94.5, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8484705741543078897}
   - {fileID: 6956303832520693097}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6521389161183208754
 SpriteRenderer:
@@ -121,7 +121,7 @@ Rigidbody2D:
   m_Constraints: 4
 --- !u!95 &2630255944690882768
 Animator:
-  serializedVersion: 7
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -135,7 +135,6 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -149,7 +148,6 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1861076680170244730}
   m_Enabled: 1
-  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -173,10 +171,9 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.08822235, y: -0.04599911}
-  m_Size: {x: 0.1959548, y: 0.32324216}
+  m_UsedByComposite: 0
+  m_Offset: {x: -7, y: -5}
+  m_Size: {x: 15, y: 30}
   m_Direction: 0
 --- !u!114 &8116510583806733817
 MonoBehaviour:
@@ -211,8 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 860e77afb4d69fe488d496fe4a87ca9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  dashSpeed: 20
+  moveSpeed: 64
+  dashSpeed: 192
   dashTime: 0.2
   attackDuration: 0.3
   trailMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
@@ -254,13 +251,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2497902044989194437}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5613799572447214989}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &2597388067729148513
 CapsuleCollider2D:
@@ -270,7 +267,6 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2497902044989194437}
   m_Enabled: 0
-  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -294,10 +290,9 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.10065704, y: -0.015623703}
-  m_Size: {x: 0.60065806, y: 0.4496737}
+  m_UsedByComposite: 0
+  m_Offset: {x: 5, y: -7}
+  m_Size: {x: 50, y: 30}
   m_Direction: 1
 --- !u!114 &7778719186131965550
 MonoBehaviour:
@@ -338,13 +333,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2909214985725917444}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5613799572447214989}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &9087848653801325438
 CapsuleCollider2D:
@@ -354,7 +349,6 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2909214985725917444}
   m_Enabled: 0
-  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -378,10 +372,9 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.10065704, y: -0.015623703}
-  m_Size: {x: 0.60065806, y: 0.4496737}
+  m_UsedByComposite: 0
+  m_Offset: {x: 5, y: -7}
+  m_Size: {x: 50, y: 30}
   m_Direction: 1
 --- !u!114 &3525930337980314787
 MonoBehaviour:

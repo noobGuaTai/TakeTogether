@@ -41,7 +41,7 @@ public class KnightAttribute : PlayerAttribute
         if (!isInvincible && value < 0)
         {
             // 实例化伤害文本预设
-            Vector2 pos = new Vector2(transform.position.x, transform.position.y + 0.4f);//生成的文本在玩家头上
+            Vector2 pos = new Vector2(transform.position.x, transform.position.y + 10f);//生成的文本在玩家头上
             Vector2 screenPosition = Camera.main.WorldToScreenPoint(pos);
             GameObject damageTextInstance = Instantiate(damageTextPrefab, Vector3.zero, Quaternion.identity, UI.transform);
             damageTextInstance.transform.SetParent(UI);
