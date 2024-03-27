@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static MapGenerator;
@@ -31,7 +32,11 @@ public class MapGridsRenderer : MonoBehaviour
     public ComputeBuffer materialBuffer;
     public ComputeBuffer argsBuffer;
     public uint[] argsBufferArray = new uint[5] { 0, 0, 0, 0, 0 };
-    public GameObject knight = null;
+    public GameObject player = null;
+    public Grid gridComponent = null;
+    public MapGenerator mapGenerator = null;
+    float2 blPos;
+    float2 trPos;
     // Start is called before the first frame update
 
     int GetIndex(int x, int y) {
@@ -52,10 +57,8 @@ public class MapGridsRenderer : MonoBehaviour
     void Start()
     {
         gameObject.SetActive(false);
-        knight = transform.Find("/knight(clone)").gameObject;
-        if (knight == null) { 
-            
-        }
+        gridComponent = transform.Find("/Grid").GetComponent<Grid>();
+        mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
     }
 
     public void GenMap(GridType[,] map)
@@ -69,8 +72,8 @@ public class MapGridsRenderer : MonoBehaviour
         bounds = new Bounds(transform.position, new Vector3(100000, 100000, 100000));
         materialBuffer = new ComputeBuffer(totX * totY, InstanceData.Size());
         var totSize = new Vector2(totX, totY) * gridLength;
-        var blPos = new Vector2(0, 0) * gridLength - 0.5f * totSize;
-        var trPos = new Vector2(totX, totY) * gridLength - 0.5f * totSize;
+        blPos = new Vector2(0, 0) * gridLength - 0.5f * totSize;
+        trPos = new Vector2(totX, totY) * gridLength - 0.5f * totSize;
 
         for (int i = 0; i < totX; i++) { 
             for(int j = 0; j < totY; j++)
@@ -102,7 +105,23 @@ public class MapGridsRenderer : MonoBehaviour
         if (grid != null)
         {
             material.SetMatrix("local2World", transform.localToWorldMatrix);
-            material.SetVector("playerPosition", knight.transform.position);
+
+            
+            if (player == null)
+            {
+                player = transform.Find("/Player").gameObject;
+            }
+            if (player != null)
+            {
+                float3 playerWorldPos = player.transform.position;
+                float3 gridSize = mapGenerator.gridSize;
+                float3 playerMapPos = playerWorldPos / gridSize * gridLength 
+                    + new float3(blPos, 0);
+                float2 playerMapUV = (playerMapPos.xy - blPos) / (trPos - blPos);
+
+                material.SetVector(
+                    "_playerMapUV", new float4(playerMapUV, 0, 0));
+            }
             Graphics.DrawMeshInstancedIndirect(grid, 0, material, bounds, argsBuffer, 0, 
                 null, UnityEngine.Rendering.ShadowCastingMode.Off, false, gameObject.layer);
         }
