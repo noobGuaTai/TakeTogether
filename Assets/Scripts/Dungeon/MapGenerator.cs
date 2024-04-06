@@ -225,19 +225,40 @@ public class MapGenerator : NetworkBehaviour
 
             //PrintMap();
             mapGenerateProcess += 80.0f / rooms.Count;
-            yield return new WaitForSeconds(0.1f); // 暂停0.5秒
+            yield return new WaitForSeconds(0.1f); // 暂停0.1秒
         }
 
         mapGenerateProcess = 90;
         //在所有房间生成完毕后连接它们
         ConnectRooms();
 
-        farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
-
-        if (localPlayer != null)
+        Room farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
+        // GenerateBoss(farRoom.bottomLeft, farRoom.topRight, 1, "Boss1");
+        // foreach(GameObject player in players)
+        // {
+        //     //var p = Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
+        //     Vector3 pp = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
+        //     playerManager.InitPlayers(pp);
+        // }
+        var waitLocalPlayerTime = 200;
+        var waitLocalPlayerFlag = false;
+        while ( waitLocalPlayerTime-- > 0)
         {
-            localPlayer.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f, 0);
+            if (localPlayer != null)
+            {
+                var center = rooms[0].Center;
+                var worldPostion = groundTilemap.CellToWorld(new Vector3Int(center.x, center.y, 0));
+                Debug.Log("local player spawn at:\n" + worldPostion.ToString() + "\n" + map[center.x, center.y].ToString());
+                localPlayer.transform.position = worldPostion;
+                waitLocalPlayerFlag = true;
+                break;
+            }
+            FindLocalPlayer();
+            yield return new WaitForSeconds(0.1f); // 暂停0.1秒
         }
+        if (!waitLocalPlayerFlag)
+            Debug.Log("Fail to initialize player location");
+
 
         mapGenerateProcess = 100;
         isFinish = true;
@@ -312,6 +333,7 @@ public class MapGenerator : NetworkBehaviour
         {
             for (int y = bottomLeft.y; y < topRight.y; y++)
             {
+                //TODO: fix tile pos
                 Vector3Int position = new Vector3Int(x, y, 0);
                 if (map[x, y] == GridType.WALL) // 如果当前位置不是地板
                 {

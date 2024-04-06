@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c75e667ca96b464da85b109f6f97407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridLength: 16
+  gridLength: 12
   totX: 0
   totY: 0
   material: {fileID: 2100000, guid: b48c7cae098f1eb458f211ae08379cc4, type: 2}
@@ -57,6 +57,9 @@ MonoBehaviour:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   argsBufferArray: 0000000000000000000000000000000000000000
+  player: {fileID: 0}
+  gridComponent: {fileID: 0}
+  mapGenerator: {fileID: 0}
 --- !u!1 &5063913124754365662
 GameObject:
   m_ObjectHideFlags: 0

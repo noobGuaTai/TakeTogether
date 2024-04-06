@@ -28,9 +28,11 @@ public class PlayerManager : NetworkBehaviour
 
     }
 
-    public void addPlayer(GameObject player)
+    public void addPlayer(GameObject player, String name = "")
     {
         players.Add(player);
+        if (name != "")
+            player.name = name;
     }
 
     public void InitPlayers(Vector3 vector)
@@ -38,6 +40,7 @@ public class PlayerManager : NetworkBehaviour
         foreach(var player in players)
         {
             var p = Instantiate(player, vector, Quaternion.identity);
+            //p.name = "Player";
             NetworkServer.Spawn(p);
         }
 
