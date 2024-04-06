@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public class Enemy1Attribute : EnemyAttribute
@@ -27,13 +28,16 @@ public class Enemy1Attribute : EnemyAttribute
 
     void Update()
     {
-        Die();
+        if (HP <= 0 && isServer)
+        {
+            Die();
+        }
     }
 
+    [Server]
     public override void ChangeHP(float value)
     {
         HP += value;
-
         // 实例化伤害文本预设
         Vector2 pos = new Vector2(transform.position.x, transform.position.y + 0.4f);//生成的文本在敌人头上
         Vector2 screenPosition = Camera.main.WorldToScreenPoint(pos);
@@ -43,16 +47,14 @@ public class Enemy1Attribute : EnemyAttribute
         damageTextInstance.GetComponent<EnemyUnderAttackText>().SetText(Math.Abs(value).ToString());
     }
 
+    [ClientRpc]
     public override void Die()
     {
-        if (HP <= 0)
-        {
-            anim.SetBool("death", true);
-            GetComponent<EnemyMove>().enabled = false;
-            GetComponent<Collider2D>().enabled = false;
-            rb.velocity = Vector2.zero;
-            Destroy(gameObject, 1f);
-        }
+        anim.SetBool("death", true);
+        GetComponent<EnemyMove>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        rb.velocity = Vector2.zero;
+        Destroy(gameObject, 1f);
 
     }
 

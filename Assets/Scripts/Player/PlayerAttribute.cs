@@ -1,17 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class PlayerAttribute : MonoBehaviour
+public class PlayerAttribute : NetworkBehaviour
 {
-    public float HP;
+    [SyncVar] public float HP;
     public float MAXHP;
-    public float MP;
+    [SyncVar] public float MP;
     public float MAXMP;
-    public float MPConsume;
-    public float ATK;
-    public bool isInvincible;
+    [SyncVar] public float MPConsume;
+    [SyncVar] public float ATK;
+    [SyncVar] public bool isInvincible;
     public GameObject enemyHPUI;
+    public bool isReady;
     public virtual void ChangeHP(float value){}
     public virtual void ChangeMP(float value){}
     public virtual void ChangeTP(float value){}

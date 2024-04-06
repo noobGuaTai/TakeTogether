@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public class KnightMove : PlayerMove
@@ -20,14 +21,19 @@ public class KnightMove : PlayerMove
     private float dashTimeLeft;
     private bool isAttacking;
     private float restoreSpeedMP = 1f;
-    private float lastRestoreMPTime;
+    [SyncVar] public double lastRestoreMPTime;
+    private float underAttackCooldownTime = 1.0f; // 受击冷却时间为1秒
+    private double lastHitTime = 0.0f; // 上次被击中的时间
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerAttribute = GetComponent<PlayerAttribute>();
-        lastRestoreMPTime = Time.time;
+        lastRestoreMPTime = NetworkTime.time;
+
+        GameObject.Find("PlayerManager").GetComponent<PlayerManager>().addPlayer(gameObject);
     }
 
     void Update()
@@ -39,10 +45,10 @@ public class KnightMove : PlayerMove
         Attack();
         Attack2();
 
-        if(Time.time - lastRestoreMPTime > restoreSpeedMP)
+        if (isLocalPlayer && NetworkTime.time - lastRestoreMPTime > restoreSpeedMP)
         {
-            playerAttribute.ChangeMP(1f);
-            lastRestoreMPTime = Time.time;
+            UpdateMP(1f);
+            lastRestoreMPTime = NetworkTime.time;
         }
     }
 
@@ -57,10 +63,11 @@ public class KnightMove : PlayerMove
 
     public override void Move()
     {
+        if (!isLocalPlayer) return;
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
 
         bool isMoving = moveInput.x != 0 || moveInput.y != 0;
-        anim.SetBool("run", isMoving);
+        ShowPlayerAnimCommand("run", isMoving);
 
         if (isMoving)
         {
@@ -70,6 +77,7 @@ public class KnightMove : PlayerMove
 
     public override void Attack2()
     {
+        if (!isLocalPlayer) return;
         if (Input.GetButtonDown("Attack2") && !isDashing && playerAttribute.MP >= playerAttribute.MPConsume)
         {
             StartCoroutine(Dash());
@@ -80,27 +88,33 @@ public class KnightMove : PlayerMove
     {
         isDashing = true;
         playerAttribute.isInvincible = true;//冲刺期间无敌
-        playerAttribute.ChangeMP(-playerAttribute.MPConsume);
-        GameObject.Find("KnightAttack2Tect").GetComponent<Collider2D>().enabled = true;
+        UpdateMP(-playerAttribute.MPConsume);
+        transform.Find("KnightAttack2Tect").GetComponent<Collider2D>().enabled = true;
         dashTimeLeft = dashTime;
-        anim.SetBool("dash", true);
-        rb.velocity = moveInput* dashSpeed;
+        ShowPlayerAnimCommand("dash", true);
+        rb.velocity = moveInput * dashSpeed;
 
-        SpawnTrail();
+        CommandForSpawnTrail();
         yield return new WaitForSeconds(dashTime / 2);
-        SpawnTrail();
+        CommandForSpawnTrail();
         yield return new WaitForSeconds(dashTime / 2);
-        SpawnTrail();
+        CommandForSpawnTrail();
 
         // 结束冲刺，重置状态
         rb.velocity = Vector2.zero;
         isDashing = false;
         playerAttribute.isInvincible = false;
-        GameObject.Find("KnightAttack2Tect").GetComponent<Collider2D>().enabled = false;
-        anim.SetBool("dash", false);
+        transform.Find("KnightAttack2Tect").GetComponent<Collider2D>().enabled = false;
+        ShowPlayerAnimCommand("dash", false);
     }
 
+    [Command]
+    void CommandForSpawnTrail()// 客户端发起请求，里边的操作在服务器执行，然后调用ClientRpc同步到其他客户端
+    {
+        SpawnTrail();
+    }
 
+    [ClientRpc]
     void SpawnTrail()
     {
         // 创建一个新的Sprite GameObject作为残影
@@ -108,7 +122,7 @@ public class KnightMove : PlayerMove
         SpriteRenderer trailRenderer = trail.AddComponent<SpriteRenderer>();
         trailRenderer.sprite = GetComponent<SpriteRenderer>().sprite;
         trailRenderer.material = trailMaterial;
-        trailRenderer.color = new Color(49f/255f, 110f/255f, 183f/255f, 1f);
+        trailRenderer.color = new Color(49f / 255f, 110f / 255f, 183f / 255f, 1f);
         //trail.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.01f);
         trail.transform.position = transform.position;
         trail.transform.localScale = transform.localScale;
@@ -123,6 +137,7 @@ public class KnightMove : PlayerMove
 
     public override void Attack()
     {
+        if (!isLocalPlayer) return;
         if (Input.GetButton("Attack") && !isAttacking && !isDashing)
         {
             StartCoroutine(StartAttack());
@@ -132,13 +147,36 @@ public class KnightMove : PlayerMove
     IEnumerator StartAttack()
     {
         isAttacking = true;
-        anim.SetBool("attack", true);
-        GameObject.Find("KnightAttackTect").GetComponent<Collider2D>().enabled = true;
+        ShowPlayerAnimCommand("attack", true);
+        transform.Find("KnightAttackTect").GetComponent<Collider2D>().enabled = true;
 
         yield return new WaitForSeconds(attackDuration); // 等待攻击动画完成
 
         isAttacking = false;
-        anim.SetBool("attack", false);
-        GameObject.Find("KnightAttackTect").GetComponent<Collider2D>().enabled = false;
+        ShowPlayerAnimCommand("attack", false);
+        transform.Find("KnightAttackTect").GetComponent<Collider2D>().enabled = false;
     }
+
+    [Command]
+    void UpdateMP(float value)
+    {
+        playerAttribute.ChangeMP(value);
+    }
+
+    [Command]
+    void ShowPlayerAnimCommand(string name, bool can)
+    {
+        ShowPlayerAnim(name, can);
+    }
+
+    [ClientRpc]
+    void ShowPlayerAnim(string name, bool can)
+    {
+        if (anim != null)
+        {
+            anim.SetBool(name, can);
+        }
+
+    }
+
 }

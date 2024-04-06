@@ -1,4 +1,5 @@
 using System.Collections;
+using Mirror;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -9,7 +10,6 @@ public class Enemy1Move : EnemyMove
     public float randomMoveDistance = 2f;
     public LayerMask playerLayer;
 
-    private Transform playerTransform;
     private bool isPlayerDetected = false;
     private Vector3 randomDestination;
     private float moveTimer = 3f;
@@ -25,18 +25,21 @@ public class Enemy1Move : EnemyMove
 
     void Update()
     {
-        Move();
+        if(isServer)
+        {
+            Move();
+        }
+        
     }
 
+    [Server]
     public override void Move()
     {
-        if (!canMove) return;
-
         isPlayerDetected = Physics2D.OverlapCircle(transform.position, detectionRadius, playerLayer);
         if (isPlayerDetected)
         {
-            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-            MoveTowards(playerTransform.position);
+            closedPlayer = FindClosestPlayer();
+            MoveTowards(closedPlayer.transform.position);
         }
         else
         {

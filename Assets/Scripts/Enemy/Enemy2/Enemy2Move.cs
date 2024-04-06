@@ -1,16 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public class Enemy2Move : EnemyMove
 {
-    public Transform playerTransform;
     public float detectionRangeA = 10.0f;
     public float stopChaseRangeB = 8.0f;
     public float moveSpeed = 2.0f;
+    public GameObject enemy2Barrage;
 
     private SpriteRenderer spriteRenderer; // SpriteRenderer组件引用
     private Rigidbody2D rb; // Rigidbody2D组件引用
+    [SyncVar] private float attackCoolDown = 3f;
+    [SyncVar] private double lastAttackTime = 0f;
 
     void Awake()
     {
@@ -25,26 +29,39 @@ public class Enemy2Move : EnemyMove
 
     void Update()
     {
-        if (playerTransform == null)
+        if(isServer)
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player)
-            {
-                playerTransform = player.transform;
-            }
+            ServerUpdate();
         }
-        if(playerTransform !=null)
-        {
-            Move();
-        }
-
+        
     }
 
+    [Server]
+    void ServerUpdate()
+    {
+        closedPlayer = FindClosestPlayer();
+        allPlayers = FindAllPlayers();
+        if (allPlayers != null)
+        {
+            Move();
+
+            if (NetworkTime.time - lastAttackTime > attackCoolDown)
+            {
+                lastAttackTime = NetworkTime.time;
+                var barrage2Instance = Instantiate(enemy2Barrage, transform.position, Quaternion.identity);
+                NetworkServer.Spawn(barrage2Instance);
+                Destroy(barrage2Instance, 6f);
+                attackCoolDown = UnityEngine.Random.Range(3f, 6f); // 随机冷却时间
+            }
+        }
+    }
+
+    [Server]
     public override void Move()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, closedPlayer.transform.position);
 
-        Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        Vector3 directionToPlayer = (closedPlayer.transform.position - transform.position).normalized;
         if (distanceToPlayer <= detectionRangeA)
         {
             isAttacking = true;
@@ -69,11 +86,11 @@ public class Enemy2Move : EnemyMove
         // 更新敌人朝向
         if (rb.velocity.x > 0)
         {
-            spriteRenderer.flipX = false; // 敌人朝右
+            transform.localScale = new Vector3(Math.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z); // 敌人朝右// 敌人朝右
         }
         else if (rb.velocity.x < 0)
         {
-            spriteRenderer.flipX = true; // 敌人朝左
+            transform.localScale = new Vector3(-1 * Math.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z); // 敌人朝右// 敌人朝右
         }
     }
 

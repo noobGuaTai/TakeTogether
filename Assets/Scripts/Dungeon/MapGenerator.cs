@@ -8,18 +8,20 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using Mirror;
+using TMPro;
 
-public class MapGenerator : MonoBehaviour
+public class MapGenerator : NetworkBehaviour
 {
     public enum GridType
     {
-        VOID=-1,
+        VOID = -1,
         FLOOR,
         WALL
     }
     public int width = 100;
     public int height = 100;
-    public string seed;
+    [SyncVar] public string publicSeed;
     public bool useRandomSeed = true;
     public Tilemap groundTilemap;
     public Tilemap wallTilemap;
@@ -29,20 +31,23 @@ public class MapGenerator : MonoBehaviour
     public int randomFillPercent = 45;
     public int roomNums = 5;
     public int roomSize = 30;
-    public List<Room> rooms;
+    [SyncVar] public List<Room> rooms;
 
-    public GameObject player;
+    public List<GameObject> players = new List<GameObject>();
     public Dictionary<string, GameObject> enemyPrefabs;
     public GameObject enemies;
     public Room furthestRoom;
     public float mapGenerateProcess = 0;
-
     public MapGridsRenderer mapGridsRenderer;
 
     private GridType[,] map;
     private GameObject bossHPUI;
     private bool isFinish = false;//是否加载完成
-    private Vector3 playerPosition;
+
+    public GameObject localPlayer;
+    private PlayerManager playerManager;
+    private string privateSeed;
+    private System.Random pseudoRandom;
 
     void LoadEnemyPrefabs()
     {
@@ -65,36 +70,49 @@ public class MapGenerator : MonoBehaviour
         mapGridsRenderer = transform.Find("/UI/MapView/MapGrids").GetComponent<MapGridsRenderer>();
         enemies = transform.Find("/Enemies").gameObject;
         LoadEnemyPrefabs();
-        StartCoroutine(GenerateMapCoroutine());
-        bossHPUI = GameObject.Find("BossHPUI");
-        bossHPUI.SetActive(false);
+
+        //bossHPUI = GameObject.Find("BossHPUI");
+        //bossHPUI.SetActive(false);
         //loadTime = GameObject.Find("LoadScene").GetComponent<LoadScene>().duration;
-        
+
+        playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
+        players = playerManager.players;
+
+        if (isServer)
+        {
+            publicSeed = NetworkTime.time.ToString();
+        }
+        privateSeed = publicSeed;
+        pseudoRandom = new System.Random(privateSeed.GetHashCode());
+        FindLocalPlayer();
+
+        StartCoroutine(GenerateMapCoroutine());
     }
 
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.G))
-        // {
-        //     StartCoroutine(GenerateMapCoroutine());
-        // }
-        //等待加载后再开始搜索
-        if (isFinish)//启动boss血条
+        if (Input.GetKeyDown(KeyCode.G))
         {
-            playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
-            if (IsPlayerInRoom(furthestRoom, playerPosition))
-            {
-                bossHPUI.SetActive(true);
-                bossHPUI.GetComponent<BossHPUI>().ActivateBossHPUI();
-            }
-            else
-            {
-                bossHPUI.SetActive(false);
-            }
+            StartCoroutine(GenerateMapCoroutine());
         }
-
-
+        //等待加载后再开始搜索
+        // if (isFinish && isLocalPlayer)//启动boss血条
+        // {
+        //     playerPosition = transform.position;
+        //     if (IsPlayerInRoom(furthestRoom, playerPosition))
+        //     {
+        //         bossHPUI.SetActive(true);
+        //         bossHPUI.GetComponent<BossHPUI>().ActivateBossHPUI();
+        //     }
+        //     else
+        //     {
+        //         bossHPUI.SetActive(false);
+        //     }
+        // }
+        // FindLocalPlayer();
     }
+
+
 
     List<Room> GenerateRooms(int numberOfRooms)
     {
@@ -142,7 +160,7 @@ public class MapGenerator : MonoBehaviour
 
     Room FindFurthestRoomFromRoom0(List<Room> rooms)//找到最远的房间（相对于房间0）
     {
-        Room room0 = rooms[0]; // 假定房间0是列表中的第一个房间
+        Room room0 = rooms[0];
         furthestRoom = null;
         float maxDistance = 0;
 
@@ -196,13 +214,17 @@ public class MapGenerator : MonoBehaviour
         wallTilemap.ClearAllTiles();
         groundTilemap.ClearAllTiles();
 
-        rooms = GenerateRooms(roomNums);
+        if (isServer)
+        {
+            rooms = GenerateRooms(roomNums);
+        }
+
 
         mapGenerateProcess = 10;
         foreach (var room in rooms)
         {
-            RandomFillMap(room.bottomLeft, room.topRight);
 
+            RandomFillMap(room.bottomLeft, room.topRight);
 
             for (int i = 0; i < 5; i++)
             {
@@ -210,8 +232,8 @@ public class MapGenerator : MonoBehaviour
             }
             FillTilemap(room.bottomLeft, room.topRight);
 
-            GenerateEnemies(room.bottomLeft, room.topRight, 10, "Enemy1");
-            GenerateEnemies(room.bottomLeft, room.topRight, 5, "Enemy2");
+            // GenerateEnemies(room.bottomLeft, room.topRight, 10, "Enemy1");
+            // GenerateEnemies(room.bottomLeft, room.topRight, 5, "Enemy2");
 
             //PrintMap();
             mapGenerateProcess += 80.0f / rooms.Count;
@@ -223,10 +245,18 @@ public class MapGenerator : MonoBehaviour
         ConnectRooms();
 
         Room farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
-        GenerateBoss(farRoom.bottomLeft, farRoom.topRight, 1, "Boss1");
+        // GenerateBoss(farRoom.bottomLeft, farRoom.topRight, 1, "Boss1");
+        // foreach(GameObject player in players)
+        // {
+        //     //var p = Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
+        //     Vector3 pp = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
+        //     playerManager.InitPlayers(pp);
+        // }
+        if (localPlayer != null)
+        {
+            localPlayer.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f, 0);
+        }
 
-        Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
-        //player.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
         mapGenerateProcess = 100;
         isFinish = true;
 
@@ -263,6 +293,7 @@ public class MapGenerator : MonoBehaviour
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
                 Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
                 var enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
+                NetworkServer.Spawn(enemy);
                 enemy.transform.parent = enemies.transform;
             }
         }
@@ -284,7 +315,8 @@ public class MapGenerator : MonoBehaviour
                 Debug.Log("map[x, y]" + map[x, y]);
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
                 Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
-                Instantiate(bossPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
+                var boss = Instantiate(bossPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
+                NetworkServer.Spawn(boss);
                 nums--;
             }
         }
@@ -292,12 +324,13 @@ public class MapGenerator : MonoBehaviour
 
     void RandomFillMap(Vector2Int bottomLeft, Vector2Int topRight)
     {
-        if (useRandomSeed)
-        {
-            seed = Time.time.ToString();
-        }
+        // if (useRandomSeed)
+        // {
+        //     seed = NetworkTime.time.ToString();
+        // }
 
-        System.Random pseudoRandom = new System.Random(seed.GetHashCode());
+        // System.Random pseudoRandom = new System.Random(NetworkTime.time.ToString().GetHashCode());
+
 
         for (int x = bottomLeft.x; x < topRight.x; x++)
         {
@@ -313,6 +346,8 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+
+        privateSeed = (double.Parse(privateSeed) * 2).ToString();//调用一次就*2，这样只需在start初始化一次种子
     }
 
     void SmoothMap(Vector2Int bottomLeft, Vector2Int topRight)
@@ -322,7 +357,7 @@ public class MapGenerator : MonoBehaviour
             for (int y = bottomLeft.y; y < topRight.y; y++)
             {
                 if (x == bottomLeft.x || x == topRight.x - 1 || y == bottomLeft.y || y == topRight.y - 1)
-                    continue; // Skip border tiles
+                    continue;
 
                 int neighbourWallTiles = GetSurroundingWallCount(x, y);
 
@@ -418,7 +453,7 @@ public class MapGenerator : MonoBehaviour
 
     void ConnectRooms()
     {
-        // 使用Prim's算法生成最小生成树（MST），这里简化表示
+        // 使用Prim算法生成最小生成树
         if (rooms.Count < 2) return;
 
         bool[] inMST = new bool[rooms.Count];
@@ -544,12 +579,29 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    void FindLocalPlayer()
+    {
+        foreach (var netPlayer in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            var networkIdentity = netPlayer.GetComponent<NetworkIdentity>();
+            if (networkIdentity.isLocalPlayer)
+            {
+                localPlayer = netPlayer;
+                break;
+            }
+        }
+    }
+
     [System.Serializable]
     public class Room
     {
         public Vector2Int bottomLeft; // 房间左下角坐标
         public Vector2Int topRight;   // 房间右上角坐标
-        string seed; // 为每个房间指定的种子，以生成随机填充
+        string seed;
+
+        public Room()
+        {
+        }
 
         public Room(Vector2Int _bottomLeft, Vector2Int _topRight, string _seed)
         {

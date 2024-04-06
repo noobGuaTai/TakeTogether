@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Mirror;
 
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : NetworkBehaviour
 {
     public Transform target;
     public float smoothSpeed;
@@ -15,7 +16,7 @@ public class CameraFollow : MonoBehaviour
         //target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    
+
     void Update()
     {
         // if(mapGenerator.rooms != null)
@@ -23,14 +24,14 @@ public class CameraFollow : MonoBehaviour
         //     minPosition = mapGenerator.rooms[0].bottomLeft;
         //     maxPosition = mapGenerator.rooms[0].topRight;
         // }
-        
+        FindLocalPlayer();
     }
 
     void LateUpdate()
     {
-        if(target != null)
+        if (target != null)
         {
-            if(transform.position != target.position)
+            if (transform.position != target.position)
             {
                 Vector3 targetPosition = target.position;
                 //targetPosition.x = Mathf.Clamp(targetPosition.x, minPosition.x, maxPosition.x);
@@ -38,14 +39,32 @@ public class CameraFollow : MonoBehaviour
                 transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
             }
         }
-        else
+        // else
+        // {
+        //     var player = GameObject.FindGameObjectWithTag("Player");
+        //     if (player != null)
+        //     {
+        //         target = GameObject.FindGameObjectWithTag("Player").transform;
+        //     }
+        // }
+    }
+
+    void FindLocalPlayer()
+    {
+        foreach (var netPlayer in GameObject.FindGameObjectsWithTag("Player"))
         {
-            var player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
+            var networkIdentity = netPlayer.GetComponent<NetworkIdentity>();
+            if (networkIdentity.isLocalPlayer)
             {
-                target = GameObject.FindGameObjectWithTag("Player").transform;
+                target = netPlayer.gameObject.transform;
+                break;
             }
         }
     }
-    
+
+
+
+
 }
+
+

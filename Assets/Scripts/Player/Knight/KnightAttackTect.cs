@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class KnightAttackTect : MonoBehaviour
+public class KnightAttackTect : NetworkBehaviour
 {
     public float knockbackForce = 1f; // 击退力量
     public float knockbackDuration = 0.15f; // 击退时间
@@ -25,7 +26,7 @@ public class KnightAttackTect : MonoBehaviour
         enemyAttribute = other.GetComponent<EnemyAttribute>();
         if (enemyAttribute != null)
         {
-            enemyAttribute.ChangeHP(-ATK);
+            ChangeHPCommand(enemyAttribute);
             Debug.Log(enemyAttribute.HP);
 
             StartCoroutine(KnockbackRoutine(other));
@@ -39,7 +40,7 @@ public class KnightAttackTect : MonoBehaviour
                 // 应用力
                 enemyRb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
             }
-            if (other.tag == "Enemy")
+            if (other.gameObject.layer == 7)// 7为enemy
             {
                 GetComponentInParent<PlayerAttribute>().enemyHPUI.SetActive(true);
                 GetComponentInParent<PlayerAttribute>().enemyHPUI.GetComponent<EnemyHPUI>().ActivateEnemyHPUI(other.GetComponent<EnemyAttribute>(), other.GetComponent<SpriteRenderer>());
@@ -54,5 +55,11 @@ public class KnightAttackTect : MonoBehaviour
         other.GetComponent<EnemyMove>().enabled = false;
         yield return new WaitForSeconds(knockbackDuration);
         other.GetComponent<EnemyMove>().enabled = true;
+    }
+
+    [Command]
+    void ChangeHPCommand(EnemyAttribute ea)
+    {
+        ea.ChangeHP(-ATK);
     }
 }

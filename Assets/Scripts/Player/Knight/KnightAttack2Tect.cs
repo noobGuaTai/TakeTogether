@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class KnightAttack2Tect : MonoBehaviour
+public class KnightAttack2Tect : NetworkBehaviour
 {
     public float knockbackForce = 1f; // 击退力量
     public float knockbackDuration = 0.15f; // 击退时间
@@ -25,7 +26,7 @@ public class KnightAttack2Tect : MonoBehaviour
         enemyAttribute = other.GetComponent<EnemyAttribute>();
         if (enemyAttribute != null)
         {
-            enemyAttribute.ChangeHP(-ATK);
+            ChangeHPCommand(enemyAttribute);
             Debug.Log(enemyAttribute.HP);
 
             StartCoroutine(KnockbackRoutine(other));
@@ -54,5 +55,11 @@ public class KnightAttack2Tect : MonoBehaviour
         other.GetComponent<EnemyMove>().enabled = false;
         yield return new WaitForSeconds(knockbackDuration);
         other.GetComponent<EnemyMove>().enabled = true;
+    }
+
+    [Command]
+    void ChangeHPCommand(EnemyAttribute ea)
+    {
+        ea.ChangeHP(-ATK);
     }
 }

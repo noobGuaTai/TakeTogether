@@ -1,33 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class Boss1Barrage2 : MonoBehaviour
+public class Boss1Barrage2 : EnemyMove
 {
     public ParticleSystem ps;
     public float speed = 5f;
     public int particlesToEmit = 10;
     public bool canEmission = false;
-
-    private GameObject player;
-    private Transform playerTransform;
+    public float cooldownTime = 1.0f; // 冷却时间为1秒
+    private double lastHitTime = 0.0f; // 上次被击中的时间
 
     void Start()
     {
-        ps = GetComponent<ParticleSystem>();
+        Init();
+        Emission();
     }
 
-    void Update()
+    public void Update()
     {
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player");
-            if (player != null)
-            {
-                playerTransform = player.transform;
-                ps.trigger.SetCollider(0, playerTransform);
-            }
-        }
+        Init();
+
 
         if (canEmission == true)
         {
@@ -36,11 +30,28 @@ public class Boss1Barrage2 : MonoBehaviour
         }
     }
 
-    void Emission()
+    void Init()
     {
-        if (playerTransform != null)
+        ps = GetComponent<ParticleSystem>();
+        allPlayers = FindAllPlayers();
+        closedPlayer = FindClosestPlayer();
+        if (closedPlayer != null)
         {
-            Vector3 directionToPlayer = playerTransform.position - transform.position;
+            int i = 0;
+            foreach (GameObject player in allPlayers)
+            {
+                ps.trigger.SetCollider(i, player.transform);
+                i += 1;
+            }
+        }
+    }
+
+
+    public void Emission()
+    {
+        if (closedPlayer != null)
+        {
+            Vector3 directionToPlayer = closedPlayer.transform.position - transform.position;
             float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
 
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
@@ -81,20 +92,32 @@ public class Boss1Barrage2 : MonoBehaviour
 
     void OnParticleTrigger()
     {
-        List<ParticleSystem.Particle> inside = new List<ParticleSystem.Particle>();
-        int numEnter = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Inside, inside);
+        List<ParticleSystem.Particle> enter = new List<ParticleSystem.Particle>();
+        int numEnter = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
 
         for (int i = 0; i < numEnter; i++)
         {
-            ParticleSystem.Particle p = inside[i];
+            ParticleSystem.Particle p = enter[i];
             // 设置粒子的剩余生命时间为0立即消失
             p.remainingLifetime = 0;
-            inside[i] = p;
-            float atk = GameObject.FindGameObjectWithTag("Boss").GetComponent<EnemyAttribute>().ATK;
-            player.GetComponent<PlayerAttribute>().ChangeHP(-atk);
+            enter[i] = p;
+            // float atk = GameObject.FindGameObjectWithTag("Boss").GetComponent<EnemyAttribute>().ATK;
+            // player.GetComponent<PlayerAttribute>().ChangeHP(-atk);
         }
 
         // 应用更改回粒子系统
-        ps.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, inside);
+        ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
+    }
+
+    void OnParticleCollision(GameObject other)
+    {
+        if (other.tag == "Player" && NetworkTime.time - lastHitTime > cooldownTime)
+        {
+            // 粒子碰撞到了玩家
+            // 在这里处理碰撞逻辑，比如减少玩家的HP
+            float atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
+            other.GetComponent<PlayerAttribute>().ChangeHP(-atk * 3);
+            lastHitTime = NetworkTime.time;
+        }
     }
 }

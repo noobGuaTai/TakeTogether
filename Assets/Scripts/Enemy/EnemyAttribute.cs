@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class EnemyAttribute : MonoBehaviour
+public class EnemyAttribute : NetworkBehaviour
 {
-    public float HP;
+    [SyncVar] public float HP;
     public float MAXHP;
-    public float ATK;
+    [SyncVar] public float ATK;
     public virtual void ChangeHP(float value){}
     public virtual void Die(){}
 

@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 8116510583806733817}
   - component: {fileID: 3447527588840383791}
   - component: {fileID: 8899048498008746864}
+  - component: {fileID: 7092387109832566789}
+  - component: {fileID: 5940719807700986753}
   m_Layer: 6
   m_Name: Knight
   m_TagString: Player
@@ -30,6 +32,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1861076680170244730}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87, y: 94.5, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
@@ -38,7 +41,6 @@ Transform:
   - {fileID: 8484705741543078897}
   - {fileID: 6956303832520693097}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6521389161183208754
 SpriteRenderer:
@@ -121,7 +123,7 @@ Rigidbody2D:
   m_Constraints: 4
 --- !u!95 &2630255944690882768
 Animator:
-  serializedVersion: 7
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -135,7 +137,6 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -149,7 +150,6 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1861076680170244730}
   m_Enabled: 1
-  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -173,8 +173,7 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: -0.08822235, y: -0.04599911}
   m_Size: {x: 0.1959548, y: 0.32324216}
   m_Direction: 0
@@ -190,6 +189,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa8642205c9d3442a02fe53a3561816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   HP: 0
   MAXHP: 0
   MP: 0
@@ -198,6 +200,7 @@ MonoBehaviour:
   ATK: 0
   isInvincible: 0
   enemyHPUI: {fileID: 0}
+  isReady: 0
   damageTextPrefab: {fileID: 4281288399244367145, guid: c0067bcb474f7bd488e0a22ea00d05a9, type: 3}
 --- !u!114 &3447527588840383791
 MonoBehaviour:
@@ -211,12 +214,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 860e77afb4d69fe488d496fe4a87ca9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  HPUI: {fileID: 0}
   moveSpeed: 5
   dashSpeed: 20
   dashTime: 0.2
   attackDuration: 0.3
   trailMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   trailSpawnInterval: 0.05
+  lastRestoreMPTime: 0
 --- !u!114 &8899048498008746864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +237,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e10c389abc3aa034396eb8e3a26e43df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &7092387109832566789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861076680170244730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 3576404662
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &5940719807700986753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861076680170244730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 5613799572447214989}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 1
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  sendIntervalMultiplier: 1
+  timelineOffset: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  changedDetection: 1
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
 --- !u!1 &2497902044989194437
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,13 +317,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2497902044989194437}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5613799572447214989}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &2597388067729148513
 CapsuleCollider2D:
@@ -270,7 +333,6 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2497902044989194437}
   m_Enabled: 0
-  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -294,8 +356,7 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0.10065704, y: -0.015623703}
   m_Size: {x: 0.60065806, y: 0.4496737}
   m_Direction: 1
@@ -311,6 +372,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5590da619757a1d47a509ef90118c1d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   knockbackForce: 1
   knockbackDuration: 0.15
 --- !u!1 &2909214985725917444
@@ -338,13 +402,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2909214985725917444}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5613799572447214989}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &9087848653801325438
 CapsuleCollider2D:
@@ -354,7 +418,6 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2909214985725917444}
   m_Enabled: 0
-  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -378,8 +441,7 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0.10065704, y: -0.015623703}
   m_Size: {x: 0.60065806, y: 0.4496737}
   m_Direction: 1
@@ -395,5 +457,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17bf7a5b2700f8547bad517e16fe3591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   knockbackForce: 1
   knockbackDuration: 0.15

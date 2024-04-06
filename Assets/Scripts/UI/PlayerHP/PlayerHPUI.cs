@@ -1,69 +1,58 @@
-using System.Collections;
-using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
-using Image = UnityEngine.UI.Image;
 
-public class PlayerHPUI : MonoBehaviour
+public class PlayerHPUI : NetworkBehaviour
 {
-    private GameObject player;
-    private GameObject playerImageBorder;
-    private GameObject playerImage;
-    private Image playerHPImage;
-    private Image playerMPImage;
-    private PlayerAttribute playerAttribute;
-
+    public GameObject player;
+    public Image playerHPImage;
+    public Image playerMPImage;
+    public PlayerAttribute playerAttribute;
 
     void Start()
     {
-        Init();
+        // 直接在Start中初始化组件引用
+        playerHPImage = transform.Find("PlayerHPBar/PlayerHPImage").GetComponent<Image>();
+        playerMPImage = transform.Find("PlayerMPBar/PlayerMPImage").GetComponent<Image>();
+
+        // 验证是否已指定player
+        if (player != null)
+        {
+            playerAttribute = player.GetComponent<PlayerAttribute>();
+            UpdatePlayerImage();
+        }
+        else
+        {
+            Debug.LogError("PlayerHPUI: Player object not assigned.");
+        }
     }
 
     void Update()
     {
-        if(player == null)
+        UpdateHPUI();
+    }
+
+    void UpdatePlayerImage()
+    {
+        // 假设玩家图像显示在UI的一部分，这需要在你的UI预设中有一个具体的Image组件
+        Image playerImageComponent = transform.Find("PlayerImageBorder/PlayerImage").GetComponent<Image>();
+        Sprite playerSprite = player.GetComponent<SpriteRenderer>().sprite;
+        if (playerImageComponent != null && playerSprite != null)
         {
-            Init();
-        }
-        if (playerAttribute != null)
-        {
-            if (playerHPImage != null)
-            {
-                playerHPImage.fillAmount = playerAttribute.HP / playerAttribute.MAXHP;
-            }
-            if (playerMPImage != null)
-            {
-                playerMPImage.fillAmount = playerAttribute.MP / playerAttribute.MAXMP;
-            }
+            playerImageComponent.sprite = playerSprite;
+            RectTransform rectTransform = playerImageComponent.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector2(16, 12);
+            rectTransform.localScale = new Vector3(1.3f, 0.9f, 1f);
         }
     }
 
-    void Init()
+    void UpdateHPUI()
     {
-        player = GameObject.FindWithTag("Player");
-        if (player == null) return;
-        playerImageBorder = GameObject.Find("PlayerImageBorder");
-        playerImage = GameObject.Find("PlayerImage");
-        playerHPImage = GameObject.Find("PlayerHPImage").GetComponent<Image>();
-        playerMPImage = GameObject.Find("PlayerMPImage").GetComponent<Image>();
-        playerAttribute = player.GetComponent<PlayerAttribute>();
-
-        Sprite playerSprite = player.GetComponent<SpriteRenderer>().sprite;
-
-        if (playerImage != null)
+        // 更新HP和MP UI
+        if (playerAttribute != null)
         {
-            Image playerImageComponent = playerImage.GetComponent<Image>();
-            if (playerImageComponent != null)
-            {
-                playerImageComponent.sprite = playerSprite;
-            }
-        }
-
-        RectTransform rectTransform = playerImage.GetComponent<RectTransform>();
-        if (rectTransform != null)
-        {
-            rectTransform.anchoredPosition = new Vector2(16, 12);
-            rectTransform.localScale = new Vector3(1.3f, 0.9f, 1f);
+            playerHPImage.fillAmount = playerAttribute.HP / playerAttribute.MAXHP;
+            playerMPImage.fillAmount = playerAttribute.MP / playerAttribute.MAXMP;
         }
     }
 }

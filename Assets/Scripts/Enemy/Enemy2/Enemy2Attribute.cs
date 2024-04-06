@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public class Enemy2Attribute : EnemyAttribute
@@ -27,9 +28,14 @@ public class Enemy2Attribute : EnemyAttribute
 
     void Update()
     {
-        Die();
+        if (HP <= 0 && isServer)
+        {
+            Die();
+        }
+
     }
 
+    [Server]
     public override void ChangeHP(float value)
     {
         HP += value;
@@ -43,17 +49,14 @@ public class Enemy2Attribute : EnemyAttribute
         damageTextInstance.GetComponent<EnemyUnderAttackText>().SetText(Math.Abs(value).ToString());
     }
 
+    [ClientRpc]
     public override void Die()
     {
-        if (HP <= 0)
-        {
-            anim.SetBool("death", true);
-            GetComponent<EnemyMove>().enabled = false;
-            GetComponent<Collider2D>().enabled = false;
-            GetComponent<EnemyMove>().isAttacking = false;
-            rb.velocity = Vector2.zero;
-            Destroy(gameObject, 1f);
-        }
-
+        anim.SetBool("death", true);
+        GetComponent<EnemyMove>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        GetComponent<EnemyMove>().isAttacking = false;
+        rb.velocity = Vector2.zero;
+        Destroy(gameObject, 1f);
     }
 }

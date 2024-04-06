@@ -1,40 +1,77 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement; // 引入场景管理命名空间
+using UnityEngine.SceneManagement;
+using Mirror;
 
-public class StartGame : MonoBehaviour
+public class StartGame : NetworkBehaviour
 {
-    private bool isPlayerInside = false; // 用于检测玩家是否在物体内部
+    private bool isPlayerInside = false;
+    private int ready = 0;
+    public bool load = false;
 
     void Update()
     {
-        // 检查是否在物体内部且按下了"Attack"键
-        if (isPlayerInside && Input.GetButtonDown("Attack")) // 确保在Input Manager中有一个名为"Attack"的按钮设置
-        {
-            LoadNewScene(); // 调用加载新场景的函数
-        }
+        // if (isPlayerInside && Input.GetButtonDown("Attack"))
+        // {
+        //     LoaclLoadNewScene(); 
+        // }
+        // if(isServer)
+        // {
+        //     OnlineLoadNewScene();
+        // }
+        Test();
     }
 
-    void OnTriggerEnter2D(Collider2D other) // 注意是Collider2D
+    void OnTriggerEnter2D(Collider2D other)
     {
         // 检测进入碰撞的是不是玩家
-        if (other.CompareTag("Player")) // 确保你的玩家对象有一个"Player"的标签
-        {
-            isPlayerInside = true;
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D other) // 注意是Collider2D
-    {
-        // 检测离开碰撞的是不是玩家
         if (other.CompareTag("Player"))
         {
-            isPlayerInside = false;
+            // isPlayerInside = true;
+            other.GetComponent<PlayerAttribute>().isReady = true;
         }
     }
 
-    void LoadNewScene()
+    void OnTriggerExit2D(Collider2D other)
     {
-        SceneManager.LoadScene("Level"); // 替换"Level"为你的目标场景名
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerAttribute>().isReady = false;
+        }
+    }
+
+    void LoaclLoadNewScene()
+    {
+        SceneManager.LoadScene("Level");
+    }
+
+    [Server]
+    void OnlineLoadNewScene()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (players != null)
+        {
+            foreach (GameObject player in players)
+            {
+                if (player.GetComponent<PlayerAttribute>().isReady == true)
+                    ready++;
+            }
+            if(ready == players.Length)
+            {
+                NetworkManager.singleton.ServerChangeScene("Level");
+                //Destroy(gameObject);
+            }
+            
+        }
+
+    }
+
+    void Test()
+    {
+        if(load == true)
+        {
+            NetworkManager.singleton.ServerChangeScene("Level");
+            load = false;
+        }
     }
 }
