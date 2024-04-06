@@ -40,6 +40,9 @@ public class MapGenerator : NetworkBehaviour
     public float mapGenerateProcess = 0;
     public MapGridsRenderer mapGridsRenderer;
 
+    public Vector3 gridSize;
+    public GameObject gridObject;
+    public Grid grid = null;
     private GridType[,] map;
     private GameObject bossHPUI;
     private bool isFinish = false;//是否加载完成
@@ -67,8 +70,12 @@ public class MapGenerator : NetworkBehaviour
 
     void Start()
     {
+        gridObject = transform.Find("/Grid").gameObject;
+        grid = gridObject.GetComponent<Grid>();
         mapGridsRenderer = transform.Find("/UI/MapView/MapGrids").GetComponent<MapGridsRenderer>();
         enemies = transform.Find("/Enemies").gameObject;
+        gridSize = grid.cellSize;
+        gridSize.Scale(gridObject.transform.localScale);
         LoadEnemyPrefabs();
 
         //bossHPUI = GameObject.Find("BossHPUI");

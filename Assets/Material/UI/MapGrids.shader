@@ -3,8 +3,9 @@ Shader "MapGrids"
     Properties
     {
         _noiseTexture ("Noise Texture for rendering grids", 2D) = "" {}
-        _border ("test", Vector) = (-100,-100,100,100)
+        _border ("test _border", Vector) = (-100,-100,100,100)
         _noiseDiff ("", Float) = 0.3
+        _playerMapUV ("test player uv", Vector) = (-100,-100,100,100)
     }
     SubShader
     {
@@ -39,7 +40,8 @@ Shader "MapGrids"
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
                 float4 type : COLOR0;
-                float2 uvGlobal : TEXCOORD1;
+                float2 uvGlobalDis : TEXCOORD1;
+                float2 uvGlobalCon : TEXCOORD2;
             };
 
             struct InstanceData
@@ -53,6 +55,7 @@ Shader "MapGrids"
             float4 _border;
             sampler2D _noiseTexture;
             float _noiseDiff;
+            float4 _playerMapUV;
 
             v2f vert (appdata v, uint id:SV_INSTANCEID)
             {
@@ -67,7 +70,8 @@ Shader "MapGrids"
                 float2 blPos = _border.xy;
                 float2 trPos = _border.zw;
 
-                o.uvGlobal = (instanceData[id].pos - blPos) / (trPos - blPos);
+                o.uvGlobalDis = (instanceData[id].pos - blPos) / (trPos - blPos);
+                o.uvGlobalCon = (pos - blPos) / (trPos - blPos);
                 return o;;
             }
 
@@ -76,7 +80,7 @@ Shader "MapGrids"
                 fixed4 col;
                 fixed4 floor = float4(85, 81, 69, 255) / 255.0;
                 fixed4 wall = float4(42, 34, 31,255) / 255.0;
-                fixed4 noise = tex2D(_noiseTexture, i.uvGlobal);
+                fixed4 noise = tex2D(_noiseTexture, i.uvGlobalDis);
                 fixed4 noiseCol = noise * _noiseDiff - 0.5 * _noiseDiff;
 
                 if(i.type.r == 0)
@@ -86,7 +90,15 @@ Shader "MapGrids"
                 fixed value = (col.x + col.y + col.z) / 3.0;
                 col += value * noiseCol;
                 //col = noise;
-                //col = float4(i.uvGlobal, 0, 1);
+                //col = float4(i.uvGlobalDis, 0, 1);
+
+                // render player's position
+                float dis = distance(i.uvGlobalCon * 100, _playerMapUV.xy * 100);
+                float maxDis = 2;
+                float ratio = lerp(0, 1, (maxDis - clamp(dis, 0, maxDis))/maxDis);
+                ratio = ratio * ratio * ratio;
+                col += float4(ratio, 0,0,0);
+                //col = float4(1 / dis, 0, 0, 1);
                 return col;
             }
             ENDCG

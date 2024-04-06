@@ -115,7 +115,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.2942343, y: 0.5635963, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1697406987442451401}
@@ -205,8 +205,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.011338949, y: -0.037796825}
-  m_Size: {x: 0.3266096, y: 0.44440633}
+  m_Offset: {x: 0, y: -5}
+  m_Size: {x: 30, y: 50}
   m_Direction: 0
 --- !u!95 &4654834901823328214
 Animator:
@@ -266,9 +266,9 @@ MonoBehaviour:
   allPlayers: []
   closedPlayer: {fileID: 0}
   isAttacking: 0
-  detectionRadius: 5
-  moveSpeed: 2
-  randomMoveDistance: 2
+  detectionRadius: 80
+  moveSpeed: 24
+  randomMoveDistance: 32
   playerLayer:
     serializedVersion: 2
     m_Bits: 64

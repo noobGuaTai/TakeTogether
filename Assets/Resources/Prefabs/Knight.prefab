@@ -35,7 +35,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87, y: 94.5, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8484705741543078897}
@@ -174,8 +174,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.08822235, y: -0.04599911}
-  m_Size: {x: 0.1959548, y: 0.32324216}
+  m_Offset: {x: -7, y: -5}
+  m_Size: {x: 15, y: 30}
   m_Direction: 0
 --- !u!114 &8116510583806733817
 MonoBehaviour:
@@ -214,12 +214,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 860e77afb4d69fe488d496fe4a87ca9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  HPUI: {fileID: 0}
-  moveSpeed: 5
-  dashSpeed: 20
+  moveSpeed: 64
+  dashSpeed: 192
   dashTime: 0.2
   attackDuration: 0.3
   trailMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
@@ -357,8 +353,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.10065704, y: -0.015623703}
-  m_Size: {x: 0.60065806, y: 0.4496737}
+  m_Offset: {x: 5, y: -7}
+  m_Size: {x: 50, y: 30}
   m_Direction: 1
 --- !u!114 &7778719186131965550
 MonoBehaviour:
@@ -442,8 +438,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.10065704, y: -0.015623703}
-  m_Size: {x: 0.60065806, y: 0.4496737}
+  m_Offset: {x: 5, y: -7}
+  m_Size: {x: 50, y: 30}
   m_Direction: 1
 --- !u!114 &3525930337980314787
 MonoBehaviour:
