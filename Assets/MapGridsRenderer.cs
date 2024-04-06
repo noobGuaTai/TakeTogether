@@ -58,7 +58,7 @@ public class MapGridsRenderer : MonoBehaviour
     {
         gameObject.SetActive(false);
         gridComponent = transform.Find("/Grid").GetComponent<Grid>();
-        mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
+        // mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
     }
 
     public void GenMap(GridType[,] map)
@@ -102,6 +102,11 @@ public class MapGridsRenderer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(transform.Find("/MapGenerator").GetComponent<MapGenerator>() != null)
+        {
+            mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
+        }
+
         if (grid != null)
         {
             material.SetMatrix("local2World", transform.localToWorldMatrix);
