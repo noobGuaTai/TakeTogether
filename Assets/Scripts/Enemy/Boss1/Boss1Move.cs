@@ -45,7 +45,7 @@ public class Boss1Move : EnemyMove
         {
             Move();
 
-            if (NetworkTime.time - lastAttackTime > attackCoolDown)
+            if (NetworkTime.time - lastAttackTime > attackCoolDown && isAttacking)
             {
                 lastAttackTime = NetworkTime.time;
                 chooseAttack = UnityEngine.Random.Range(1, 3); // 随机选择攻击模式

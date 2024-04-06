@@ -94,7 +94,6 @@ SpriteRenderer:
 --- !u!95 &2213719968235905547
 Animator:
   serializedVersion: 5
-  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -125,6 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4cab47a2868254e9fb88600663f305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   HP: 0
   MAXHP: 0
   ATK: 0
@@ -147,9 +149,9 @@ MonoBehaviour:
   allPlayers: []
   closedPlayer: {fileID: 0}
   isAttacking: 0
-  detectionRangeA: 8
-  stopChaseRangeB: 6
-  moveSpeed: 1
+  detectionRangeA: 80
+  stopChaseRangeB: 60
+  moveSpeed: 12
   enemy2Barrage: {fileID: 228005358404479225, guid: ddc80382347268148a049d6efd342e6f, type: 3}
 --- !u!70 &4898392593694424972
 CapsuleCollider2D:

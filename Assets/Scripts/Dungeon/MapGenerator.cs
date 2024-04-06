@@ -34,8 +34,6 @@ public class MapGenerator : NetworkBehaviour
     [SyncVar] public List<Room> rooms;
 
     public List<GameObject> players = new List<GameObject>();
-    public Dictionary<string, GameObject> enemyPrefabs;
-    public GameObject enemies;
     public Room furthestRoom;
     public float mapGenerateProcess = 0;
     public MapGridsRenderer mapGridsRenderer;
@@ -43,47 +41,30 @@ public class MapGenerator : NetworkBehaviour
     public Vector3 gridSize;
     public GameObject gridObject;
     public Grid grid = null;
-    private GridType[,] map;
+    public GridType[,] map;
+    public Room farRoom;
+
     private GameObject bossHPUI;
     private bool isFinish = false;//是否加载完成
 
     public GameObject localPlayer;
-    private PlayerManager playerManager;
     private string privateSeed;
     private System.Random pseudoRandom;
 
-    void LoadEnemyPrefabs()
-    {
-        enemyPrefabs = new Dictionary<string, GameObject>();
-        var folderPath = "Assets/Resources/Prefabs/Enemies";
-        var resPrefix = "Prefabs/Enemies/";
-        string[] files =
-            Directory.GetFiles(folderPath, "*.prefab");
-        foreach (var filePath in files)
-        {
-            string enemyName = Path.GetFileNameWithoutExtension(filePath);
-            GameObject prefab = Resources.Load<GameObject>(
-                resPrefix + enemyName);
-            enemyPrefabs[enemyName] = prefab;
-        }
-    }
+
 
     void Start()
     {
         gridObject = transform.Find("/Grid").gameObject;
         grid = gridObject.GetComponent<Grid>();
         mapGridsRenderer = transform.Find("/UI/MapView/MapGrids").GetComponent<MapGridsRenderer>();
-        enemies = transform.Find("/Enemies").gameObject;
         gridSize = grid.cellSize;
         gridSize.Scale(gridObject.transform.localScale);
-        LoadEnemyPrefabs();
+        
 
         //bossHPUI = GameObject.Find("BossHPUI");
         //bossHPUI.SetActive(false);
         //loadTime = GameObject.Find("LoadScene").GetComponent<LoadScene>().duration;
-
-        playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
-        players = playerManager.players;
 
         if (isServer)
         {
@@ -251,14 +232,8 @@ public class MapGenerator : NetworkBehaviour
         //在所有房间生成完毕后连接它们
         ConnectRooms();
 
-        Room farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
-        // GenerateBoss(farRoom.bottomLeft, farRoom.topRight, 1, "Boss1");
-        // foreach(GameObject player in players)
-        // {
-        //     //var p = Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
-        //     Vector3 pp = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
-        //     playerManager.InitPlayers(pp);
-        // }
+        farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
+
         if (localPlayer != null)
         {
             localPlayer.transform.position = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f, 0);
@@ -282,51 +257,6 @@ public class MapGenerator : NetworkBehaviour
             mapString += "\n";
         }
         Debug.Log(mapString);
-    }
-
-    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, String enemyName)
-    {
-        GenerateEnemies(bottomLeft, topRight, nums, enemyPrefabs[enemyName]);
-    }
-    void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, GameObject enemyPrefab)
-    {
-        for (int i = 0; i < nums; i++)
-        {
-            int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
-            int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
-            if (map[x, y] == GridType.FLOOR && !IsBorder(x, y)) // 确保选定位置是地板
-            {
-                Debug.Log("map[x, y]" + map[x, y]);
-                Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
-                Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
-                var enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
-                NetworkServer.Spawn(enemy);
-                enemy.transform.parent = enemies.transform;
-            }
-        }
-    }
-
-    void GenerateBoss(Vector2Int bottomLeft, Vector2Int topRight, int nums, String enemyName)
-    {
-        GenerateBoss(bottomLeft, topRight, nums, enemyPrefabs[enemyName]);
-    }
-
-    void GenerateBoss(Vector2Int bottomLeft, Vector2Int topRight, int nums, GameObject bossPrefab)
-    {
-        while (nums > 0)
-        {
-            int x = Random.Range(bottomLeft.x + 1, topRight.x - 1);
-            int y = Random.Range(bottomLeft.y + 1, topRight.y - 1);
-            if (map[x, y] == GridType.FLOOR && !IsBorder(x, y)) // 确保选定位置是地板
-            {
-                Debug.Log("map[x, y]" + map[x, y]);
-                Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
-                Vector3 worldPosition = groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
-                var boss = Instantiate(bossPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
-                NetworkServer.Spawn(boss);
-                nums--;
-            }
-        }
     }
 
     void RandomFillMap(Vector2Int bottomLeft, Vector2Int topRight)
@@ -405,7 +335,7 @@ public class MapGenerator : NetworkBehaviour
         }
     }
 
-    bool IsBorder(int x, int y)
+    public bool IsBorder(int x, int y)
     {
         if (map[x, y] == GridType.FLOOR) return false; // 当前位置如果是地板，则直接返回false
 

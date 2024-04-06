@@ -609,14 +609,18 @@ MonoBehaviour:
   roomSize: 20
   rooms: []
   players: []
-  enemies: {fileID: 0}
   furthestRoom:
     bottomLeft: {x: 0, y: 0}
     topRight: {x: 0, y: 0}
   mapGenerateProcess: 0
   mapGridsRenderer: {fileID: 0}
   gridSize: {x: 0, y: 0, z: 0}
+  gridObject: {fileID: 0}
   grid: {fileID: 0}
+  farRoom:
+    bottomLeft: {x: 0, y: 0}
+    topRight: {x: 0, y: 0}
+  localPlayer: {fileID: 0}
 --- !u!4 &228491317
 Transform:
   m_ObjectHideFlags: 0
@@ -109721,7 +109725,8 @@ MonoBehaviour:
   - {fileID: 4702855559027084351, guid: a270259d57c5fb34eaa31aa1574ef4ff, type: 3}
   - {fileID: 7689738140122501342, guid: f18eabc6227fe734780476e69d1495f9, type: 3}
   - {fileID: 978404134085458214, guid: 4d8e480113db2d449a25cab9d5fa7d9f, type: 3}
-  startSpawning: 0
+  mapGen: {fileID: 0}
+  enemies: {fileID: 0}
 --- !u!1 &1918480819
 GameObject:
   m_ObjectHideFlags: 0
@@ -109815,6 +109820,113 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1987730812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1987730816}
+  - component: {fileID: 1987730815}
+  - component: {fileID: 1987730814}
+  - component: {fileID: 1987730813}
+  m_Layer: 0
+  m_Name: MonsterGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1987730813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987730812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 1074080404
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &1987730814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987730812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 1987730816}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  sendIntervalMultiplier: 1
+  timelineOffset: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  changedDetection: 1
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+--- !u!114 &1987730815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987730812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed80cd30ed586fc499a9fb761fb1b02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  monsterPrefab:
+  - {fileID: 4702855559027084351, guid: a270259d57c5fb34eaa31aa1574ef4ff, type: 3}
+  - {fileID: 7689738140122501342, guid: f18eabc6227fe734780476e69d1495f9, type: 3}
+  - {fileID: 978404134085458214, guid: 4d8e480113db2d449a25cab9d5fa7d9f, type: 3}
+  mapGen: {fileID: 228491315}
+  enemies: {fileID: 0}
+--- !u!4 &1987730816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987730812}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2047757904
 GameObject:
   m_ObjectHideFlags: 0
@@ -110246,6 +110358,7 @@ SceneRoots:
   - {fileID: 921560694}
   - {fileID: 504793620}
   - {fileID: 228491317}
+  - {fileID: 1987730816}
   - {fileID: 156960114}
   - {fileID: 2098432842}
   - {fileID: 225478677}

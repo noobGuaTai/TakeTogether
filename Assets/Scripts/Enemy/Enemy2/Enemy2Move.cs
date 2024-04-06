@@ -45,7 +45,7 @@ public class Enemy2Move : EnemyMove
         {
             Move();
 
-            if (NetworkTime.time - lastAttackTime > attackCoolDown)
+            if (NetworkTime.time - lastAttackTime > attackCoolDown && isAttacking)
             {
                 lastAttackTime = NetworkTime.time;
                 var barrage2Instance = Instantiate(enemy2Barrage, transform.position, Quaternion.identity);
