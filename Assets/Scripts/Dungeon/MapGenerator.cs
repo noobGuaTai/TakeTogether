@@ -382,6 +382,7 @@ public class MapGenerator : NetworkBehaviour
         {
             for (int y = bottomLeft.y; y < topRight.y; y++)
             {
+                //TODO: fix tile pos
                 Vector3Int position = new Vector3Int(x, y, 0);
                 if (map[x, y] == GridType.WALL) // 如果当前位置不是地板
                 {

@@ -33,7 +33,7 @@ public class KnightMove : PlayerMove
         playerAttribute = GetComponent<PlayerAttribute>();
         lastRestoreMPTime = NetworkTime.time;
 
-        GameObject.Find("PlayerManager").GetComponent<PlayerManager>().addPlayer(gameObject);
+        GameObject.Find("PlayerManager").GetComponent<PlayerManager>().addPlayer(gameObject, "Player");
     }
 
     void Update()
