@@ -6,12 +6,13 @@ using UnityEngine.UI;
 public class LoadScene : MonoBehaviour
 {
     public float duration = 3f; // 完成移动所需时间
+    public MapGenerator mapGenerator;
 
     private RectTransform characterRect; // 使用RectTransform来处理UI元素
     private Image sliderImage;
     private TextMeshProUGUI textPercent;
     private GameObject background1;
-    private MapGenerator mapGenerator;
+    
 
     void Start()
     {
@@ -19,8 +20,8 @@ public class LoadScene : MonoBehaviour
         characterRect = GameObject.Find("Character").GetComponent<RectTransform>();
         sliderImage = GameObject.Find("Slider").GetComponent<Image>();
         textPercent = GameObject.Find("LoadPercent").GetComponent<TextMeshProUGUI>();
-        //mapGenerator = GameObject.Find("/MapGenerator").GetComponent<MapGenerator>();
-        mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
+        // mapGenerator = GameObject.Find("/MapGenerator").GetComponent<MapGenerator>();
+        // mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
         Vector2 startPosition = characterRect.anchoredPosition;
         Vector2 endPosition = new Vector2(startPosition.x + 1214f, startPosition.y);
 
@@ -29,6 +30,11 @@ public class LoadScene : MonoBehaviour
         //背景处理
         MoveBackground();
 
+    }
+
+    void Update()
+    {
+        
     }
 
     IEnumerator MoveAndFillCoroutine(Vector2 start, Vector2 end, float time)

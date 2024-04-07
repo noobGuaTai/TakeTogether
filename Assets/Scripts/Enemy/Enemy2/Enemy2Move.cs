@@ -15,6 +15,7 @@ public class Enemy2Move : EnemyMove
     private Rigidbody2D rb; // Rigidbody2D组件引用
     [SyncVar] private float attackCoolDown = 3f;
     [SyncVar] private double lastAttackTime = 0f;
+    private Animator anim;
 
     void Awake()
     {
@@ -23,17 +24,18 @@ public class Enemy2Move : EnemyMove
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>(); // 获取SpriteRenderer组件
-        rb = GetComponent<Rigidbody2D>(); // 获取Rigidbody2D组件
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if(isServer)
+        if (isServer)
         {
             ServerUpdate();
         }
-        
+
     }
 
     [Server]
@@ -47,11 +49,9 @@ public class Enemy2Move : EnemyMove
 
             if (NetworkTime.time - lastAttackTime > attackCoolDown && isAttacking)
             {
+                ShowAttackAnimRpc();
                 lastAttackTime = NetworkTime.time;
-                var barrage2Instance = Instantiate(enemy2Barrage, transform.position, Quaternion.identity);
-                NetworkServer.Spawn(barrage2Instance);
-                Destroy(barrage2Instance, 6f);
-                attackCoolDown = UnityEngine.Random.Range(3f, 6f); // 随机冷却时间
+                StartCoroutine(AttackCoroutine());
             }
         }
     }
@@ -92,6 +92,28 @@ public class Enemy2Move : EnemyMove
         {
             transform.localScale = new Vector3(-1 * Math.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z); // 敌人朝右// 敌人朝右
         }
+    }
+
+    IEnumerator AttackCoroutine()
+    {
+        yield return new WaitForSeconds(1.3f);
+        var barrage2Instance = Instantiate(enemy2Barrage, transform.position, Quaternion.identity);
+        NetworkServer.Spawn(barrage2Instance);
+        Destroy(barrage2Instance, 6f);
+        attackCoolDown = UnityEngine.Random.Range(3f, 6f); // 随机冷却时间
+    }
+
+    [ClientRpc]
+    void ShowAttackAnimRpc()
+    {
+        StartCoroutine(ShowAttackAnimCoroutine());
+    }
+
+    IEnumerator ShowAttackAnimCoroutine()
+    {
+        anim.SetBool("attack", true);
+        yield return new WaitForSeconds(1.5f);
+        anim.SetBool("attack", false);
     }
 
     void OnDrawGizmosSelected()

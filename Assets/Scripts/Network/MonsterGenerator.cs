@@ -98,7 +98,6 @@ public class MonsterGenerator : NetworkBehaviour
     [Server]
     IEnumerator SpawnMonster()
     {
-        print(1233);
         yield return new WaitForSeconds(2f);
         foreach (var room in mg.rooms)
         {

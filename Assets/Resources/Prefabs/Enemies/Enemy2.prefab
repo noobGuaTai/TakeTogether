@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.5, y: 0.96, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -149,8 +149,8 @@ MonoBehaviour:
   allPlayers: []
   closedPlayer: {fileID: 0}
   isAttacking: 0
-  detectionRangeA: 80
-  stopChaseRangeB: 60
+  detectionRangeA: 120
+  stopChaseRangeB: 100
   moveSpeed: 12
   enemy2Barrage: {fileID: 228005358404479225, guid: ddc80382347268148a049d6efd342e6f, type: 3}
 --- !u!70 &4898392593694424972
