@@ -41,7 +41,7 @@ public class Enemy2Move : EnemyMove
     {
         closedPlayer = FindClosestPlayer();
         allPlayers = FindAllPlayers();
-        if (allPlayers != null)
+        if (closedPlayer != null)
         {
             Move();
 

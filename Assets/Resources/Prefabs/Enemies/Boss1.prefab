@@ -211,9 +211,9 @@ MonoBehaviour:
   allPlayers: []
   closedPlayer: {fileID: 0}
   isAttacking: 0
-  detectionRangeA: 80
-  stopChaseRangeB: 49
-  moveSpeed: 32
+  detectionRangeA: 120
+  stopChaseRangeB: 80
+  moveSpeed: 24
   chooseAttack: 0
   barrage2Prefab: {fileID: 2263960870291288537, guid: b000134a98bf2ed428ab6f12a1c475e9, type: 3}
   barrage1Prefab: {fileID: 3704805397966435546, guid: 203e062d146da6d439d9a0a62d38a209, type: 3}

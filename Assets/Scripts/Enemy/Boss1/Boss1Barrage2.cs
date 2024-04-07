@@ -16,6 +16,7 @@ public class Boss1Barrage2 : EnemyMove
     {
         Init();
         Emission();
+        transform.localScale = new Vector3(9, 9, 1);
     }
 
     public void Update()

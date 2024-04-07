@@ -55,7 +55,7 @@ public class Boss1Move : EnemyMove
             }
         }
     }
- 
+
     [Server]
     public override void Move()
     {
@@ -110,6 +110,12 @@ public class Boss1Move : EnemyMove
     [Server]
     void ServerPerformAttack(int attackType)
     {
+        StartCoroutine(ServerPerformAttackCoroutine(attackType));
+    }
+
+    IEnumerator ServerPerformAttackCoroutine(int attackType)
+    {
+        yield return new WaitForSeconds(1.3f);
         // 在服务器上根据攻击类型实例化不同的攻击效果
         if (attackType == 1)
         {

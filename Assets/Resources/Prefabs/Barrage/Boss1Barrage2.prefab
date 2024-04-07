@@ -4852,8 +4852,7 @@ MonoBehaviour:
   closedPlayer: {fileID: 0}
   isAttacking: 0
   ps: {fileID: 0}
-  father: {fileID: 4702855559027084351, guid: a270259d57c5fb34eaa31aa1574ef4ff, type: 3}
-  speed: 5
+  speed: 15
   particlesToEmit: 10
   canEmission: 0
   cooldownTime: 1

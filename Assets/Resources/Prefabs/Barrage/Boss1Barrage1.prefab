@@ -83,7 +83,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 2
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -247,7 +247,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 20
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -365,7 +365,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -4864,9 +4864,8 @@ MonoBehaviour:
   closedPlayer: {fileID: 0}
   isAttacking: 0
   ps: {fileID: 0}
-  father: {fileID: 4702855559027084351, guid: a270259d57c5fb34eaa31aa1574ef4ff, type: 3}
   subEmitterPrefab: {fileID: 3964000501895163414, guid: e71b8407ed85c214ea036f6af3cec8fa, type: 3}
-  speed: 5
+  speed: 15
   particlesToEmit: 10
   canEmission: 0
   coolDownTime: 1

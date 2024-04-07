@@ -8,7 +8,7 @@ public class Boss1Barrage1 : EnemyMove
 {
     public ParticleSystem ps;
     public GameObject subEmitterPrefab;//子粒子系统的prefab
-    public float speed = 5f;
+    public float speed = 15f;
     public int particlesToEmit = 10;
     public bool canEmission = false;
     public float coolDownTime = 1.0f; // 冷却时间为1秒
@@ -20,6 +20,7 @@ public class Boss1Barrage1 : EnemyMove
     {
         Init();
         Emission();
+        transform.localScale = new Vector3(9, 9, 1);
     }
 
     void Update()
