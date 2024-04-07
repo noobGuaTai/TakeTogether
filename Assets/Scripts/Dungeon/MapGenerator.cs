@@ -51,9 +51,12 @@ public class MapGenerator : NetworkBehaviour
 	private string privateSeed;
 	private System.Random pseudoRandom;
 
+    private void Awake()
+    {
+		Debug.Log("MapGenerator awake");
+    }
 
-
-	void Start()
+    void Start()
 	{
 		gridObject = transform.Find("/Grid").gameObject;
 		grid = gridObject.GetComponent<Grid>();

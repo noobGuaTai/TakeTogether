@@ -12,7 +12,9 @@ public class LoadScene : MonoBehaviour
     private Image sliderImage;
     private TextMeshProUGUI textPercent;
     private GameObject background1;
-    
+
+    public GameObject InactiveTest;
+
 
     void Start()
     {
@@ -21,7 +23,14 @@ public class LoadScene : MonoBehaviour
         sliderImage = GameObject.Find("Slider").GetComponent<Image>();
         textPercent = GameObject.Find("LoadPercent").GetComponent<TextMeshProUGUI>();
         // mapGenerator = GameObject.Find("/MapGenerator").GetComponent<MapGenerator>();
-        // mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
+
+
+
+         
+        //var inactive = transform.Find("/InactiveTest");
+        //var inactive2 = transform.Find("/InactiveTest/InactiveTest2");
+        //mapGenerator = transform.Find("/MapGenerator").GetComponent<MapGenerator>();
+
         Vector2 startPosition = characterRect.anchoredPosition;
         Vector2 endPosition = new Vector2(startPosition.x + 1214f, startPosition.y);
 
