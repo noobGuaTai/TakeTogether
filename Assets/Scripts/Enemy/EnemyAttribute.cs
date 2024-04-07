@@ -14,6 +14,7 @@ public class EnemyAttribute : NetworkBehaviour
     private Animator anim;
     private Rigidbody2D rb;
     private Transform UI;
+    public bool isDead = false;
 
     void Start()
     {
@@ -25,7 +26,7 @@ public class EnemyAttribute : NetworkBehaviour
 
     void Update()
     {
-        if (HP <= 0 && isServer)
+        if (HP <= 0 && isServer && !isDead)
         {
             Die();
         }
@@ -55,6 +56,8 @@ public class EnemyAttribute : NetworkBehaviour
         GetComponent<EnemyMove>().isAttacking = false;
         rb.velocity = Vector2.zero;
         Destroy(gameObject, 1f);
+        gameObject.SetActive(false);
+        isDead = true;
     }
 
 }
