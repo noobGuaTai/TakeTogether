@@ -27,6 +27,8 @@ public class PlayerBackpack : MonoBehaviour
         if (prop.canBeCollected)
         {
             Collect(prop.propName, prop.amount);
+            prop.OnCollect(gameObject);
+
             Destroy(prop.gameObject);
         }
     }
