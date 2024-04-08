@@ -13,11 +13,11 @@ public class EnemyAttribute : NetworkBehaviour
 
     private Animator anim;
     private Rigidbody2D rb;
-    private Transform UI;
+    public Transform UI;
     private GameObject enemies;
-    
 
-    void Start()
+
+    protected virtual void Awake()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
@@ -59,12 +59,13 @@ public class EnemyAttribute : NetworkBehaviour
         Destroy(gameObject, 1f);
         gameObject.SetActive(false);
         isDead = true;
+
     }
 
     public void SetParent()
     {
         enemies = transform.Find("/Enemies").gameObject;
-        if(enemies != null)
+        if (enemies != null)
         {
             transform.parent = enemies.transform;
         }

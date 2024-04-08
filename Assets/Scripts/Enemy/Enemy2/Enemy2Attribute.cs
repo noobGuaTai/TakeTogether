@@ -7,8 +7,9 @@ using UnityEngine;
 public class Enemy2Attribute : EnemyAttribute
 {
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         HP = 50f;
         MAXHP = 50f;
         ATK = 5f;

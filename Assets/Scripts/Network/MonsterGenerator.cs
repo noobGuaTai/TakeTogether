@@ -76,7 +76,7 @@ public class MonsterGenerator : NetworkBehaviour
 
     void GenerateBoss(Vector2Int bottomLeft, Vector2Int topRight, int nums, GameObject bossPrefab)
     {
-        while (nums > 0)
+        for (int i = 0; i < nums; i++)
         {
             int x = UnityEngine.Random.Range(bottomLeft.x + 1, topRight.x - 1);
             int y = UnityEngine.Random.Range(bottomLeft.y + 1, topRight.y - 1);
@@ -87,7 +87,6 @@ public class MonsterGenerator : NetworkBehaviour
                 Vector3 worldPosition = mg.groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
                 var boss = Instantiate(bossPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
                 NetworkServer.Spawn(boss);
-                nums--;
             }
         }
     }
@@ -103,7 +102,7 @@ public class MonsterGenerator : NetworkBehaviour
             GenerateEnemies(room.bottomLeft, room.topRight, 10, "Enemy1");
             GenerateEnemies(room.bottomLeft, room.topRight, 5, "Enemy2");
         }
-        GenerateEnemies(mg.farRoom.bottomLeft, mg.farRoom.topRight, 1, "Boss1");
+        // GenerateBoss(mg.farRoom.bottomLeft, mg.farRoom.topRight, 1, "Boss1");
     }
 
 
