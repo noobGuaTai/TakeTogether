@@ -29,7 +29,6 @@ public class KnightAttribute : PlayerAttribute
         // {
         //     enemyHPUI.SetActive(false);
         // }
-
     }
 
 

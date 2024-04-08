@@ -6,8 +6,9 @@ using UnityEngine;
 
 public class Boss1Attribute : EnemyAttribute
 {
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         HP = 300f;
         MAXHP = 300f;
         ATK = 10f;
