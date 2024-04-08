@@ -14,6 +14,11 @@ public class Enemy1Attribute : EnemyAttribute
         ATK = 10f;
     }
 
-   
 
+    public override void Die()
+    {
+        var propManager = transform.Find("/PropManager").GetComponent<PropManager>();
+        propManager.GenProp("Coin_1", transform.position);
+        base.Die();
+    }
 }

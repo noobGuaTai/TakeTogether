@@ -17,7 +17,7 @@ public class KnightAttribute : PlayerAttribute
         MP = 10f;
         MAXMP = 10f;
         MPConsume = 3f;
-        ATK = 10f;
+        ATK = 60f;
         isInvincible = false;
         isReady = false;// true为开始游戏
         UI = GameObject.Find("UI").transform;

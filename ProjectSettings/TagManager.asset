@@ -20,7 +20,7 @@ TagManager:
   - Player
   - Enemy
   - Boss
-  - 
+  - Prop
   - 
   - 
   - 
@@ -61,4 +61,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 218899499
+    locked: 0
+  - name: Prop
+    uniqueID: 1185057721
     locked: 0
