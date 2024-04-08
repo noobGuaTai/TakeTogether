@@ -14,6 +14,11 @@ public class Enemy2Attribute : EnemyAttribute
         ATK = 5f;
     }
 
+    void Start()
+    {
+        SetParent();
+    }
+
     public override void Die()
     {
         var propManager = transform.Find("/PropManager").GetComponent<PropManager>();

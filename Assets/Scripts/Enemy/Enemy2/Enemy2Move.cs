@@ -111,9 +111,17 @@ public class Enemy2Move : EnemyMove
 
     IEnumerator ShowAttackAnimCoroutine()
     {
-        anim.SetBool("attack", true);
-        yield return new WaitForSeconds(1.5f);
-        anim.SetBool("attack", false);
+        if (anim == null)
+        {
+            anim = GetComponent<Animator>();
+        }
+        else
+        {
+            anim.SetBool("attack", true);
+            yield return new WaitForSeconds(1.5f);
+            anim.SetBool("attack", false);
+        }
+
     }
 
     void OnDrawGizmosSelected()

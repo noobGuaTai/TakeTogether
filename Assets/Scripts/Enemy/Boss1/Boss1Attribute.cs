@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class Boss1Attribute : EnemyAttribute
 {
-   
-
     void Awake()
     {
         HP = 300f;
@@ -15,5 +13,9 @@ public class Boss1Attribute : EnemyAttribute
         ATK = 10f;
     }
 
-    
+    void Start()
+    {
+        SetParent();
+    }
+
 }
