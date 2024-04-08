@@ -8,7 +8,8 @@ using Mirror;
 public class PlayerManager : NetworkBehaviour
 {
     public static PlayerManager instance;
-    public List<GameObject> players = new List<GameObject>();
+    public List<GameObject> allPlayers = new List<GameObject>();
+    public GameObject localPlayer;
     void Start()
     {
         if (instance == null)
@@ -19,7 +20,8 @@ public class PlayerManager : NetworkBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+
+        StartCoroutine(FindPlayer());
     }
 
 
@@ -28,22 +30,23 @@ public class PlayerManager : NetworkBehaviour
 
     }
 
-    public void addPlayer(GameObject player, String name = "")
+    IEnumerator FindPlayer() // 暂时先写成协程，等1s搜索玩家
     {
-        players.Add(player);
-        if (name != "")
-            player.name = name;
-    }
+        yield return new WaitForSeconds(1f);
 
-    public void InitPlayers(Vector3 vector)
-    {
-        foreach(var player in players)
+        foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
         {
-            var p = Instantiate(player, vector, Quaternion.identity);
-            //p.name = "Player";
-            NetworkServer.Spawn(p);
+            var networkIdentity = player.GetComponent<NetworkIdentity>();
+            if (networkIdentity.isLocalPlayer)
+            {
+                localPlayer = player;
+                break;
+            }
         }
 
+        foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            allPlayers.Add(player);
+        }
     }
-
 }

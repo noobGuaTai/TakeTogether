@@ -8,13 +8,14 @@ public class EnemyAttribute : NetworkBehaviour
     [SyncVar] public float HP;
     public float MAXHP;
     [SyncVar] public float ATK;
-
     public GameObject damageTextPrefab;
+    public bool isDead = false;
 
     private Animator anim;
     private Rigidbody2D rb;
     private Transform UI;
-    public bool isDead = false;
+    private GameObject enemies;
+    
 
     void Start()
     {
@@ -58,6 +59,15 @@ public class EnemyAttribute : NetworkBehaviour
         Destroy(gameObject, 1f);
         gameObject.SetActive(false);
         isDead = true;
+    }
+
+    public void SetParent()
+    {
+        enemies = transform.Find("/Enemies").gameObject;
+        if(enemies != null)
+        {
+            transform.parent = enemies.transform;
+        }
     }
 
 }

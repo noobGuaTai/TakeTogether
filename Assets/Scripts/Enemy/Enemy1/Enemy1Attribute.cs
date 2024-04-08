@@ -14,6 +14,11 @@ public class Enemy1Attribute : EnemyAttribute
         ATK = 10f;
     }
 
+    void Start()
+    {
+        SetParent();
+    }
+
 
     public override void Die()
     {

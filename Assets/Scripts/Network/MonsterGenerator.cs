@@ -64,7 +64,7 @@ public class MonsterGenerator : NetworkBehaviour
                 Vector3 worldPosition = mg.groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
                 var enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
                 NetworkServer.Spawn(enemy);
-                enemy.transform.parent = enemies.transform;
+                
             }
         }
     }
