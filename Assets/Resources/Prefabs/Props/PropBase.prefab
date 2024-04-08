@@ -138,6 +138,7 @@ MonoBehaviour:
   propName: unnamedProp
   amount: 1
   canBeCollected: 1
+  tween: {fileID: 0}
 --- !u!95 &2018294439771227787
 Animator:
   serializedVersion: 5
@@ -168,6 +169,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1798228074230858497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b50aa91ce8ac434409ed3ebf8315c5bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f6d1709429de3c44a41cda118141bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

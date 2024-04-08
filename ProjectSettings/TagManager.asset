@@ -21,7 +21,7 @@ TagManager:
   - Enemy
   - Boss
   - Prop
-  - 
+  - Effect
   - 
   - 
   - 
@@ -64,4 +64,7 @@ TagManager:
     locked: 0
   - name: Prop
     uniqueID: 1185057721
+    locked: 0
+  - name: Effect
+    uniqueID: 370237979
     locked: 0

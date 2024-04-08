@@ -32,7 +32,7 @@ public class PropBase : MonoBehaviour
         var targetPos = transform.position + randomVec3 * dropRadius;
 
 
-        tween.AddTween(_DropProcess, transform.position, targetPos, collectDelay);
+        tween.AddTween(_DropProcess, transform.position, targetPos, collectDelay, Tween.TransitionType.QUAD, Tween.EaseType.OUT);
         tween.AddTween(_DropCollect, 0f, 0f, 0);
         tween.Play();
     }

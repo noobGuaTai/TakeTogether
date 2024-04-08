@@ -1,3 +1,4 @@
+using Assets.Scripts.Tool.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,26 +15,15 @@ public class PropManager : MonoBehaviour
 
     void LoadPropPrefabs()
     {
-        propPrefabs = new Dictionary<string, GameObject>();
-        var folderPath = "Assets/Resources/Prefabs/Props";
-        var resPrefix = "Prefabs/Props/";
-        string[] files =
-            Directory.GetFiles(folderPath, "*.prefab");
-        foreach (var filePath in files)
-        {
-            string propName = Path.GetFileNameWithoutExtension(filePath);
-            GameObject prefab = Resources.Load<GameObject>(
-                resPrefix + propName);
-            propPrefabs[propName] = prefab;
-        }
+        propPrefabs = Utils.getAllPrefab("Prefabs/Props/");
     }
 
-    public void GenProp(string propName, Vector3 propPosition )
+    public void GenProp(string propName, Vector3 propPosition, bool drop = true)
     {
         propName = "Prop" + propName;
         var flag = propPrefabs.ContainsKey(propName);
         if(!flag  ) {
-            Debug.LogError("unknown prop name!");
+            Debug.LogError("unknown prop name!: " + propName);
             return;
         }
         var obj = propPrefabs[propName];
@@ -41,5 +31,7 @@ public class PropManager : MonoBehaviour
         prop.transform.position = propPosition;
         prop.transform.parent = transform;
         prop.transform.localScale = new Vector3(1,1,1);
+        var propComp = prop.GetComponent<PropBase>();
+        propComp.Drop(propPosition);
     }
 }

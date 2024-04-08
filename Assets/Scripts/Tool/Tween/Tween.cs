@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 
 
@@ -33,6 +34,8 @@ public class Tween : MonoBehaviour
     public class TweeNodeBase {
         public TweenType type;
         public float time;
+        public TransitionType transitionType = TransitionType.LINEAR;
+        public EaseType easeType = EaseType.IN;
     }
 
     public class TweenNode<T> : TweeNodeBase {
@@ -79,7 +82,9 @@ public class Tween : MonoBehaviour
 
     }
 
-    public void AddTween<T>(Action<T> setter, T start, T end, float time){
+    public void AddTween<T>(
+        Action<T> setter, T start, T end, float time, 
+        TransitionType transitionType=TransitionType.LINEAR, EaseType easeType=EaseType.IN){
         if (tweenState == Tween.TweenState.RUNNING)
         {
             Debug.LogError("Try to call AddTween while tween is running");
@@ -96,7 +101,10 @@ public class Tween : MonoBehaviour
         if(tweenNodeList.Count > 0 )
             cTime = tweenNodeList[tweenNodeList.Count - 1].time;
 
-        tweenNodeList.Add(new Tween.TweenNode<T>(type, setter, start, end, time + cTime));
+        var tweenNode = new TweenNode<T>(type, setter, start, end, time + cTime);
+        tweenNode.easeType = easeType;
+        tweenNode.transitionType = transitionType;
+        tweenNodeList.Add(tweenNode);
     }
 
     public void Play() {
@@ -136,6 +144,8 @@ public class Tween : MonoBehaviour
         }
     }
 
+   
+
     // Update is called once per frame
     void Update()
     {
@@ -162,6 +172,41 @@ public class Tween : MonoBehaviour
         if(tweenIndex > 0)
             preTime = tweenNodeList[tweenIndex - 1].time;
         float cntAlpha = (tweenTime - preTime) / (tweenNodeList[tweenIndex].time - preTime + 1e-6f);
+        var transitionType =  tweenNodeList[tweenIndex].transitionType;
+        var easeType = tweenNodeList[tweenIndex].easeType;
+
+        if (easeType == EaseType.OUT) 
+            cntAlpha = 1 - cntAlpha;
+        cntAlpha = TransitionProcess(cntAlpha, transitionType);
+        if (easeType == EaseType.OUT) 
+            cntAlpha = 1 - cntAlpha;
+
         TweenProcess(tweenNodeList[tweenIndex], cntAlpha);
+    }
+
+    public enum TransitionType { 
+        LINEAR,
+        SIN,
+        QUAD
+    }
+
+    public enum EaseType
+    {
+        IN,
+        OUT,
+    }
+    public static float TransitionProcess(float alpha, TransitionType type)
+    {
+        switch (type)
+        {
+            case TransitionType.LINEAR:
+                return alpha;
+            case TransitionType.SIN:
+                return Mathf.Sin(alpha * 0.5f * Mathf.PI);
+            case TransitionType.QUAD:
+                return alpha * alpha;
+        }
+        Debug.LogError("Unknow transition!");
+        return -1;
     }
 }

@@ -1,3 +1,4 @@
+using Assets.Scripts.Tool.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,18 +15,7 @@ public class EffectManager : MonoBehaviour
 
     void LoadEffectPrefabs()
     {
-        effectPrefabs = new Dictionary<string, GameObject>();
-        var folderPath = "Assets/Resources/Prefabs/Effects";
-        var resPrefix = "Prefabs/Props/";
-        string[] files =
-            Directory.GetFiles(folderPath, "*.prefab");
-        foreach (var filePath in files)
-        {
-            string effectName = Path.GetFileNameWithoutExtension(filePath);
-            GameObject prefab = Resources.Load<GameObject>(
-                resPrefix + effectName);
-            effectPrefabs[effectName] = prefab;
-        }
+        effectPrefabs = Utils.getAllPrefab("Prefabs/Effects");
     }
 
     public void GenEffect(string effectName, Vector3 propPosition, bool singlePlaye=true)

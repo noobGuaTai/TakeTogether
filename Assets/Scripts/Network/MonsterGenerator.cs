@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Mirror;
 using Mirror.Examples.CCU;
+using UnityEditor;
 using UnityEngine;
 
 public class MonsterGenerator : NetworkBehaviour
@@ -34,18 +35,7 @@ public class MonsterGenerator : NetworkBehaviour
 
     void LoadEnemyPrefabs()
     {
-        enemyPrefabs = new Dictionary<string, GameObject>();
-        var folderPath = "Assets/Resources/Prefabs/Enemies";
-        var resPrefix = "Prefabs/Enemies/";
-        string[] files =
-            Directory.GetFiles(folderPath, "*.prefab");
-        foreach (var filePath in files)
-        {
-            string enemyName = Path.GetFileNameWithoutExtension(filePath);
-            GameObject prefab = Resources.Load<GameObject>(
-                resPrefix + enemyName);
-            enemyPrefabs[enemyName] = prefab;
-        }
+        enemyPrefabs = Assets.Scripts.Tool.Utils.Utils.getAllPrefab("Prefabs/Enemies");
     }
 
     void GenerateEnemies(Vector2Int bottomLeft, Vector2Int topRight, int nums, String enemyName)

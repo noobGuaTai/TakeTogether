@@ -114,7 +114,7 @@ public class MapGridsRenderer : MonoBehaviour
             
             if (player == null)
             {
-                player = transform.Find("/Player").gameObject;
+                player = transform.Find("/PlayerManager").GetComponent<PlayerManager>().localPlayer;
             }
             if (player != null)
             {
