@@ -40,6 +40,6 @@ public class PropManager : MonoBehaviour
         var prop = Instantiate(obj);
         prop.transform.position = propPosition;
         prop.transform.parent = transform;
-
+        prop.transform.localScale = new Vector3(1,1,1);
     }
 }
