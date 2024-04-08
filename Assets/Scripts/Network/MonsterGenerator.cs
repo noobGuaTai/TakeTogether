@@ -60,7 +60,6 @@ public class MonsterGenerator : NetworkBehaviour
             int y = UnityEngine.Random.Range(bottomLeft.y + 1, topRight.y - 1);
             if (mg.map[x, y] == MapGenerator.GridType.FLOOR && !mg.IsBorder(x, y)) // 确保选定位置是地板
             {
-                Debug.Log("map[x, y]" + mg.map[x, y]);
                 Vector3Int tilePosition = new Vector3Int(x, y, 0); // 创建一个Tilemap坐标
                 Vector3 worldPosition = mg.groundTilemap.CellToWorld(tilePosition); // 将Tilemap坐标转换为世界坐标
                 var enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity); // 在转换后的世界坐标处实例化敌人预制体
