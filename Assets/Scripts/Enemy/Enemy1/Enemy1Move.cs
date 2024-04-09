@@ -19,13 +19,13 @@ public class Enemy1Move : EnemyMove
     void Start()
     {
         // 延迟开始搜索和移动
-        StartCoroutine(DelayMovement(2f));
+        StartCoroutine(DelayMovement(1.5f));
         rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        if(isServer)
+        if(isServer && canMove)
         {
             Move();
         }

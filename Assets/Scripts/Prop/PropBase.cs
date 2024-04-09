@@ -15,6 +15,10 @@ public class PropBase : MonoBehaviour
     private void Awake()
     {
         tween = GetComponent<Tween>();
+        if(transform.Find("/PropManager") != null)
+        {
+            transform.parent = transform.Find("/PropManager").gameObject.transform;
+        }
     }
 
     public void _DropProcess(Vector3 position)

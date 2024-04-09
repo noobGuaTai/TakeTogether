@@ -20,10 +20,23 @@ public class Enemy2Attribute : EnemyAttribute
         SetParent();
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        if (isDead && isServer)
+        {
+            while (propNums > 0)
+            {
+                GenProp("Coin_5");
+                propNums--;
+            }
+        }
+    }
+
     public override void Die()
     {
-        var propManager = transform.Find("/PropManager").GetComponent<PropManager>();
-        propManager.GenProp("Coin_5", transform.position);
         base.Die();
+
     }
 }
+
