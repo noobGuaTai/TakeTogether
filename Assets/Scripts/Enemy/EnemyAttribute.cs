@@ -9,7 +9,8 @@ public class EnemyAttribute : NetworkBehaviour
     public float MAXHP;
     [SyncVar] public float ATK;
     public GameObject damageTextPrefab;
-    public bool isDead = false;
+    [SyncVar] public bool isDead = false;
+    [SyncVar] public int propNums = 1;// 掉落金币数量
 
     private Animator anim;
     private Rigidbody2D rb;
@@ -25,13 +26,12 @@ public class EnemyAttribute : NetworkBehaviour
     }
 
 
-    void Update()
+    protected virtual void Update()
     {
         if (HP <= 0 && isServer && !isDead)
         {
             Die();
         }
-
     }
 
     [Server]
@@ -40,7 +40,7 @@ public class EnemyAttribute : NetworkBehaviour
         HP += value;
 
         // 实例化伤害文本预设
-        Vector2 pos = new Vector2(transform.position.x, transform.position.y + 0.4f);
+        Vector2 pos = new Vector2(transform.position.x, transform.position.y + 8f);
         Vector2 screenPosition = Camera.main.WorldToScreenPoint(pos);
         GameObject damageTextInstance = Instantiate(damageTextPrefab, screenPosition, Quaternion.identity, UI.transform);
         damageTextInstance.transform.SetParent(UI);
@@ -57,16 +57,28 @@ public class EnemyAttribute : NetworkBehaviour
         GetComponent<EnemyMove>().isAttacking = false;
         rb.velocity = Vector2.zero;
         Destroy(gameObject, 1f);
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
         isDead = true;
+    }
 
+    [Server]
+    public virtual void GenProp(string PropName)
+    {
+        StartCoroutine(GenPropCoroutine(PropName));
+    }
+
+    IEnumerator GenPropCoroutine(string PropName)
+    {
+        yield return new WaitForSeconds(0.9f);
+        var propManager = transform.Find("/PropManager").GetComponent<PropManager>();
+        propManager.GenProp(PropName, transform.position);
     }
 
     public void SetParent()
     {
-        enemies = transform.Find("/Enemies").gameObject;
-        if (enemies != null)
+        if (transform.Find("/Enemies") != null)
         {
+            enemies = transform.Find("/Enemies").gameObject;
             transform.parent = enemies.transform;
         }
     }
