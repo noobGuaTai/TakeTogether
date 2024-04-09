@@ -29,8 +29,9 @@ public class PropBase : MonoBehaviour
         canBeCollected = true;
     }
     
-    public void Drop(Vector3 position, float dropRadius=16f, float collectDelay=1f) {
-        
+    public void Drop(Vector3 position, float dropRadius=16f, float collectDelay=0.6f) {
+        canBeCollected = false;
+
         var randomAngle = UnityEngine.Random.Range(0, 2 * Mathf.PI);
         var randomVec3 = new Vector3(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle), 0);
         var targetPos = transform.position + randomVec3 * dropRadius;
