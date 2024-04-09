@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts.Tool.Utils
@@ -26,6 +28,36 @@ namespace Assets.Scripts.Tool.Utils
                 ret[objName] = prefab;
             }
             return ret;
+        }
+
+
+        static public void ExitRange(Dictionary<Collider2D, bool> inRange, Collider2D collision)
+        {
+            if (inRange.ContainsKey(collision))
+                inRange.Remove(collision);
+        }
+
+        public static void UpdateRange(Dictionary<Collider2D, bool> inRange) =>
+            UpdateRange(inRange, (Collider2D _) => false);
+
+        public static void UpdateRange(Dictionary<Collider2D, bool> inRange, Func<Collider2D, bool> process)
+        {
+            var removeList = new List<Collider2D>();
+            var keyList = new List<Collider2D>(inRange.Keys);
+            for (int i = 0; i < keyList.Count; i++)
+            {
+                var obj = keyList[i];
+                if (obj.IsDestroyed() || process(obj))
+                    inRange.Remove(obj);
+            }
+        }
+
+        public static void EnterRange(Dictionary<Collider2D, bool> inRange, Collider2D collision) 
+            => EnterRange(inRange, collision, (Collider2D _) => true);
+        public static void EnterRange(Dictionary<Collider2D, bool> inRange, Collider2D collision, Func<Collider2D, bool> condition)
+        {
+            if(condition(collision))
+                 inRange.Add(collision, true);
         }
     }
 }

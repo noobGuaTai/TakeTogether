@@ -65,6 +65,7 @@ public class Tween : MonoBehaviour
     public void Clear()
     {
         tweenNodeList.Clear();
+        tweenState = TweenState.STOP;
     }
 
     public TweenType GetTweenType<T>() { 
@@ -145,6 +146,7 @@ public class Tween : MonoBehaviour
     }
 
    
+    
 
     // Update is called once per frame
     void Update()
@@ -175,11 +177,7 @@ public class Tween : MonoBehaviour
         var transitionType =  tweenNodeList[tweenIndex].transitionType;
         var easeType = tweenNodeList[tweenIndex].easeType;
 
-        if (easeType == EaseType.OUT) 
-            cntAlpha = 1 - cntAlpha;
-        cntAlpha = TransitionProcess(cntAlpha, transitionType);
-        if (easeType == EaseType.OUT) 
-            cntAlpha = 1 - cntAlpha;
+        cntAlpha = EaseAndTrainsitionProcess(cntAlpha, easeType, transitionType);
 
         TweenProcess(tweenNodeList[tweenIndex], cntAlpha);
     }
@@ -187,13 +185,16 @@ public class Tween : MonoBehaviour
     public enum TransitionType { 
         LINEAR,
         SIN,
-        QUAD
+        QUAD,
+        BACK
     }
 
     public enum EaseType
     {
         IN,
         OUT,
+        IN_OUT,
+        OUT_IN,
     }
     public static float TransitionProcess(float alpha, TransitionType type)
     {
@@ -205,6 +206,30 @@ public class Tween : MonoBehaviour
                 return Mathf.Sin(alpha * 0.5f * Mathf.PI);
             case TransitionType.QUAD:
                 return alpha * alpha;
+            case TransitionType.BACK:
+                return -0.875f * alpha + 1.875f * alpha * alpha;
+        }
+        Debug.LogError("Unknow transition!");
+        return -1;
+    }
+
+    public static float EaseAndTrainsitionProcess(
+        float alpha, EaseType easeType, TransitionType transitionType)
+    {
+        switch (easeType)
+        {
+            case EaseType.IN:
+                return TransitionProcess(alpha, transitionType);
+            case EaseType.OUT:
+                return 1 - TransitionProcess(1 - alpha, transitionType);
+            case EaseType.IN_OUT:
+                var alphaIn = TransitionProcess(alpha, transitionType);
+                var alphaOut = 1 - TransitionProcess(1 - alpha, transitionType);
+                return (1 - alpha) * alphaIn + alpha * alphaOut;
+            case EaseType.OUT_IN:
+                alphaIn = TransitionProcess(alpha, transitionType);
+                alphaOut = 1 - TransitionProcess(1 - alpha, transitionType);
+                return alpha * alphaIn + (1 - alpha) * alphaOut;
         }
         Debug.LogError("Unknow transition!");
         return -1;

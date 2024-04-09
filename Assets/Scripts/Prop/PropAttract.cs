@@ -1,38 +1,26 @@
 using Assets.Scripts.Tool.Utils;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerBackpack : MonoBehaviour
+public class PropAttract : MonoBehaviour
 {
-    public Dictionary<String, int> props = new Dictionary<String, int>();
+    //public GameObject master = null;
+    //public Vector3 offset = Vector3.zero;
+
+    //private void Awake()
+    //{
+    //    master = transform.parent.gameObject;
+    //    offset = transform.position - master.transform.position;   
+    //    transform.parent = transform.Find("/Global");
+    //}
+
+    //private void Update()
+    //{
+    //    transform.position = master.GetComponent<Transform>().position + offset;
+    //}
     public Dictionary<Collider2D, bool> inRangeNotCollected = new Dictionary<Collider2D, bool>();
-    public void Collect(String name, int amount) {
-        if (!props.ContainsKey(name))
-        {
-            props.Add(name, amount);
-        }
-        else props[name] += amount;
-    }
-
-    public void TryCollect(Collider2D collision)
-    {
-        var obj = collision.gameObject;
-        if(obj.layer != LayerMask.NameToLayer("Prop"))
-        {
-            return;
-        }
-        var prop = obj.GetComponent<PropBase>();
-
-        if (prop.canBeCollected)
-        {
-            Collect(prop.propName, prop.amount);
-            prop.OnCollect(gameObject);
-
-        }
-    }
-
 
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -45,7 +33,7 @@ public class PlayerBackpack : MonoBehaviour
         {
             var prop = collision.GetComponent<PropBase>();
             if (!prop.canBeCollected) return false;
-            TryCollect(collision);
+            prop.OnAttract(gameObject);
             return true;
         });
     }
@@ -58,4 +46,5 @@ public class PlayerBackpack : MonoBehaviour
             return prop != null;
         });
     }
+    
 }

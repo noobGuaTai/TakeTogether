@@ -1,3 +1,4 @@
+using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,11 +10,13 @@ public class PropBase : MonoBehaviour
     public string propName = "unnamedProp";
     public int amount = 1;
     public bool canBeCollected = true;
+    public bool isAttracted = false;
 
     public Tween tween = null;
 
     private void Awake()
     {
+        isAttracted = false;
         tween = GetComponent<Tween>();
         if(transform.Find("/PropManager") != null)
         {
@@ -36,7 +39,7 @@ public class PropBase : MonoBehaviour
         var randomVec3 = new Vector3(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle), 0);
         var targetPos = transform.position + randomVec3 * dropRadius;
 
-
+        tween.Clear();
         tween.AddTween(_DropProcess, transform.position, targetPos, collectDelay, Tween.TransitionType.QUAD, Tween.EaseType.OUT);
         tween.AddTween(_DropCollect, 0f, 0f, 0);
         tween.Play();
@@ -47,6 +50,23 @@ public class PropBase : MonoBehaviour
         var effectManager = effectManagerObj.GetComponent<EffectManager>();
 
         effectManager.GenEffect("Collect", transform.position);
+
+        Destroy(gameObject);
     }
 
+    public void _OnAttractProcess(float alpha, GameObject who, Vector3 startPosition) {
+        alpha *= 3;
+        transform.position = (1-alpha)*startPosition + alpha * who.transform.position;
+    }
+    public void OnAttract(GameObject who)
+    {
+        if (isAttracted)
+            return;
+        tween.Clear();
+        var startPos = transform.position;
+        tween.AddTween((float alpha) => _OnAttractProcess(alpha, who, startPos), 
+            0f, 1f, 1, Tween.TransitionType.BACK, Tween.EaseType.IN);
+        tween.Play();
+        isAttracted = true;
+    }
 }
