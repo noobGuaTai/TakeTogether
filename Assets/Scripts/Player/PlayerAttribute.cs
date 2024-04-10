@@ -9,10 +9,13 @@ public class PlayerAttribute : NetworkBehaviour
     public float MAXHP;
     [SyncVar] public float MP;
     public float MAXMP;
+    [SyncVar] public float CTP;// 连携攻击值
+    [SyncVar] public bool isCT;// 连携攻击确认
     [SyncVar] public float MPConsume;
     [SyncVar] public float ATK;
     [SyncVar] public bool isInvincible;
     public GameObject enemyHPUI;
+    public GameObject bossHPUI;
     public bool isReady;
     public virtual void ChangeHP(float value){}
     public virtual void ChangeMP(float value){}

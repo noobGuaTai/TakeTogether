@@ -5,6 +5,7 @@ public class UIManager : NetworkBehaviour
 {
     public GameObject playerHPPrefab; // 血条UI的预制体
     public GameObject enemyHPPrefab; // 血条UI的预制体
+    public GameObject bossHPPrefab;
     public Transform canvas; // UI元素的父对象，通常是Canvas
     public float spacing = 30f; // UI元素之间的垂直间距
 
@@ -51,6 +52,11 @@ public class UIManager : NetworkBehaviour
                 GameObject enemyHPUI = Instantiate(enemyHPPrefab, canvas);
                 player.GetComponent<PlayerAttribute>().enemyHPUI = enemyHPUI;
                 enemyHPUI.SetActive(false);
+
+                //每个玩家都有一个bossHPUI
+                GameObject bossHPUI = Instantiate(bossHPPrefab, canvas);
+                player.GetComponent<PlayerAttribute>().bossHPUI = bossHPUI;
+                bossHPUI.SetActive(false);
             }
 
         }

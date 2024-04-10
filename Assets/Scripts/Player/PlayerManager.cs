@@ -10,6 +10,7 @@ public class PlayerManager : NetworkBehaviour
     public static PlayerManager instance;
     public List<GameObject> allPlayers = new List<GameObject>();
     public GameObject localPlayer;
+    public GameObject otherPlayer;
     void Start()
     {
         if (instance == null)
@@ -27,7 +28,6 @@ public class PlayerManager : NetworkBehaviour
 
     void Update()
     {
-
     }
 
     IEnumerator FindPlayer() // 暂时先写成协程，等1s搜索玩家
@@ -40,7 +40,10 @@ public class PlayerManager : NetworkBehaviour
             if (networkIdentity.isLocalPlayer)
             {
                 localPlayer = player;
-                break;
+            }
+            else
+            {
+                otherPlayer = player;
             }
         }
 

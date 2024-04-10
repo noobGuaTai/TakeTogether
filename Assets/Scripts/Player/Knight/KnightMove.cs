@@ -16,6 +16,7 @@ public class KnightMove : PlayerMove
     private Vector2 moveInput;
     private Animator anim;
     private PlayerAttribute playerAttribute;
+    private PlayerManager playerManager;
 
     private bool isDashing;
     private float dashTimeLeft;
@@ -31,6 +32,7 @@ public class KnightMove : PlayerMove
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         playerAttribute = GetComponent<PlayerAttribute>();
+        playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
         lastRestoreMPTime = NetworkTime.time;
     }
 
@@ -42,6 +44,7 @@ public class KnightMove : PlayerMove
 
         Attack();
         Attack2();
+        Attack3();
 
         if (isLocalPlayer && NetworkTime.time - lastRestoreMPTime > restoreSpeedMP)
         {
@@ -129,7 +132,6 @@ public class KnightMove : PlayerMove
         trailRenderer.sortingLayerID = GetComponent<SpriteRenderer>().sortingLayerID;
         trailRenderer.sortingOrder = GetComponent<SpriteRenderer>().sortingOrder - 1;
 
-        // 使残影在短时间后消失
         Destroy(trail, 1f);
     }
 
@@ -153,6 +155,65 @@ public class KnightMove : PlayerMove
         isAttacking = false;
         ShowPlayerAnimCommand("attack", false);
         transform.Find("KnightAttackTect").GetComponent<Collider2D>().enabled = false;
+    }
+
+    public override void Attack3()
+    {
+        if (!isLocalPlayer) return;
+        if (Input.GetButton("Attack3") && playerAttribute.CTP >= 10f)
+        {
+            CommandForSlowTime();
+        }
+        if (playerManager.otherPlayer != null && playerAttribute.isCT == true && playerManager.otherPlayer.GetComponent<PlayerAttribute>().isCT == true)
+        {
+            StartAttack3();
+        }
+
+    }
+
+    [Command]
+    void CommandForSlowTime()
+    {
+        RpcForSlowTime();
+    }
+
+    [ClientRpc]
+    void RpcForSlowTime()
+    {
+        StartCoroutine(SlowTime());
+    }
+
+    IEnumerator SlowTime()
+    {
+        Time.timeScale = 0.3f;
+        playerAttribute.isCT = true;
+        // playerAttribute.CTP -= 10f;
+        yield return new WaitForSeconds(0.1f);
+        playerAttribute.isCT = false;
+        Time.timeScale = 1f;
+    }
+
+    void StartAttack3()
+    {
+        ShowPlayerAnimCommand("attack3", true);
+        isAttacking = true;
+        playerAttribute.isCT = false;
+        StartCoroutine(MoveToPosition(transform, playerManager.otherPlayer.transform.position, 0.1f));
+    }
+
+    IEnumerator MoveToPosition(Transform playerTransform, Vector3 targetPosition, float duration)
+    {
+        float elapsedTime = 0;
+        Vector3 startingPosition = playerTransform.position;
+        while (elapsedTime < duration)
+        {
+            playerTransform.position = Vector3.Lerp(startingPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        playerTransform.position = targetPosition;
+        ShowPlayerAnimCommand("attack3", false);
+        isAttacking = false;
     }
 
     [Command]

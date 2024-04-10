@@ -11,4 +11,6 @@ public class PlayerMove : NetworkBehaviour
     public virtual void Attack(){}
 
     public virtual void Attack2(){}
+
+    public virtual void Attack3(){}
 }

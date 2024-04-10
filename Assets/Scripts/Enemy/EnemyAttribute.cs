@@ -48,6 +48,13 @@ public class EnemyAttribute : NetworkBehaviour
         if (HP <= 0 && isServer && !isDead)
         {
             Die();
+
+        }
+        if (HP <= 0)// 不知道为什么 把EnemyMove设置为false了，总是又变成true了
+        {
+            GetComponent<EnemyMove>().enabled = false;
+            GetComponent<EnemyMove>().isAttacking = false;
+            rb.velocity = Vector2.zero;
         }
     }
 
@@ -80,10 +87,7 @@ public class EnemyAttribute : NetworkBehaviour
     public virtual void Die()
     {
         anim.SetBool("death", true);
-        GetComponent<EnemyMove>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        GetComponent<EnemyMove>().isAttacking = false;
-        rb.velocity = Vector2.zero;
         Destroy(gameObject, 1f);
         // gameObject.SetActive(false);
         isDead = true;
