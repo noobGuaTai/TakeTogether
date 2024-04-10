@@ -34,9 +34,10 @@ public class Enemy1Attribute : EnemyAttribute
         }
     }
 
-
     public override void Die()
     {
         base.Die();
+        transform.Find("Enemy1AttackTect").gameObject.SetActive(false);
     }
+
 }

@@ -33,10 +33,5 @@ public class Enemy2Attribute : EnemyAttribute
         }
     }
 
-    public override void Die()
-    {
-        base.Die();
-
-    }
 }
 
