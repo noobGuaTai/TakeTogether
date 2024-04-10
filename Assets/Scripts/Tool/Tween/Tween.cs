@@ -186,6 +186,8 @@ public class Tween : MonoBehaviour
         LINEAR,
         SIN,
         QUAD,
+        CUBIC,
+        QUART,
         BACK
     }
 
@@ -206,6 +208,10 @@ public class Tween : MonoBehaviour
                 return Mathf.Sin(alpha * 0.5f * Mathf.PI);
             case TransitionType.QUAD:
                 return alpha * alpha;
+            case TransitionType.CUBIC:
+                return alpha * alpha * alpha;
+            case TransitionType.QUART:
+                return alpha * alpha * alpha * alpha;
             case TransitionType.BACK:
                 return -0.875f * alpha + 1.875f * alpha * alpha;
         }

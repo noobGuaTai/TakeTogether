@@ -31,8 +31,10 @@ public class EffectManager : MonoBehaviour
         var effectObj = Instantiate(obj);
         var effectComp = effectObj.GetComponent<EffectBase>();
         effectObj.transform.position = propPosition;
+        var oldLocalScale = effectObj.transform.localScale;
         effectObj.transform.parent = transform;
-        effectObj.transform.localScale = new Vector3(1, 1, 1);
+        effectObj.transform.Rotate(0, 0, Random.Range(0, 360));
+        effectObj.transform.localScale = oldLocalScale;
         effectComp.singlePlaye = singlePlaye;
     }
 }

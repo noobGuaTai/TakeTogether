@@ -17,12 +17,29 @@ public class EnemyAttribute : NetworkBehaviour
     public Transform UI;
     private GameObject enemies;
 
+    public Tween tween;
+    public Material material = null;
+
+    private float _hittedWhiteFx;
+    public float hittedWhiteFx{
+        get { return _hittedWhiteFx; }
+        set {
+            if (value == _hittedWhiteFx)
+                return;
+            _hittedWhiteFx = value;
+            if (material != null) material.SetFloat("_HittedWhiteFx", _hittedWhiteFx);
+        }
+    }
 
     protected virtual void Awake()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         UI = GameObject.Find("UI").transform;
+        material = GetComponent<SpriteRenderer>().material;
+
+        if (tween == null)
+            tween = gameObject.AddComponent<Tween>();
     }
 
 
@@ -46,6 +63,17 @@ public class EnemyAttribute : NetworkBehaviour
         damageTextInstance.transform.SetParent(UI);
         // 设置伤害值
         damageTextInstance.GetComponent<EnemyUnderAttackText>().SetText(System.Math.Abs(value).ToString());
+
+        // become white after being hit
+        tween.Clear();
+        tween.AddTween((float alpha) => {
+            hittedWhiteFx = alpha;
+        },  1f, 0f, 0.6f, Tween.TransitionType.QUART, Tween.EaseType.OUT);
+        tween.Play();
+
+        // hit effect
+        var em = transform.Find("/EffectManager").GetComponent<EffectManager>();
+        em.GenEffect("HitSword_1", transform.position);
     }
 
     [ClientRpc]

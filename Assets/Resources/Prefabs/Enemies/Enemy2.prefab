@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 978404134085458214}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.5, y: 0.96, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -131,6 +131,11 @@ MonoBehaviour:
   MAXHP: 0
   ATK: 0
   damageTextPrefab: {fileID: 4279983477287301741, guid: 550bb72f464cf3247a18abe09d1a6221, type: 3}
+  isDead: 0
+  propNums: 1
+  UI: {fileID: 0}
+  tween: {fileID: 0}
+  material: {fileID: 0}
 --- !u!114 &7189662297713314317
 MonoBehaviour:
   m_ObjectHideFlags: 0
