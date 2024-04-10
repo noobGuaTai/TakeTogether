@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "TakeTogether.sln"
+    "dotnet.defaultSolution": "TakeTogether.sln",
+    "dotnet.preferCSharpExtension": true
 }
