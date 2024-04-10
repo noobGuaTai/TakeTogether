@@ -396,6 +396,7 @@ MonoBehaviour:
   syncInterval: 0
   playerHPPrefab: {fileID: 3540405818739382071, guid: 7ffe6adba9cffa7439e41616b195a2fd, type: 3}
   enemyHPPrefab: {fileID: 254328401061138136, guid: 27d0195044e3df74cba65e440999ae92, type: 3}
+  bossHPPrefab: {fileID: 704574836032687581, guid: 6da205a1efcf17d48aa4ae5ccefde428, type: 3}
   canvas: {fileID: 631839660}
   spacing: 30
 --- !u!114 &127665570
@@ -845,6 +846,7 @@ MonoBehaviour:
   - {fileID: 3540405818739382071, guid: 7ffe6adba9cffa7439e41616b195a2fd, type: 3}
   - {fileID: 1614682983060970914, guid: 642d264451c43b84eaf00e434ae3dd34, type: 3}
   - {fileID: 7947420028015577542, guid: 8beac03239ed43043b0b5a79a760d6f2, type: 3}
+  - {fileID: 704574836032687581, guid: 6da205a1efcf17d48aa4ae5ccefde428, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2

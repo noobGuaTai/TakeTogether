@@ -32,7 +32,7 @@ public class PlayerManager : NetworkBehaviour
 
     IEnumerator FindPlayer() // 暂时先写成协程，等1s搜索玩家
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
 
         foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
         {

@@ -15,6 +15,7 @@ public class PlayerAttribute : NetworkBehaviour
     [SyncVar] public float ATK;
     [SyncVar] public bool isInvincible;
     public GameObject enemyHPUI;
+    public GameObject bossHPUI;
     public bool isReady;
     public virtual void ChangeHP(float value){}
     public virtual void ChangeMP(float value){}

@@ -44,30 +44,27 @@ public class MapGenerator : NetworkBehaviour
 	public GridType[,] map;
 	public Room farRoom;
 
-	private GameObject bossHPUI;
-	private bool isFinish = false;//是否加载完成
+	public bool isFinish = false;
 
-	public GameObject localPlayer;
+	private BossHPUI bossHPUI;
 	private string privateSeed;
 	private System.Random pseudoRandom;
+	private PlayerManager playerManager;
 
-    private void Awake()
-    {
-		Debug.Log("MapGenerator awake");
-    }
+	private void Awake()
+	{
 
-    void Start()
+	}
+
+	void Start()
 	{
 		gridObject = transform.Find("/Grid").gameObject;
 		grid = gridObject.GetComponent<Grid>();
 		mapGridsRenderer = transform.Find("/UI/MapView/MapGrids").GetComponent<MapGridsRenderer>();
 		gridSize = grid.cellSize;
 		gridSize.Scale(gridObject.transform.localScale);
-		
 
-		//bossHPUI = GameObject.Find("BossHPUI");
-		//bossHPUI.SetActive(false);
-		//loadTime = GameObject.Find("LoadScene").GetComponent<LoadScene>().duration;
+		playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
 
 		if (isServer)
 		{
@@ -75,7 +72,6 @@ public class MapGenerator : NetworkBehaviour
 		}
 		privateSeed = publicSeed;
 		pseudoRandom = new System.Random(privateSeed.GetHashCode());
-		FindLocalPlayer();
 
 		StartCoroutine(GenerateMapCoroutine());
 	}
@@ -86,24 +82,25 @@ public class MapGenerator : NetworkBehaviour
 		{
 			StartCoroutine(GenerateMapCoroutine());
 		}
-		//等待加载后再开始搜索
-		// if (isFinish && isLocalPlayer)//启动boss血条
-		// {
-		//     playerPosition = transform.position;
-		//     if (IsPlayerInRoom(furthestRoom, playerPosition))
-		//     {
-		//         bossHPUI.SetActive(true);
-		//         bossHPUI.GetComponent<BossHPUI>().ActivateBossHPUI();
-		//     }
-		//     else
-		//     {
-		//         bossHPUI.SetActive(false);
-		//     }
-		// }
-		// FindLocalPlayer();
+
+		// 等待加载后再开始搜索
+		if (isFinish)//启动boss血条
+		{
+			if (bossHPUI == null)
+			{
+				bossHPUI = playerManager.localPlayer.GetComponent<PlayerAttribute>().bossHPUI.GetComponent<BossHPUI>();
+
+			}
+			else if (bossHPUI != null && bossHPUI.isDie == false && IsPlayerInRoom(farRoom, playerManager.localPlayer.transform.position))
+			{
+				bossHPUI.ActivateBossHPUI();
+			}
+			else if (bossHPUI != null && bossHPUI.isDie == true)
+			{
+				bossHPUI.HideBossHPUI();
+			}
+		}
 	}
-
-
 
 	List<Room> GenerateRooms(int numberOfRooms)
 	{
@@ -177,7 +174,7 @@ public class MapGenerator : NetworkBehaviour
 		Vector3 roomBottomLeftWorld = groundTilemap.CellToWorld(bottomLeftTilePosition);
 		Vector3 roomTopRightWorld = groundTilemap.CellToWorld(topRightTilePosition);
 
-		// 因为CellToWorld通常给出的是Tile的左下角位置，所以对于topRight坐标，我们需要做一些调整以确保包含整个Tile
+		// 因为CellToWorld通常给出的是Tile的左下角位置，所以对于topRight坐标，需要调整以确保包含整个Tile
 		roomTopRightWorld += new Vector3(groundTilemap.cellSize.x, groundTilemap.cellSize.y, 0);
 
 		// 在世界坐标中检查玩家位置
@@ -223,9 +220,6 @@ public class MapGenerator : NetworkBehaviour
 			}
 			FillTilemap(room.bottomLeft, room.topRight);
 
-			// GenerateEnemies(room.bottomLeft, room.topRight, 10, "Enemy1");
-			// GenerateEnemies(room.bottomLeft, room.topRight, 5, "Enemy2");
-
 			//PrintMap();
 			mapGenerateProcess += 80.0f / rooms.Count;
 			yield return new WaitForSeconds(0.1f); // 暂停0.1秒
@@ -235,28 +229,21 @@ public class MapGenerator : NetworkBehaviour
 		//在所有房间生成完毕后连接它们
 		ConnectRooms();
 
-		Room farRoom = FindFurthestRoomFromRoom0(rooms);//生成1个boss
-		// GenerateBoss(farRoom.bottomLeft, farRoom.topRight, 1, "Boss1");
-		// foreach(GameObject player in players)
-		// {
-		//     //var p = Instantiate(player, new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f), Quaternion.identity);
-		//     Vector3 pp = new Vector3(rooms[0].Center.x * 1.5f, rooms[0].Center.y * 1.5f);
-		//     playerManager.InitPlayers(pp);
-		// }
+		farRoom = FindFurthestRoomFromRoom0(rooms);
+
 		var waitLocalPlayerTime = 200;
 		var waitLocalPlayerFlag = false;
-		while ( waitLocalPlayerTime-- > 0)
+		while (waitLocalPlayerTime-- > 0)
 		{
-			if (localPlayer != null)
+			if (playerManager.localPlayer != null)
 			{
 				var center = rooms[0].Center;
 				var worldPostion = groundTilemap.CellToWorld(new Vector3Int(center.x, center.y, 0));
 				Debug.Log("local player spawn at:\n" + worldPostion.ToString() + "\n" + map[center.x, center.y].ToString());
-				localPlayer.transform.position = worldPostion;
+				playerManager.localPlayer.transform.position = worldPostion;
 				waitLocalPlayerFlag = true;
 				break;
 			}
-			FindLocalPlayer();
 			yield return new WaitForSeconds(0.1f); // 暂停0.1秒
 		}
 		if (!waitLocalPlayerFlag)
@@ -285,13 +272,6 @@ public class MapGenerator : NetworkBehaviour
 
 	void RandomFillMap(Vector2Int bottomLeft, Vector2Int topRight)
 	{
-		// if (useRandomSeed)
-		// {
-		//     seed = NetworkTime.time.ToString();
-		// }
-
-		// System.Random pseudoRandom = new System.Random(NetworkTime.time.ToString().GetHashCode());
-
 
 		for (int x = bottomLeft.x; x < topRight.x; x++)
 		{
@@ -537,19 +517,6 @@ public class MapGenerator : NetworkBehaviour
 					map[cornerPos.x, cornerPos.y] = GridType.WALL; // 墙壁标记为1
 					wallTilemap.SetTile(cornerPos, wallTile);
 				}
-			}
-		}
-	}
-
-	void FindLocalPlayer()
-	{
-		foreach (var netPlayer in GameObject.FindGameObjectsWithTag("Player"))
-		{
-			var networkIdentity = netPlayer.GetComponent<NetworkIdentity>();
-			if (networkIdentity.isLocalPlayer)
-			{
-				localPlayer = netPlayer;
-				break;
 			}
 		}
 	}
