@@ -9,11 +9,14 @@ public class Boss1Barrage1Sub : EnemyMove
     private GameObject player;
     public float cooldownTime = 1.0f; // 冷却时间为1秒
     private double lastHitTime = 0.0f; // 上次被击中的时间
+    private float atk = 0f;
     void Start()
     {
         Init();
         Emission();
         transform.localScale = new Vector3(9, 9, 1);
+
+        atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
     }
 
 
@@ -67,7 +70,6 @@ public class Boss1Barrage1Sub : EnemyMove
     {
         if (other.tag == "Player" && NetworkTime.time - lastHitTime > cooldownTime)
         {
-            float atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
             other.GetComponent<PlayerAttribute>().ChangeHP(-atk);
             lastHitTime = NetworkTime.time;
         }

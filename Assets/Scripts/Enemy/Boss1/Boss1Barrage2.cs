@@ -11,12 +11,15 @@ public class Boss1Barrage2 : EnemyMove
     public bool canEmission = false;
     public float cooldownTime = 1.0f; // 冷却时间为1秒
     private double lastHitTime = 0.0f; // 上次被击中的时间
+    private float atk = 0f;
 
     void Start()
     {
         Init();
         Emission();
         transform.localScale = new Vector3(9, 9, 1);
+
+        atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
     }
 
     public void Update()
@@ -114,9 +117,6 @@ public class Boss1Barrage2 : EnemyMove
     {
         if (other.tag == "Player" && NetworkTime.time - lastHitTime > cooldownTime)
         {
-            // 粒子碰撞到了玩家
-            // 在这里处理碰撞逻辑，比如减少玩家的HP
-            float atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
             other.GetComponent<PlayerAttribute>().ChangeHP(-atk * 3);
             lastHitTime = NetworkTime.time;
         }

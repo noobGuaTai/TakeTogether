@@ -78,9 +78,9 @@ public class MapGenerator : NetworkBehaviour
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.G))
+		if (isServer && Input.GetKeyDown(KeyCode.G))
 		{
-			StartCoroutine(GenerateMapCoroutine());
+			NetworkManager.singleton.ServerChangeScene("Level");
 		}
 
 		// 等待加载后再开始搜索

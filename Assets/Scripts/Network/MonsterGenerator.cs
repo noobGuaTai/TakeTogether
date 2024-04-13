@@ -30,7 +30,22 @@ public class MonsterGenerator : NetworkBehaviour
 
     void LoadEnemyPrefabs()
     {
-        enemyPrefabs = Assets.Scripts.Tool.Utils.Utils.getAllPrefab("Prefabs/Enemies");
+        // 使用IL2cpp，无法加载资源目录下的文件
+        // enemyPrefabs = Assets.Scripts.Tool.Utils.Utils.getAllPrefab("Prefabs/Enemies");
+
+        enemyPrefabs = new Dictionary<string, GameObject>();
+        GameObject[] prefabs = Resources.LoadAll<GameObject>("Prefabs/Enemies");
+        foreach (GameObject prefab in prefabs)
+        {
+            if (!enemyPrefabs.ContainsKey(prefab.name))
+            {
+                enemyPrefabs[prefab.name] = prefab;
+            }
+            else
+            {
+                Debug.LogWarning("Duplicate prefab name found in 'Prefabs/Enemies': " + prefab.name);
+            }
+        }
     }
 
     void GenerateEnemy(Vector2Int bottomLeft, Vector2Int topRight, int nums, String enemyName)

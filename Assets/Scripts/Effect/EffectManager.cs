@@ -10,15 +10,29 @@ public class EffectManager : MonoBehaviour
     private void Awake()
     {
         LoadEffectPrefabs();
-
     }
 
     void LoadEffectPrefabs()
     {
-        effectPrefabs = Utils.getAllPrefab("Prefabs/Effects");
+        // 这个方法在使用IL2cpp构建项目时，会出错
+        // effectPrefabs = Utils.getAllPrefab("Prefabs/Effects");
+
+        effectPrefabs = new Dictionary<string, GameObject>();
+        GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Effects");
+        foreach (GameObject prefab in loadedPrefabs)
+        {
+            if (!effectPrefabs.ContainsKey(prefab.name))
+            {
+                effectPrefabs[prefab.name] = prefab;
+            }
+            else
+            {
+                Debug.LogWarning("Duplicate effect prefab name found in 'Prefabs/Effects': " + prefab.name);
+            }
+        }
     }
 
-    public void GenEffect(string effectName, Vector3 propPosition, bool singlePlaye=true)
+    public void GenEffect(string effectName, Vector3 propPosition, bool singlePlaye = true)
     {
         effectName = "Effect" + effectName;
         var flag = effectPrefabs.ContainsKey(effectName);

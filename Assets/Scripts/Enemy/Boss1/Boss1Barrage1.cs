@@ -14,6 +14,7 @@ public class Boss1Barrage1 : EnemyMove
     public float coolDownTime = 1.0f; // 冷却时间为1秒
     private double lastHitTime = 0.0f; // 上次被击中的时间
     [SyncVar] private bool barrage1subHasSpawn = false;
+    private float atk = 0f;
 
 
     void Start()
@@ -21,6 +22,8 @@ public class Boss1Barrage1 : EnemyMove
         Init();
         Emission();
         transform.localScale = new Vector3(9, 9, 1);
+
+        atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
     }
 
     void Update()
@@ -117,7 +120,6 @@ public class Boss1Barrage1 : EnemyMove
     {
         if (other.tag == "Player" && NetworkTime.time - lastHitTime > coolDownTime)// 有点问题，应该在玩家身上判断
         {
-            float atk = GameObject.FindGameObjectWithTag("Boss1").GetComponent<EnemyAttribute>().ATK;
             other.GetComponent<PlayerAttribute>().ChangeHP(-atk);
             lastHitTime = NetworkTime.time;
         }
