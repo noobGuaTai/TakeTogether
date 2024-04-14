@@ -39,7 +39,7 @@ MonoBehaviour:
         UserData: 
     - GroupName: effect
       GroupDesc: 
-      AssetTags: 
+      AssetTags: effect
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/GameResources/Effect
@@ -52,7 +52,7 @@ MonoBehaviour:
         UserData: 
     - GroupName: enemy
       GroupDesc: 
-      AssetTags: 
+      AssetTags: enemy
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/GameResources/Enemy
@@ -135,6 +135,19 @@ MonoBehaviour:
       Collectors:
       - CollectPath: Assets/GameResources/UI
         CollectorGUID: 24432c3fdfd6e2245b6272a0a2b57432
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: prop
+      GroupDesc: 
+      AssetTags: prop
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/GameResources/Props
+        CollectorGUID: 6bef451087aa5fd4d93aee58ff0f856d
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
