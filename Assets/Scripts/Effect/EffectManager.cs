@@ -46,6 +46,7 @@ public class EffectManager : MonoBehaviour
         var effectComp = effectObj.GetComponent<EffectBase>();
         effectObj.transform.position = propPosition;
         var oldLocalScale = effectObj.transform.localScale;
+        
         effectObj.transform.parent = transform;
         effectObj.transform.Rotate(0, 0, Random.Range(0, 360));
         effectObj.transform.localScale = oldLocalScale;
