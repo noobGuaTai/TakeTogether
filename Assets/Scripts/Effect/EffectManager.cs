@@ -1,25 +1,37 @@
-using Assets.Scripts.Tool.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using YooAsset;
 
 public class EffectManager : MonoBehaviour
 {
     public Dictionary<string, GameObject> effectPrefabs;
     private void Awake()
     {
-        LoadEffectPrefabs();
+        StartCoroutine(LoadEffectPrefabs());
     }
 
-    void LoadEffectPrefabs()
+    IEnumerator LoadEffectPrefabs()
     {
-        // 这个方法在使用IL2cpp构建项目时，会出错
-        // effectPrefabs = Utils.getAllPrefab("Prefabs/Effects");
-
         effectPrefabs = new Dictionary<string, GameObject>();
-        GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Effects");
-        foreach (GameObject prefab in loadedPrefabs)
+        // GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Effects");
+        List<GameObject> prefabs = new List<GameObject>();
+        AssetHandle effectBaseHandle = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Effect/Effects/EffectBase.prefab");
+        AssetHandle effectCollect = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Effect/Effects/EffectCollect.prefab");
+        AssetHandle effectHitSword_1Handle = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Effect/Effects/Hit/EffectHitSword_1.prefab");
+        yield return effectBaseHandle;
+        yield return effectCollect;
+        yield return effectHitSword_1Handle;
+
+        GameObject effectBasePrefab = effectBaseHandle.AssetObject as GameObject;
+        prefabs.Add(effectBasePrefab);
+        GameObject effectCollectPrefab = effectCollect.AssetObject as GameObject;
+        prefabs.Add(effectCollectPrefab);
+        GameObject effectHitSword_1Prefab = effectHitSword_1Handle.AssetObject as GameObject;
+        prefabs.Add(effectHitSword_1Prefab);
+
+        foreach (GameObject prefab in prefabs)
         {
             if (!effectPrefabs.ContainsKey(prefab.name))
             {

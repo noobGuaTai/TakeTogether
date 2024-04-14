@@ -650,6 +650,7 @@ MonoBehaviour:
   farRoom:
     bottomLeft: {x: 0, y: 0}
     topRight: {x: 0, y: 0}
+  isFinish: 0
 --- !u!4 &228491317
 Transform:
   m_ObjectHideFlags: 0
@@ -108995,7 +108996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4312510042007804440, guid: ae72133dacba6ec4eb33ecde48f50e56, type: 3}
+  m_Sprite: {fileID: 4312510042007804440, guid: 3f97be97b23824a4dac876be29b1bbb3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
