@@ -11,6 +11,7 @@ using UnityEngine.Networking;
 
 public class LoadDll : MonoBehaviour
 {
+    public GameObject test;
 
     void Start()
     {

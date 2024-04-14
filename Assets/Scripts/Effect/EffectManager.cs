@@ -15,21 +15,19 @@ public class EffectManager : MonoBehaviour
     IEnumerator LoadEffectPrefabs()
     {
         effectPrefabs = new Dictionary<string, GameObject>();
-        // GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/Effects");
         List<GameObject> prefabs = new List<GameObject>();
-        AssetHandle effectBaseHandle = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Effect/Effects/EffectBase.prefab");
-        AssetHandle effectCollect = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Effect/Effects/EffectCollect.prefab");
-        AssetHandle effectHitSword_1Handle = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Effect/Effects/Hit/EffectHitSword_1.prefab");
-        yield return effectBaseHandle;
-        yield return effectCollect;
-        yield return effectHitSword_1Handle;
+        AssetInfo[] ass = YooAssets.GetAssetInfos("effect");
+        foreach (AssetInfo info in ass)
+        {
+            if (info.AssetPath.Contains(".prefab"))
+            {
+                AssetHandle ah = YooAssets.LoadAssetAsync<GameObject>(info.AssetPath);
+                yield return ah;
+                GameObject prefab = ah.AssetObject as GameObject;
+                prefabs.Add(prefab);
+            }
+        }
 
-        GameObject effectBasePrefab = effectBaseHandle.AssetObject as GameObject;
-        prefabs.Add(effectBasePrefab);
-        GameObject effectCollectPrefab = effectCollect.AssetObject as GameObject;
-        prefabs.Add(effectCollectPrefab);
-        GameObject effectHitSword_1Prefab = effectHitSword_1Handle.AssetObject as GameObject;
-        prefabs.Add(effectHitSword_1Prefab);
 
         foreach (GameObject prefab in prefabs)
         {
@@ -58,7 +56,7 @@ public class EffectManager : MonoBehaviour
         var effectComp = effectObj.GetComponent<EffectBase>();
         effectObj.transform.position = propPosition;
         var oldLocalScale = effectObj.transform.localScale;
-        
+
         effectObj.transform.parent = transform;
         effectObj.transform.Rotate(0, 0, Random.Range(0, 360));
         effectObj.transform.localScale = oldLocalScale;
