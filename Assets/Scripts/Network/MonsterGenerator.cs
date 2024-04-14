@@ -6,6 +6,7 @@ using Mirror;
 using Mirror.Examples.CCU;
 using UnityEditor;
 using UnityEngine;
+using YooAsset;
 
 public class MonsterGenerator : NetworkBehaviour
 {
@@ -20,7 +21,7 @@ public class MonsterGenerator : NetworkBehaviour
     {
         mg = mapGen.GetComponent<MapGenerator>();
         enemies = transform.Find("/Enemies").gameObject;
-        LoadEnemyPrefabs();
+        StartCoroutine(LoadEnemyPrefabs());
 
         if (isServer)
         {
@@ -28,13 +29,26 @@ public class MonsterGenerator : NetworkBehaviour
         }
     }
 
-    void LoadEnemyPrefabs()
+    IEnumerator LoadEnemyPrefabs()
     {
-        // 使用IL2cpp，无法加载资源目录下的文件
-        // enemyPrefabs = Assets.Scripts.Tool.Utils.Utils.getAllPrefab("Prefabs/Enemies");
-
+        yield return null;
         enemyPrefabs = new Dictionary<string, GameObject>();
-        GameObject[] prefabs = Resources.LoadAll<GameObject>("Prefabs/Enemies");
+        // GameObject[] prefabs = Resources.LoadAll<GameObject>("Prefabs/Enemies");
+        List<GameObject> prefabs = new List<GameObject>();
+        AssetHandle enemy1Handle = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Enemy/EnemyPrefab/Enemy1.prefab");
+        AssetHandle enemy2Handle = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Enemy/EnemyPrefab/Enemy2.prefab");
+        AssetHandle boss1Handle = YooAssets.LoadAssetAsync<GameObject>("Assets/GameResources/Enemy/EnemyPrefab/Boss1.prefab");
+        yield return enemy1Handle;
+        yield return enemy2Handle;
+        yield return boss1Handle;
+        GameObject enemy1Prefab = enemy1Handle.AssetObject as GameObject;
+        prefabs.Add(enemy1Prefab);
+        GameObject enemy2Prefab = enemy2Handle.AssetObject as GameObject;
+        prefabs.Add(enemy2Prefab);
+        GameObject boss1Prefab = boss1Handle.AssetObject as GameObject;
+        prefabs.Add(boss1Prefab);
+
+
         foreach (GameObject prefab in prefabs)
         {
             if (!enemyPrefabs.ContainsKey(prefab.name))
