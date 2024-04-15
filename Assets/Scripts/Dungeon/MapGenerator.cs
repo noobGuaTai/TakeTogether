@@ -254,6 +254,7 @@ public class MapGenerator : NetworkBehaviour
 		isFinish = true;
 
 		mapGridsRenderer.GenMap(map);
+		// PrintMap();
 	}
 
 	void PrintMap()
@@ -263,7 +264,7 @@ public class MapGenerator : NetworkBehaviour
 		{
 			for (int x = 0; x < width; x++)
 			{
-				mapString += map[x, y] + " ";
+				mapString += (int)map[x, y] + " ";
 			}
 			mapString += "\n";
 		}

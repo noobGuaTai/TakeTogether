@@ -97,24 +97,24 @@ public class Boss1Barrage1 : EnemyMove
     }
 
 
-    void OnParticleTrigger()
-    {
-        List<ParticleSystem.Particle> enter = new List<ParticleSystem.Particle>();
-        int numEnter = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
+    // void OnParticleTrigger()
+    // {
+    //     List<ParticleSystem.Particle> enter = new List<ParticleSystem.Particle>();
+    //     int numEnter = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
 
-        for (int i = 0; i < numEnter; i++)
-        {
-            ParticleSystem.Particle p = enter[i];
-            // 设置粒子的剩余生命时间为0，使其立即消失
-            p.remainingLifetime = 0;
-            enter[i] = p;
-            // float atk = GetComponentInParent<EnemyAttribute>().ATK;
-            // player.GetComponent<PlayerAttribute>().ChangeHP(-atk * 3);
-        }
+    //     for (int i = 0; i < numEnter; i++)
+    //     {
+    //         ParticleSystem.Particle p = enter[i];
+    //         // 设置粒子的剩余生命时间为0，使其立即消失
+    //         p.remainingLifetime = 0;
+    //         enter[i] = p;
+    //         // float atk = GetComponentInParent<EnemyAttribute>().ATK;
+    //         // player.GetComponent<PlayerAttribute>().ChangeHP(-atk * 3);
+    //     }
 
-        // 应用更改回粒子系统
-        ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
-    }
+    //     // 应用更改回粒子系统
+    //     ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
+    // }
 
     void OnParticleCollision(GameObject other)
     {

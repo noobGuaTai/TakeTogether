@@ -16,6 +16,7 @@ public class EffectManager : MonoBehaviour
     {
         effectPrefabs = new Dictionary<string, GameObject>();
         List<GameObject> prefabs = new List<GameObject>();
+
         AssetInfo[] ass = YooAssets.GetAssetInfos("effect");
         foreach (AssetInfo info in ass)
         {
