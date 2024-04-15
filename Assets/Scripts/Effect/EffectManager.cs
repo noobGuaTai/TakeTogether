@@ -43,14 +43,14 @@ public class EffectManager : MonoBehaviour
         }
     }
 
-    public void GenEffect(string effectName, Vector3 propPosition, bool singlePlaye = true)
+    public GameObject GenEffect(string effectName, Vector3 propPosition, bool singlePlaye = true)
     {
         effectName = "Effect" + effectName;
         var flag = effectPrefabs.ContainsKey(effectName);
         if (!flag)
         {
             Debug.LogError("unknown prop name!");
-            return;
+            return null;
         }
         var obj = effectPrefabs[effectName];
         var effectObj = Instantiate(obj);
@@ -62,5 +62,7 @@ public class EffectManager : MonoBehaviour
         effectObj.transform.Rotate(0, 0, Random.Range(0, 360));
         effectObj.transform.localScale = oldLocalScale;
         effectComp.singlePlaye = singlePlaye;
+
+        return effectObj;
     }
 }

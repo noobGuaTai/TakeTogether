@@ -68,5 +68,9 @@ public class PropBase : MonoBehaviour
             0f, 1f, 1, Tween.TransitionType.BACK, Tween.EaseType.IN);
         tween.Play();
         isAttracted = true;
+
+        var effectManager = transform.Find("/EffectManager").GetComponent<EffectManager>();
+        var obj = effectManager.GenEffect("Attract", transform.position);
+        obj.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
     }
 }
