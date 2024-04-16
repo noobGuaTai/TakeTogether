@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class KnightMove : PlayerMove
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 200f;
     public float dashSpeed = 20f; // 冲刺速度
     public float dashTime = 0.2f; // 冲刺持续时间
     public float attackDuration = 0.3f; // 攻击动画持续时间
@@ -83,7 +83,7 @@ public class KnightMove : PlayerMove
         {
             StartCoroutine(Dash());
         }
-    }
+    } 
 
     IEnumerator Dash()
     {

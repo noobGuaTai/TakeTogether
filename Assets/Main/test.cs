@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class test : MonoBehaviour
 {
+    public GameObject player;
     
     public static void Run()
     {
-        Time.timeScale = 1f;
+        print("HotUpdate");
     }
 }
