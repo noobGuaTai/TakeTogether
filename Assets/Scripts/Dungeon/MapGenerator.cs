@@ -146,7 +146,7 @@ public class MapGenerator : NetworkBehaviour
 		return rooms;
 	}
 
-	Room FindFurthestRoomFromRoom0(List<Room> rooms)//找到最远的房间（相对于房间0）
+	Room FindFurthestRoomFromRoom0(List<Room> rooms)
 	{
 		Room room0 = rooms[0];
 		furthestRoom = null;
@@ -174,7 +174,6 @@ public class MapGenerator : NetworkBehaviour
 		Vector3 roomBottomLeftWorld = groundTilemap.CellToWorld(bottomLeftTilePosition);
 		Vector3 roomTopRightWorld = groundTilemap.CellToWorld(topRightTilePosition);
 
-		// 因为CellToWorld通常给出的是Tile的左下角位置，所以对于topRight坐标，需要调整以确保包含整个Tile
 		roomTopRightWorld += new Vector3(groundTilemap.cellSize.x, groundTilemap.cellSize.y, 0);
 
 		// 在世界坐标中检查玩家位置
@@ -365,11 +364,6 @@ public class MapGenerator : NetworkBehaviour
 		return false; // 如果周围没有地板，则不是边缘
 	}
 
-	void SetBorderWalls(int x, int y)
-	{
-		Vector3Int position = new Vector3Int(x, y, 0);
-		wallTilemap.SetTile(position, wallTile); // 在当前地板位置放置墙壁
-	}
 
 	int GetSurroundingWallCount(int gridX, int gridY)
 	{
@@ -448,50 +442,79 @@ public class MapGenerator : NetworkBehaviour
 		}
 	}
 
+	// void GeneratePath(Vector2Int start, Vector2Int end)
+	// {
+	// 	Vector2Int current = start;
+
+	// 	// 先水平后垂直移动
+	// 	while (current.x != end.x)
+	// 	{
+	// 		SetFloorAndWalls(current, true); // true 表示水平移动
+	// 		current.x += (end.x > current.x) ? 1 : -1;
+	// 	}
+
+	// 	while (current.y != end.y)
+	// 	{
+	// 		SetFloorAndWalls(current, false); // false 表示垂直移动
+	// 		current.y += (end.y > current.y) ? 1 : -1;
+	// 	}
+	// }
+
 	void GeneratePath(Vector2Int start, Vector2Int end)
 	{
 		Vector2Int current = start;
+		bool horizontal = Random.Range(0, 2) == 0; // 初始随机方向，true为水平，false为垂直
 
-		// 先水平后垂直移动
-		while (current.x != end.x)
+		while (current != end)
 		{
-			SetFloorAndWalls(current, true); // true 表示水平移动
-			current.x += (end.x > current.x) ? 1 : -1;
-		}
+			// 在每次循环开始时随机决定是否改变方向
+			if (Random.Range(0, 100) < 50) // 有30%的概率改变方向
+			{
+				horizontal = !horizontal;
+			}
 
-		while (current.y != end.y)
-		{
-			SetFloorAndWalls(current, false); // false 表示垂直移动
-			current.y += (end.y > current.y) ? 1 : -1;
+			// 水平或垂直移动
+			if (horizontal)
+			{
+				SetFloorAndWalls(current, true);
+				// SetFloorAndWalls(new Vector2Int(current.x, current.y + 1), true); // 宽度为2的路径
+				current.x += (end.x > current.x) ? 1 : -1;
+			}
+			else
+			{
+				SetFloorAndWalls(current, false);
+				// SetFloorAndWalls(new Vector2Int(current.x + 1, current.y), false); // 宽度为2的路径
+				current.y += (end.y > current.y) ? 1 : -1;
+			}
+
+			// 检查是否达到目标点的一条直线上
+			if (current.x == end.x) horizontal = false;
+			if (current.y == end.y) horizontal = true;
 		}
 	}
 
-
 	void SetFloorAndWalls(Vector2Int position, bool isHorizontal)
 	{
-		// 设置中间的路为地板
+		// 设置地板
 		wallTilemap.SetTile(new Vector3Int(position.x, position.y, 0), null);
 		groundTilemap.SetTile(new Vector3Int(position.x, position.y, 0), floorTile);
 		map[position.x, position.y] = GridType.FLOOR;
 
-		// 设置当前方向的墙壁
+		// 根据移动方向设置墙壁
 		Vector2Int[] directions = {
 		new Vector2Int(0, 1), // 上
-		new Vector2Int(1, 0), // 右
-		new Vector2Int(0, -1), // 下
-		new Vector2Int(-1, 0) // 左
-		};
-
+        new Vector2Int(1, 0), // 右
+        new Vector2Int(0, -1), // 下
+        new Vector2Int(-1, 0) // 左
+    };
+		// 设置墙壁
 		foreach (var dir in directions)
 		{
 			Vector3Int wallPos = new Vector3Int(position.x + dir.x, position.y + dir.y, 0);
-			if (wallPos.x >= 0 && wallPos.x < width && wallPos.y >= 0 && wallPos.y < height)
+			if (map[wallPos.x, wallPos.y] != GridType.FLOOR)
 			{
-				if (map[wallPos.x, wallPos.y] != GridType.FLOOR) // 如果不是地板，则设置为墙壁
-				{
-					map[wallPos.x, wallPos.y] = GridType.WALL; // 墙壁标记为1
-					wallTilemap.SetTile(wallPos, wallTile);
-				}
+				map[wallPos.x, wallPos.y] = GridType.WALL;
+				wallTilemap.SetTile(wallPos, wallTile);
 			}
 		}
 
@@ -501,26 +524,82 @@ public class MapGenerator : NetworkBehaviour
 
 	void SetCornerWalls(Vector2Int position)
 	{
-		Vector2Int[] cornerDirections = {
-		new Vector2Int(1, 1),   // 右上
-		new Vector2Int(1, -1),  // 右下
-		new Vector2Int(-1, -1), // 左下
-		new Vector2Int(-1, 1)   // 左上
-	};
-
+		// 检查当前位置四个角的墙壁是否需要设置
+		Vector2Int[] cornerDirections = { new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1) };
 		foreach (var dir in cornerDirections)
 		{
 			Vector3Int cornerPos = new Vector3Int(position.x + dir.x, position.y + dir.y, 0);
-			if (cornerPos.x >= 0 && cornerPos.x < width && cornerPos.y >= 0 && cornerPos.y < height)
+			if (map[cornerPos.x, cornerPos.y] != GridType.FLOOR)
 			{
-				if (map[cornerPos.x, cornerPos.y] != GridType.FLOOR) // 如果不是地板，则设置为墙壁
-				{
-					map[cornerPos.x, cornerPos.y] = GridType.WALL; // 墙壁标记为1
-					wallTilemap.SetTile(cornerPos, wallTile);
-				}
+				map[cornerPos.x, cornerPos.y] = GridType.WALL;
+				wallTilemap.SetTile(cornerPos, wallTile);
 			}
 		}
 	}
+
+	// bool IsInBounds(Vector3Int pos)
+	// {
+	// 	return pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height;
+	// }
+
+
+
+	// void SetFloorAndWalls(Vector2Int position, bool isHorizontal)
+	// {
+	// 	// 设置中间的路为地板
+	// 	wallTilemap.SetTile(new Vector3Int(position.x, position.y, 0), null);
+	// 	groundTilemap.SetTile(new Vector3Int(position.x, position.y, 0), floorTile);
+	// 	map[position.x, position.y] = GridType.FLOOR;
+
+	// 	// 设置当前方向的墙壁
+	// 	Vector2Int[] directions = {
+	// 	new Vector2Int(0, 1), // 上
+	// 	new Vector2Int(1, 0), // 右
+	// 	new Vector2Int(0, -1), // 下
+	// 	new Vector2Int(-1, 0) // 左
+	// 	};
+
+	// 	foreach (var dir in directions)
+	// 	{
+	// 		Vector3Int wallPos = new Vector3Int(position.x + dir.x, position.y + dir.y, 0);
+	// 		if (wallPos.x >= 0 && wallPos.x < width && wallPos.y >= 0 && wallPos.y < height)
+	// 		{
+	// 			if (map[wallPos.x, wallPos.y] != GridType.FLOOR) // 如果不是地板，则设置为墙壁
+	// 			{
+	// 				map[wallPos.x, wallPos.y] = GridType.WALL; // 墙壁标记为1
+	// 				wallTilemap.SetTile(wallPos, wallTile);
+	// 			}
+	// 		}
+	// 	}
+
+	// 	// 额外设置拐角的墙壁，以确保完全覆盖
+	// 	SetCornerWalls(position);
+	// }
+
+
+
+	// void SetCornerWalls(Vector2Int position)
+	// {
+	// 	Vector2Int[] cornerDirections = {
+	// 	new Vector2Int(1, 1),   // 右上
+	// 	new Vector2Int(1, -1),  // 右下
+	// 	new Vector2Int(-1, -1), // 左下
+	// 	new Vector2Int(-1, 1)   // 左上
+	// };
+
+	// 	foreach (var dir in cornerDirections)
+	// 	{
+	// 		Vector3Int cornerPos = new Vector3Int(position.x + dir.x, position.y + dir.y, 0);
+	// 		if (cornerPos.x >= 0 && cornerPos.x < width && cornerPos.y >= 0 && cornerPos.y < height)
+	// 		{
+	// 			if (map[cornerPos.x, cornerPos.y] != GridType.FLOOR) // 如果不是地板，则设置为墙壁
+	// 			{
+	// 				map[cornerPos.x, cornerPos.y] = GridType.WALL; // 墙壁标记为1
+	// 				wallTilemap.SetTile(cornerPos, wallTile);
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	[System.Serializable]
 	public class Room

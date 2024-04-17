@@ -626,17 +626,17 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  width: 80
-  height: 80
+  width: 100
+  height: 100
   publicSeed: 
   useRandomSeed: 1
   groundTilemap: {fileID: 1687842857}
   wallTilemap: {fileID: 128605481}
   wallTile: {fileID: 11400000, guid: 56764d6de57831c499b23eb5d0fb6339, type: 2}
   floorTile: {fileID: 11400000, guid: 601f7fce4b7749e49a31e5e2958d8880, type: 2}
-  randomFillPercent: 37
+  randomFillPercent: 40
   roomNums: 5
-  roomSize: 20
+  roomSize: 22
   rooms: []
   players: []
   furthestRoom:
