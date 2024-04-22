@@ -1,0 +1,12 @@
+.custom-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+GridBackground{
+    --grid-background-color: rgb(40, 40, 40);
+    --line-color: rgba(220, 220, 220, 0.1);
+    --thick-line-color: rgba(220, 220, 220, 0.2);
+    --spacing: 15;
+}

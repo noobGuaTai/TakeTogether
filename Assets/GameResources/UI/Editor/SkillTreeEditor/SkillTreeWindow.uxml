@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/GameResources/UI/Editor/SkillTreeEditor/SkillTreeWindow.uss?fileID=7433441132597879392&amp;guid=1d213737786b7824c802b950547a744d&amp;type=3#SkillTreeWindow" />
+    <SkillTreeSplitView name="SkillTreeSplitView" orientation="Horizontal" fixed-pane-initial-dimension="200">
+        <ui:VisualElement name="LPanel" style="flex-grow: 1; width: 250px; opacity: 1; flex-shrink: 0; min-width: 200px; background-color: rgb(60, 60, 60);">
+            <ui:Label tabindex="-1" text="Inspector" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="color: rgb(200, 200, 200); font-size: 24px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(196, 196, 196); border-right-color: rgb(196, 196, 196); border-top-color: rgb(196, 196, 196); border-bottom-color: rgb(196, 196, 196); -unity-font-style: bold;" />
+            <SkillTreeSplitView name="SkillTreeSplitViewInspector" orientation="Vertical" fixed-pane-initial-dimension="180">
+                <ui:Foldout text="-SkillTree" name="FoldoutTree" style="color: rgb(200, 200, 200); font-size: 18px; background-color: rgb(60, 60, 60); flex-direction: column;">
+                    <SkillTreeInspectorAsset name="SkillTreeInspectorAsset" style="border-top-width: 1px; border-right-width: 1px; border-bottom-width: 5px; border-left-width: 1px; border-left-color: rgb(62, 62, 62); border-right-color: rgb(62, 62, 62); border-top-color: rgb(62, 62, 62); border-bottom-color: rgb(62, 62, 62);" />
+                </ui:Foldout>
+                <ui:Foldout text="-SkillAttribution" name="FoldoutNode" style="font-size: 18px; color: rgb(200, 200, 200);">
+                    <SkillTreeInspectorNode name="SkillTreeInspectorNode">
+                        <ui:VisualElement name="Background" style="flex-grow: 1; min-height: 50px; background-color: rgba(0, 0, 0, 0.19);">
+                            <ui:Label tabindex="-1" text="Skill Name" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 16px;" />
+                        </ui:VisualElement>
+                    </SkillTreeInspectorNode>
+                </ui:Foldout>
+            </SkillTreeSplitView>
+        </ui:VisualElement>
+        <ui:VisualElement name="RPanel" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="SkillTree" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(226, 226, 226); background-color: rgb(60, 60, 60); font-size: 24px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(190, 190, 190); border-right-color: rgb(190, 190, 190); border-top-color: rgb(190, 190, 190); border-bottom-color: rgb(190, 190, 190); -unity-font-style: bold;" />
+            <SkillTreeGraphView name="SkillTreeGraphView" view-data-key="SkillTreeGraphView" style="flex-grow: 1; overflow: visible; background-color: rgba(0, 0, 0, 0);" />
+        </ui:VisualElement>
+    </SkillTreeSplitView>
+</ui:UXML>

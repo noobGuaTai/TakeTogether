@@ -7,6 +7,7 @@
   <xs:import schemaLocation="UnityEditor.U2D.Animation.SpriteLibraryEditor.xsd" namespace="UnityEditor.U2D.Animation.SpriteLibraryEditor" />
   <xs:import schemaLocation="UnityEditor.U2D.Layout.xsd" namespace="UnityEditor.U2D.Layout" />
   <xs:import schemaLocation="UnityEditor.Tilemaps.xsd" namespace="UnityEditor.Tilemaps" />
+  <xs:import schemaLocation="YooAsset.Editor.xsd" namespace="YooAsset.Editor" />
   <xs:import schemaLocation="UnityEditor.ShaderGraph.Drawing.xsd" namespace="UnityEditor.ShaderGraph.Drawing" />
   <xs:include schemaLocation="GlobalNamespace.xsd" />
   <xs:import schemaLocation="UnityEditor.Rendering.LookDev.xsd" namespace="UnityEditor.Rendering.LookDev" />
