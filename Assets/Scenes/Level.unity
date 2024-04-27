@@ -626,8 +626,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  width: 100
-  height: 100
+  width: 80
+  height: 80
   publicSeed: 
   useRandomSeed: 1
   groundTilemap: {fileID: 1687842857}
