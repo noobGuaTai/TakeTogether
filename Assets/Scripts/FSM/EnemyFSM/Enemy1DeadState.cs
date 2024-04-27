@@ -5,24 +5,26 @@ using UnityEngine;
 public class Enemy1DeadState : IState
 {
     private Enemy1FSM enemy1FSM;
+    private Parameters parameters;
 
     public Enemy1DeadState(Enemy1FSM enemy1FSM)
     {
         this.enemy1FSM = enemy1FSM;
+        this.parameters = enemy1FSM.parameters;
     }
 
     public void OnEnter()
     {
-        throw new System.NotImplementedException();
+        parameters.anim.Play("death");
     }
 
     public void OnExit()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public void OnUpdate()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

@@ -44,6 +44,7 @@ public class Enemy1FSM : EnemyMove
     public Dictionary<Enemy1StateType, IState> state = new Dictionary<Enemy1StateType, IState>();
 
     private double time;
+    private Enemy1Attribute enemy1Attribute;
 
 
     void Start()
@@ -57,6 +58,7 @@ public class Enemy1FSM : EnemyMove
         ChangeState(Enemy1StateType.Idle);
 
         time = NetworkTime.time;
+        enemy1Attribute = GetComponent<Enemy1Attribute>();
 
     }
 
@@ -70,6 +72,10 @@ public class Enemy1FSM : EnemyMove
                 parameters.isPlayerDetected = Physics2D.OverlapCircle(transform.position, parameters.detectionRadius, parameters.playerLayer);
                 parameters.isAttacking = Physics2D.OverlapCircle(transform.position, parameters.attackDetectionRadius, parameters.playerLayer);
                 currentState.OnUpdate();
+                if(enemy1Attribute.HP <= 0)
+                {
+                    ChangeState(Enemy1StateType.Dead);
+                }
             }
         }
 
