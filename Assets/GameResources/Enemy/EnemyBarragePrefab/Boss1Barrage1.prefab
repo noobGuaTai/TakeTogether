@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7190279135465692076}
   - component: {fileID: 4903061965736007162}
   - component: {fileID: 863921068734926681}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Boss1Barrage1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4930,7 +4930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3705261198294683159}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Plane Transform 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

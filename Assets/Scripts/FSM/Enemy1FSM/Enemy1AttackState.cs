@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using NUnit.Framework;
 
 public class Enemy1AttackState : IState
 {
     private Enemy1FSM enemy1FSM;
-    private Parameters parameters;
+    private Enemy1Parameters parameters;
     private double timer;
 
     public Enemy1AttackState(Enemy1FSM enemy1FSM)
@@ -17,7 +18,8 @@ public class Enemy1AttackState : IState
 
     public void OnEnter()
     {
-        parameters.anim.Play("attack");
+        if (enemy1FSM.isServer)
+            enemy1FSM.ShowAnim("attack");
         timer = NetworkTime.time;
         parameters.rb.velocity = Vector2.zero;
     }
@@ -29,11 +31,15 @@ public class Enemy1AttackState : IState
 
     public void OnUpdate()
     {
-        parameters.rb.velocity = Vector2.zero;
-        if (!parameters.isAttacking && IsAnimationDone("attack"))
+        if (enemy1FSM.isServer)
         {
-            enemy1FSM.ChangeState(Enemy1StateType.Chase);
+            parameters.rb.velocity = Vector2.zero;
+            if (!parameters.isAttacking && IsAnimationDone("attack"))
+            {
+                enemy1FSM.ChangeState(Enemy1StateType.Chase);
+            }
         }
+
     }
 
     bool IsAnimationDone(string stateName)

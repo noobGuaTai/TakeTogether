@@ -105,5 +105,5 @@ Material:
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _border: {r: -480, g: -480, b: 480, a: 480}
-    - _playerMapUV: {r: 0.2840449, g: 0.84185565, b: 0, a: 0}
+    - _playerMapUV: {r: 0.58735466, g: 0.3302068, b: 0, a: 0}
   m_BuildTextureStacks: []

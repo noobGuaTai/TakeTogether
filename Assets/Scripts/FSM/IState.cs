@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public interface IState
 {
     void OnEnter();

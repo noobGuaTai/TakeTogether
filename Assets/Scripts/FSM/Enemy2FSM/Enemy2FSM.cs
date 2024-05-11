@@ -6,7 +6,7 @@ using Mirror;
 
 
 
-public enum Enemy1StateType
+public enum Enemy2StateType
 {
     Idle,
     Patrol,
@@ -16,49 +16,46 @@ public enum Enemy1StateType
 }
 
 [Serializable]
-public class Parameters
+public class Enemy2Parameters
 {
     public float detectionRadius = 100f;
-    public float moveSpeed = 80f;
-    public float randomMoveDistance = 100f;
-    public float attackDetectionRadius = 30f;
+    public float moveSpeed = 40f;
+    public float attackDetectionRadius = 75f;
     public LayerMask playerLayer;
-    public GameObject enemy1AttackTect;
+    public GameObject enemy2AttackTect;
 
     public bool isPlayerDetected = false;
     public bool isAttacking = false;
-    public Vector3 randomDestination;
-    public float moveTimer = 3f;
     public bool canMove = false;
     public Rigidbody2D rb;
     public Animator anim;
     public GameObject closedPlayer;
+    public GameObject enemy2Barrage;
 
 
 }
 
-public class Enemy1FSM : EnemyMove
+public class Enemy2FSM : EnemyMove
 {
-    public Parameters parameters;
+    public Enemy2Parameters parameters;
     public IState currentState;
-    public Dictionary<Enemy1StateType, IState> state = new Dictionary<Enemy1StateType, IState>();
+    public Dictionary<Enemy2StateType, IState> state = new Dictionary<Enemy2StateType, IState>();
 
     private double time;
-    private Enemy1Attribute enemy1Attribute;
+    private Enemy2Attribute enemy2Attribute;
 
 
     void Start()
     {
-        state.Add(Enemy1StateType.Idle, new Enemy1IdleState(this));
-        state.Add(Enemy1StateType.Patrol, new Enemy1PatrolState(this));
-        state.Add(Enemy1StateType.Chase, new Enemy1ChaseState(this));
-        state.Add(Enemy1StateType.Attack, new Enemy1AttackState(this));
-        state.Add(Enemy1StateType.Dead, new Enemy1DeadState(this));
+        state.Add(Enemy2StateType.Idle, new Enemy2IdleState(this));
+        state.Add(Enemy2StateType.Chase, new Enemy2ChaseState(this));
+        state.Add(Enemy2StateType.Attack, new Enemy2AttackState(this));
+        state.Add(Enemy2StateType.Dead, new Enemy2DeadState(this));
         // currentState = state[Enemy1StateType.Idle];
-        ChangeState(Enemy1StateType.Idle);
+        ChangeState(Enemy2StateType.Idle);
 
         time = NetworkTime.time;
-        enemy1Attribute = GetComponent<Enemy1Attribute>();
+        enemy2Attribute = GetComponent<Enemy2Attribute>();
 
     }
 
@@ -72,16 +69,16 @@ public class Enemy1FSM : EnemyMove
                 parameters.isPlayerDetected = Physics2D.OverlapCircle(transform.position, parameters.detectionRadius, parameters.playerLayer);
                 parameters.isAttacking = Physics2D.OverlapCircle(transform.position, parameters.attackDetectionRadius, parameters.playerLayer);
                 currentState.OnUpdate();
-                if(enemy1Attribute.HP <= 0)
+                if (enemy2Attribute.HP <= 0)
                 {
-                    ChangeState(Enemy1StateType.Dead);
+                    ChangeState(Enemy2StateType.Dead);
                 }
             }
         }
 
     }
 
-    public void ChangeState(Enemy1StateType stateType)
+    public void ChangeState(Enemy2StateType stateType)
     {
         if (currentState != null)
         {
@@ -89,6 +86,16 @@ public class Enemy1FSM : EnemyMove
         }
         currentState = state[stateType];
         currentState.OnEnter();
+    }
+
+    [ClientRpc]
+    public void ShowAnim(string name)
+    {
+        if (parameters.anim != null)
+        {
+            parameters.anim.Play(name);
+        }
+
     }
 
     void OnDrawGizmosSelected()

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy1ChaseState : IState
 {
     private Enemy1FSM enemy1FSM;
-    private Parameters parameters;
+    private Enemy1Parameters parameters;
 
     public Enemy1ChaseState(Enemy1FSM enemy1FSM)
     {
@@ -15,7 +15,8 @@ public class Enemy1ChaseState : IState
 
     public void OnEnter()
     {
-        parameters.anim.Play("run");
+        if (enemy1FSM.isServer)
+            enemy1FSM.ShowAnim("run");
     }
 
     public void OnExit()
@@ -25,17 +26,21 @@ public class Enemy1ChaseState : IState
 
     public void OnUpdate()
     {
-        if (!parameters.isPlayerDetected)
+        if (enemy1FSM.isServer)
         {
-            enemy1FSM.ChangeState(Enemy1StateType.Idle);
-            return;
+            if (!parameters.isPlayerDetected)
+            {
+                enemy1FSM.ChangeState(Enemy1StateType.Idle);
+                return;
+            }
+
+            if (parameters.isAttacking)
+            {
+                enemy1FSM.ChangeState(Enemy1StateType.Attack);
+            }
+            MoveTowards(parameters.closedPlayer.transform.position);
         }
 
-        if (parameters.isAttacking)
-        {
-            enemy1FSM.ChangeState(Enemy1StateType.Attack);
-        }
-        MoveTowards(parameters.closedPlayer.transform.position);
     }
 
     private void MoveTowards(Vector3 target)

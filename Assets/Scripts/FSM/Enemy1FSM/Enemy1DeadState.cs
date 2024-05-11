@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy1DeadState : IState
 {
     private Enemy1FSM enemy1FSM;
-    private Parameters parameters;
+    private Enemy1Parameters parameters;
 
     public Enemy1DeadState(Enemy1FSM enemy1FSM)
     {
@@ -15,7 +15,8 @@ public class Enemy1DeadState : IState
 
     public void OnEnter()
     {
-        parameters.anim.Play("death");
+        if(enemy1FSM.isServer)
+            enemy1FSM.ShowAnim("death");
     }
 
     public void OnExit()
