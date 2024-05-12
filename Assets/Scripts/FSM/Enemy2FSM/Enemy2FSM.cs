@@ -31,6 +31,7 @@ public class Enemy2Parameters
     public Animator anim;
     public GameObject closedPlayer;
     public GameObject enemy2Barrage;
+    public Enemy2Attribute enemy2Attribute;
 
 
 }
@@ -42,7 +43,6 @@ public class Enemy2FSM : EnemyMove
     public Dictionary<Enemy2StateType, IState> state = new Dictionary<Enemy2StateType, IState>();
 
     private double time;
-    private Enemy2Attribute enemy2Attribute;
 
 
     void Start()
@@ -55,7 +55,7 @@ public class Enemy2FSM : EnemyMove
         ChangeState(Enemy2StateType.Idle);
 
         time = NetworkTime.time;
-        enemy2Attribute = GetComponent<Enemy2Attribute>();
+        parameters.enemy2Attribute = GetComponent<Enemy2Attribute>();
 
     }
 
@@ -69,7 +69,7 @@ public class Enemy2FSM : EnemyMove
                 parameters.isPlayerDetected = Physics2D.OverlapCircle(transform.position, parameters.detectionRadius, parameters.playerLayer);
                 parameters.isAttacking = Physics2D.OverlapCircle(transform.position, parameters.attackDetectionRadius, parameters.playerLayer);
                 currentState.OnUpdate();
-                if (enemy2Attribute.HP <= 0)
+                if (parameters.enemy2Attribute.HP <= 0)
                 {
                     ChangeState(Enemy2StateType.Dead);
                 }
@@ -95,7 +95,6 @@ public class Enemy2FSM : EnemyMove
         {
             parameters.anim.Play(name);
         }
-
     }
 
     void OnDrawGizmosSelected()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy2AttackState : IState
@@ -51,10 +52,14 @@ public class Enemy2AttackState : IState
     {
         isCoroutineRunning = true;
         yield return new WaitForSeconds(1.3f);
+        if(parameters.enemy2Attribute.HP <= 0)
+        {
+            yield break;
+        }
         var barrage2Instance = UnityEngine.Object.Instantiate(parameters.enemy2Barrage, enemy2FSM.transform.position, Quaternion.identity);
         NetworkServer.Spawn(barrage2Instance);
         UnityEngine.Object.Destroy(barrage2Instance, 6f);
-        attackCoolDown = UnityEngine.Random.Range(1f, 3f); // 随机冷却时间
+        attackCoolDown = UnityEngine.Random.Range(1.3f, 3f); // 随机冷却时间
         isCoroutineRunning = false;
     }
 
@@ -70,9 +75,9 @@ public class Enemy2AttackState : IState
         {
             parameters.anim.Play("attack");
             yield return new WaitForSeconds(1.6f);
-            parameters.anim.Play("float");
+            if(parameters.enemy2Attribute.HP > 0)
+                parameters.anim.Play("float");
         }
-
     }
 
     bool IsAnimationDone(string stateName)

@@ -15,8 +15,7 @@ public class Enemy1DeadState : IState
 
     public void OnEnter()
     {
-        if(enemy1FSM.isServer)
-            enemy1FSM.ShowAnim("death");
+        parameters.rb.velocity = Vector2.zero;
     }
 
     public void OnExit()
