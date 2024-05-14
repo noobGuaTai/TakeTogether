@@ -453,8 +453,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  width: 100
-  height: 100
+  width: 80
+  height: 80
   publicSeed: 
   useRandomSeed: 1
   groundTilemap: {fileID: 1687842857}
@@ -108248,7 +108248,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2007
+    m_Bits: 6103
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

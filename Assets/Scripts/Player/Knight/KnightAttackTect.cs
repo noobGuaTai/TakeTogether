@@ -29,17 +29,9 @@ public class KnightAttackTect : NetworkBehaviour
             ChangeHPCommand(enemyAttribute);
             Debug.Log(enemyAttribute.HP);
 
-            StartCoroutine(KnockbackRoutine(other));
+            // StartCoroutine(KnockbackRoutine(other));
 
-            // 应用击退效果
-            Rigidbody2D enemyRb = other.GetComponent<Rigidbody2D>();
-            if (enemyRb != null)
-            {
-                // 计算击退方向
-                Vector2 knockbackDirection = (other.transform.position - transform.position).normalized;
-                // 应用力
-                enemyRb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
-            }
+
             if (other.gameObject.layer == 7)// 7为enemy
             {
                 GetComponentInParent<PlayerAttribute>().enemyHPUI.SetActive(true);
@@ -52,9 +44,15 @@ public class KnightAttackTect : NetworkBehaviour
     //暂停敌人的移动
     IEnumerator KnockbackRoutine(Collider2D other)
     {
-        other.GetComponent<EnemyMove>().enabled = false;
         yield return new WaitForSeconds(knockbackDuration);
-        other.GetComponent<EnemyMove>().enabled = true;
+        Rigidbody2D enemyRb = other.GetComponent<Rigidbody2D>();
+        if (enemyRb != null)
+        {
+            // 计算击退方向
+            Vector2 knockbackDirection = (other.transform.position - transform.position).normalized;
+            // 应用力
+            enemyRb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+        }
     }
 
     [Command]

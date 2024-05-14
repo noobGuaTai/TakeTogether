@@ -229,7 +229,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!95 &2630255944690882768
@@ -332,7 +332,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   HPUI: {fileID: 0}
-  moveSpeed: 80
+  moveSpeed: 120
   dashSpeed: 400
   dashTime: 0.2
   attackDuration: 0.3

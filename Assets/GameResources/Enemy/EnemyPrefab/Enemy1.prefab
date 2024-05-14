@@ -65,8 +65,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.011338949, y: -0.037796825}
-  m_Size: {x: 0.3266096, y: 0.44440633}
+  m_Offset: {x: -16.126436, y: -1.7023959}
+  m_Size: {x: 55.53641, y: 76.03588}
   m_Direction: 0
 --- !u!114 &4483227852250630238
 MonoBehaviour:
@@ -81,6 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackCooldown: 1
+  attackTrigger: 0
 --- !u!1 &7689738140122501342
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +99,7 @@ GameObject:
   - component: {fileID: 8194398673889044334}
   - component: {fileID: -8626023988161977519}
   - component: {fileID: 7982810639872253828}
+  - component: {fileID: 2138154028877728929}
   m_Layer: 7
   m_Name: Enemy1
   m_TagString: Enemy
@@ -260,7 +262,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7689738140122501342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d85038c90f32a8d4c9b481e34fddd2f0, type: 3}
   m_Name: 
@@ -301,7 +303,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!114 &-8626023988161977519
@@ -356,3 +358,38 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!114 &2138154028877728929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7689738140122501342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 511d419c012af1143b62acb8ace30abd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  allPlayers: []
+  closedPlayer: {fileID: 0}
+  isAttacking: 0
+  parameters:
+    detectionRadius: 80
+    moveSpeed: 40
+    randomMoveDistance: 40
+    attackDetectionRadius: 30
+    playerLayer:
+      serializedVersion: 2
+      m_Bits: 64
+    enemy1AttackTect: {fileID: 2634614832712157376}
+    isPlayerDetected: 0
+    isAttacking: 0
+    randomDestination: {x: 0, y: 0, z: 0}
+    moveTimer: 3
+    canMove: 0
+    rb: {fileID: 8194398673889044334}
+    anim: {fileID: 4654834901823328214}
+    closedPlayer: {fileID: 0}

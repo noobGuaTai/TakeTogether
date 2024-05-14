@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4624498437108808127}
   - component: {fileID: 5461538779097318149}
   - component: {fileID: 8456109042181635598}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Boss1Barrage2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

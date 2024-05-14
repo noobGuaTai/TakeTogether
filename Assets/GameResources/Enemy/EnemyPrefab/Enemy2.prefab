@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 3819009697578233958}
   - component: {fileID: 2213719968235905547}
   - component: {fileID: 6349721606735120973}
-  - component: {fileID: 7189662297713314317}
   - component: {fileID: 4898392593694424972}
   - component: {fileID: 2333469435188259061}
   - component: {fileID: 2125001706432424695}
   - component: {fileID: 2477872700183007150}
+  - component: {fileID: 8335422360997133504}
   m_Layer: 7
   m_Name: Enemy2
   m_TagString: Enemy2
@@ -136,28 +136,6 @@ MonoBehaviour:
   UI: {fileID: 0}
   tween: {fileID: 0}
   material: {fileID: 0}
---- !u!114 &7189662297713314317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 978404134085458214}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fc2cc826792e0c429cb8cef242b27a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  allPlayers: []
-  closedPlayer: {fileID: 0}
-  isAttacking: 0
-  detectionRangeA: 120
-  stopChaseRangeB: 100
-  moveSpeed: 12
-  enemy2Barrage: {fileID: 228005358404479225, guid: ddc80382347268148a049d6efd342e6f, type: 3}
 --- !u!70 &4898392593694424972
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -272,3 +250,36 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
+--- !u!114 &8335422360997133504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978404134085458214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24f14eb1eb633134b8a68ff02cc33ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  allPlayers: []
+  closedPlayer: {fileID: 0}
+  isAttacking: 0
+  parameters:
+    detectionRadius: 150
+    moveSpeed: 20
+    attackDetectionRadius: 75
+    playerLayer:
+      serializedVersion: 2
+      m_Bits: 64
+    enemy2AttackTect: {fileID: 0}
+    isPlayerDetected: 0
+    isAttacking: 0
+    canMove: 0
+    rb: {fileID: 2333469435188259061}
+    anim: {fileID: 2213719968235905547}
+    closedPlayer: {fileID: 0}
+    enemy2Barrage: {fileID: 228005358404479225, guid: ddc80382347268148a049d6efd342e6f, type: 3}

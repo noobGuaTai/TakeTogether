@@ -89,7 +89,7 @@ public class EnemyAttribute : NetworkBehaviour
     [ClientRpc]
     public virtual void Die()
     {
-        anim.SetBool("death", true);
+        anim.Play("death");
         GetComponent<Collider2D>().enabled = false;
         Destroy(gameObject, 1f);
         // gameObject.SetActive(false);
