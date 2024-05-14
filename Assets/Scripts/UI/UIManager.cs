@@ -1,7 +1,7 @@
 using Mirror;
 using UnityEngine;
 
-public class UIManager : NetworkBehaviour
+public class UIManager : NetworkBehaviour// 用NetworkManager生成玩家回调来生成UI
 {
     public GameObject playerHPPrefab; // 血条UI的预制体
     public GameObject enemyHPPrefab; // 血条UI的预制体
@@ -58,8 +58,6 @@ public class UIManager : NetworkBehaviour
                 player.GetComponent<PlayerAttribute>().bossHPUI = bossHPUI;
                 bossHPUI.SetActive(false);
             }
-
         }
     }
-
 }

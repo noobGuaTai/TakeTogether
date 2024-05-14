@@ -94,6 +94,7 @@ public class MapGenerator : NetworkBehaviour
 			else if (bossHPUI != null && bossHPUI.isDie == false && IsPlayerInRoom(farRoom, playerManager.localPlayer.transform.position))
 			{
 				bossHPUI.ActivateBossHPUI();
+				playerManager.localPlayer.GetComponent<PlayerMove>().isPlayerInBossRoom = true;
 			}
 			else if (bossHPUI != null && bossHPUI.isDie == true)
 			{

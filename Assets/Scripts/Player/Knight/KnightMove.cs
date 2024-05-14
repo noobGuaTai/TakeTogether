@@ -34,6 +34,7 @@ public class KnightMove : PlayerMove
         playerAttribute = GetComponent<PlayerAttribute>();
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
         lastRestoreMPTime = NetworkTime.time;
+        isPlayerInBossRoom = false;
     }
 
     void Update()

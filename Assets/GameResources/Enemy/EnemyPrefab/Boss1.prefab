@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3661135354122065615}
   - component: {fileID: 997857796172391565}
   - component: {fileID: 3460895647588125984}
-  - component: {fileID: 8854247015268833442}
   - component: {fileID: 6318372867110204951}
   - component: {fileID: 7240762336656203932}
+  - component: {fileID: 6456476097170629080}
   m_Layer: 8
   m_Name: Boss1
   m_TagString: Boss1
@@ -36,7 +36,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6786712542000718453}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6989047296456887144
@@ -198,30 +199,6 @@ MonoBehaviour:
   UI: {fileID: 0}
   tween: {fileID: 0}
   material: {fileID: 0}
---- !u!114 &8854247015268833442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4702855559027084351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce46031acdccf7a45acc4477d806fef9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  allPlayers: []
-  closedPlayer: {fileID: 0}
-  isAttacking: 0
-  detectionRangeA: 120
-  stopChaseRangeB: 80
-  moveSpeed: 24
-  chooseAttack: 0
-  barrage2Prefab: {fileID: 2263960870291288537, guid: b000134a98bf2ed428ab6f12a1c475e9, type: 3}
-  barrage1Prefab: {fileID: 3704805397966435546, guid: 203e062d146da6d439d9a0a62d38a209, type: 3}
 --- !u!114 &6318372867110204951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,3 +251,118 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!114 &6456476097170629080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4702855559027084351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8419005ddfe73b2449b0df5f9579a553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  allPlayers: []
+  closedPlayer: {fileID: 0}
+  isAttacking: 0
+  parameters:
+    meleeAttackDetRadius: 50
+    remoteAttackDetRadius: 200
+    playerLayer:
+      serializedVersion: 2
+      m_Bits: 64
+    isMeleeAttackDetected: 0
+    isRemoteAttackDetected: 0
+    randomDestination: {x: 0, y: 0, z: 0}
+    rb: {fileID: 997857796172391565}
+    anim: {fileID: 990827676342895613}
+    closedPlayer: {fileID: 0}
+    barrage1Prefab: {fileID: 3704805397966435546, guid: 203e062d146da6d439d9a0a62d38a209, type: 3}
+    barrage2Prefab: {fileID: 2263960870291288537, guid: b000134a98bf2ed428ab6f12a1c475e9, type: 3}
+    meleeAttackTect: {fileID: 7710499062606529224}
+    boss1Attribute: {fileID: 0}
+--- !u!1 &7710499062606529224
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6786712542000718453}
+  - component: {fileID: 1177646500066305216}
+  - component: {fileID: 4332206944962686271}
+  m_Layer: 0
+  m_Name: Boss1MeleeAttackTect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6786712542000718453
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7710499062606529224}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9047713321520871110}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &1177646500066305216
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7710499062606529224}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -17.736874, y: -11.297829}
+  m_Size: {x: 67.63564, y: 67.63564}
+  m_Direction: 0
+--- !u!114 &4332206944962686271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7710499062606529224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36a4886041098bb4c978aa3d1dd070d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackTrigger: 0
