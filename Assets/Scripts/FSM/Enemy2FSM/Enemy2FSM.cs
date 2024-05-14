@@ -9,7 +9,6 @@ using Mirror;
 public enum Enemy2StateType
 {
     Idle,
-    Patrol,
     Chase,
     Attack,
     Dead

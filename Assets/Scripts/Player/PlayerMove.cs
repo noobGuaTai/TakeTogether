@@ -6,6 +6,7 @@ using Mirror;
 public class PlayerMove : NetworkBehaviour
 {
     public GameObject HPUI;
+    public bool isPlayerInBossRoom;
     public virtual void Move(){}
 
     public virtual void Attack(){}
