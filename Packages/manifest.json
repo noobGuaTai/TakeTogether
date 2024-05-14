@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.code-philosophy.hybridclr": "https://github.com/focus-creative-games/hybridclr_unity.git",
+    "com.csaratakij.sceneselector": "https://github.com/CSaratakij/SceneSelector.git#upm",
     "com.tuyoogame.yooasset": "2.1.1",
     "com.unity.2d.aseprite": "1.1.2",
     "com.unity.collab-proxy": "2.0.4",

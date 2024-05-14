@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "2697eb5a90cc44f226cd4ca4ad7ea1259ab38f56"
     },
+    "com.csaratakij.sceneselector": {
+      "version": "https://github.com/CSaratakij/SceneSelector.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1be87b5aa849e9f802664c22a45964c90aabd7c5"
+    },
     "com.tuyoogame.yooasset": {
       "version": "2.1.1",
       "depth": 0,

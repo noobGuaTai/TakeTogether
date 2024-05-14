@@ -80,8 +80,8 @@ public class LoadScene : MonoBehaviour
         RectTransform image4Rect = GameObject.Find("BackgroundImage-4").GetComponent<RectTransform>();
 
         // 启动协程，移动图片
-        StartCoroutine(MoveImageCoroutine(image3Rect, 506f, duration));
-        StartCoroutine(MoveImageCoroutine(image4Rect, 1647f, duration));
+        StartCoroutine(MoveImageCoroutine(image3Rect, 50f, duration));
+        StartCoroutine(MoveImageCoroutine(image4Rect, 160f, duration));
     }
 
     IEnumerator MoveImageCoroutine(RectTransform imageRect, float distance, float time)

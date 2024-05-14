@@ -175,8 +175,13 @@ public class SkillTreeGraphView : GraphView
         DeleteElements(graphElements);
 
         nodeAsset2View.Clear();
+        var badKeys = new List<string>();
         foreach (var nodeAssetPair in treeAsset.nodes)
         {
+            if (nodeAssetPair.Key != nodeAssetPair.Value.keyName) {
+                badKeys.Add(nodeAssetPair.Key);
+                continue;
+            }
             var nodeAsset = nodeAssetPair.Value;
             var nodeView = AddNode(nodeAsset);
 
@@ -184,12 +189,19 @@ public class SkillTreeGraphView : GraphView
             nodeView.onSelected = OnSelectedNodeChange;
             nodeAsset2View.Add(nodeAsset, nodeView);
         }
+        for(int i = 0;i < badKeys.Count;i++) {
+            treeAsset.nodes.Remove(badKeys[i]);
+        }
         // adding root node for skills which have not parent
 
         foreach (var nodeAssetPair in treeAsset.nodes)
         {
             var stNode = nodeAssetPair.Value;
             var stNodeView = nodeAsset2View[stNode];
+            // remove null
+            stNode.outDegressNodes.Where((SkillTreeNodeAsset asset) => {
+                return asset == null;
+            }).ToList().ForEach((SkillTreeNodeAsset nullAsset) => { stNode.outDegressNodes.Remove(nullAsset); });
             foreach (var edNode in stNode.outDegressNodes)
             {
                 var edNodeView = nodeAsset2View[edNode];
@@ -203,6 +215,8 @@ public class SkillTreeGraphView : GraphView
 
     public GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
     {
+        Undo.RecordObject(treeAsset, "Modify GraphView Asset");
+        
         if (graphViewChange.elementsToRemove != null)
         {
             foreach (var item in graphViewChange.elementsToRemove)
@@ -248,6 +262,9 @@ public class SkillTreeGraphView : GraphView
                 AssetDatabase.SaveAssets();
             }
         }
+
+        EditorUtility.SetDirty(treeAsset);
+        AssetDatabase.SaveAssetIfDirty(treeAsset);
         return graphViewChange;
     }
 
@@ -284,31 +301,28 @@ public class SkillTreeInspectorNode : VisualElement
 
     public SkillTreeGraphView.Node nodeView;
     public Editor editor = null;
+    public SkillTreeAsset treeAsset;
 
-    public void Refresh()
-    {
+    public void Refresh() {
         var skillNameBackground = this.Q<VisualElement>("Background");
         var oldToolbar = skillNameBackground.Q<ToolbarPopupSearchField>("toolbar");
         if (oldToolbar != null) { skillNameBackground.Remove(oldToolbar); }
 
         var editorContainer = this.Q<IMGUIContainer>("editor-container");
         if (editorContainer != null) { Remove(editorContainer); }
-        if (editor != null)
-        {
+        if (editor != null) {
             Editor.DestroyImmediate(editor);
             editor = null;
         }
-        if (nodeView != null)
-        {
+        if (nodeView != null) {
             var toolbar = new ToolbarPopupSearchField(); toolbar.name = "toolbar";
 
-            toolbar.RegisterValueChangedCallback((ChangeEvent<String> ce) =>
-            {
+            toolbar.RegisterValueChangedCallback((ChangeEvent<String> ce) => {
                 //Debug.Log($"skillTree window: {ce.previousValue} -> {ce.newValue}");
                 nodeView.SetSkillName(ce.newValue);
                 UpdateMenu(ce.newValue, toolbar);
             });
-            
+
             toolbar.style.width = 200;
             toolbar.style.height = 30;
             toolbar.style.flexGrow = 0;
@@ -328,8 +342,7 @@ public class SkillTreeInspectorNode : VisualElement
             skillNameBackground.Add(toolbar);
 
             editor = Editor.CreateEditor(nodeView.nodeAsset);
-            IMGUIContainer container = new IMGUIContainer(() =>
-            {
+            IMGUIContainer container = new IMGUIContainer(() => {
                 editor.OnInspectorGUI();
             });
             container.name = "editor-container";
@@ -341,26 +354,31 @@ public class SkillTreeInspectorNode : VisualElement
         }
     }
 
-    void UpdateMenu(string keyword, ToolbarPopupSearchField toolbar)
-    {
+    // update skill-names poped up
+    void UpdateMenu(string keyword, ToolbarPopupSearchField toolbar) {
         toolbar.menu.ClearItems();
         var keywords = keyword.Split(' ');
-
         var skillNames = TypeCache.GetTypesDerivedFrom<Skill.SkillBase>().ToList()
-            .Select(type => type.Name.Substring(5)).ToList();
-        foreach (var skillName in
-            skillNames.Where(name => keywords.All(
-                key => name.IndexOf(key, StringComparison.OrdinalIgnoreCase) != -1)))
-        {
-            toolbar.menu.AppendAction(skillName, (DropdownMenuAction action) =>
-            {
+           .Select(type => type.Name.Substring(5)).ToList();
+
+        Func<List<string>> getCandidate = () => {
+            if (keywords[0] == "[Undefined]") {
+                return skillNames;
+            }
+            else return skillNames.Where(name => keywords.All(
+                  key => name.IndexOf(key, StringComparison.OrdinalIgnoreCase) != -1)).ToList();
+        };
+
+
+        foreach (var skillName in getCandidate()) {
+            toolbar.menu.AppendAction(skillName, (DropdownMenuAction action) => {
                 toolbar.value = skillName;
+                treeAsset.ChangeNodeSkillName(nodeView.nodeAsset, skillName);
             });
         };
 
         //Debug.Log(toolbar.menu.MenuItems().Count);
-        if (toolbar.menu.MenuItems().Count == 0)
-        {
+        if (toolbar.menu.MenuItems().Count == 0) {
             toolbar.menu.AppendAction("- No matching reuslt -", (DropdownMenuAction action) => { });
 
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerUnderAttackText : MonoBehaviour
 {
-    private float moveSpeed = 10f; // 上移速度
+    private float moveSpeed = 30f; // 上移速度
     private float fadeOutTime = 1f; // 淡出时间
     private TextMeshProUGUI textComponent;
 

@@ -130,7 +130,7 @@ MonoBehaviour:
         UserData: 
     - GroupName: UI
       GroupDesc: 
-      AssetTags: 
+      AssetTags: UI
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/GameResources/UI
@@ -148,6 +148,19 @@ MonoBehaviour:
       Collectors:
       - CollectPath: Assets/GameResources/Props
         CollectorGUID: 6bef451087aa5fd4d93aee58ff0f856d
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: skillIcon
+      GroupDesc: 
+      AssetTags: skillIcon
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/GameResources/Skills/SkillIcon
+        CollectorGUID: 6c352db1b189a0c48b4fd185b5845324
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

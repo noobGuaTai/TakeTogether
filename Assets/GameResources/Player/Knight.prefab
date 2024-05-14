@@ -303,10 +303,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  HP: 0
-  MAXHP: 0
-  MP: 0
-  MAXMP: 0
+  HP: 100
+  MAXHP: 100
+  MP: 100
+  MAXMP: 100
   CTP: 0
   isCT: 0
   MPConsume: 0

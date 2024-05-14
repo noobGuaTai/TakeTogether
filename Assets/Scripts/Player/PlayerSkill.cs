@@ -11,7 +11,9 @@ class PlayerSkill : MonoBehaviour {
     // only save can unlock skill
     public Dictionary<string, bool> canUnlockSkill = new Dictionary<string, bool>();
     
+    // <cntSkill, skill connected to>, for decreasing outDegree counter
     public Dictionary<string, Dictionary<string, bool>> skillOut = new Dictionary<string, Dictionary<string, bool>>();
+    // <cntSkill, skills which connect to this>, for calculating inDegree
     public Dictionary<string, Dictionary<string, bool>> skillIn = new Dictionary<string, Dictionary<string, bool>>();
 
     void loadSkillTree()
@@ -26,9 +28,9 @@ class PlayerSkill : MonoBehaviour {
         skillUnlockCounter.Clear();
         canUnlockSkill.Clear();
 
-
+        // add all root nodes to queue, then find initial skill connected to root
         Queue<string> queue = new Queue<string>();
-        foreach(var rootKeyName in skillTreeAsset.rootNode.Keys)
+        foreach(var rootKeyName in skillTreeAsset.rootNodes.Keys)
             queue.Enqueue(rootKeyName);
         while (queue.Count > 0)
         {
@@ -47,7 +49,7 @@ class PlayerSkill : MonoBehaviour {
         {
             var keyName = skillPair.Key;
             var skillAsset = skillPair.Value;
-            if (skillTreeAsset.rootNode.ContainsKey(keyName))
+            if (skillTreeAsset.rootNodes.ContainsKey(keyName))
                 continue;
             // in
             var skillName = skillAsset.typeName;
@@ -69,7 +71,8 @@ class PlayerSkill : MonoBehaviour {
         }
     }
 
-    void Unlock(string skillName) {
+    public void Unlock(string skillName) {
+        if (skillName == "Null") return;
         if (!canUnlockSkill.ContainsKey(skillName)) {
             Debug.LogWarning($"PlayerSkill: trying to unlock locked skill{skillName}");
             return;
@@ -93,6 +96,8 @@ class PlayerSkill : MonoBehaviour {
             }
         }
 
+        canUnlockSkill.Remove(skillName);
+
     }
 
     private void Awake()
@@ -109,6 +114,6 @@ class PlayerSkill : MonoBehaviour {
 
     private void Start()
     {
-        test();
+        //test();
     }
 }

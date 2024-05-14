@@ -64,10 +64,13 @@ public class EnemyAttribute : NetworkBehaviour
         HP += value;
 
         // 实例化伤害文本预设
-        Vector2 pos = new Vector2(transform.position.x, transform.position.y + 8f);
+        Vector2 pos = new Vector2(transform.position.x, transform.position.y + 16f);
         Vector2 screenPosition = Camera.main.WorldToScreenPoint(pos);
+        // initial using world position
         GameObject damageTextInstance = Instantiate(damageTextPrefab, screenPosition, Quaternion.identity, UI.transform);
         damageTextInstance.transform.SetParent(UI);
+        // we need set local position of text (local position of UI is same as screen position of screen)
+        damageTextInstance.transform.localPosition = screenPosition;
         // 设置伤害值
         damageTextInstance.GetComponent<EnemyUnderAttackText>().SetText(System.Math.Abs(value).ToString());
 
