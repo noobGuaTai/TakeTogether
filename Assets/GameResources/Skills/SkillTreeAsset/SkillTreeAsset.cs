@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu()]
+[System.Serializable]
 public class SkillTreeAsset : ScriptableObject
 {
     public enum NodeType { 
@@ -15,7 +16,7 @@ public class SkillTreeAsset : ScriptableObject
     }
 
     private Dictionary<string,SkillTreeNodeAsset> _nodes = new Dictionary<string, SkillTreeNodeAsset>();
-    public Dictionary<string, bool> rootNode = new Dictionary<string, bool>();
+    public Dictionary<string, bool> rootNodes = new Dictionary<string, bool>();
 
     [DoNotSerialize]
     private bool hasInit = false;
@@ -36,8 +37,11 @@ public class SkillTreeAsset : ScriptableObject
     void init(bool force = false) {
         if (hasInit && !force) { return; }
         hasInit = true;
+        _nodes.Clear();
+        rootNodes.Clear();
         var path = AssetDatabase.GetAssetPath(this);
         var objects = AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
+        // add nodes and rootNodes
         foreach (var obj in objects)
         {
             var skillTreeNodeAsset = obj as SkillTreeNodeAsset;
@@ -45,16 +49,15 @@ public class SkillTreeAsset : ScriptableObject
             {
                 if (nodes.ContainsKey(skillTreeNodeAsset.keyName)) {
                     AssetDatabase.RemoveObjectFromAsset(skillTreeNodeAsset);
-                    AssetDatabase.SaveAssets();
+                    //AssetDatabase.SaveAssets();
                     continue;
                 }
                 nodes.Add(skillTreeNodeAsset.keyName, skillTreeNodeAsset);
                 if(skillTreeNodeAsset.typeName == "#ROOT")
-                    rootNode.Add(skillTreeNodeAsset.keyName, skillTreeNodeAsset);
+                    rootNodes.Add(skillTreeNodeAsset.keyName, skillTreeNodeAsset);
             }
             
         }
-        
     }
 
     public string GetUniqueName(String name)
@@ -79,7 +82,7 @@ public class SkillTreeAsset : ScriptableObject
         
         nodes.Add(modifiedSkillName, node);
         if (nodeType == NodeType.ROOT)
-            rootNode.Add(modifiedSkillName, node);
+            rootNodes.Add(modifiedSkillName, node);
 
         AssetDatabase.AddObjectToAsset(node, this);
         AssetDatabase.SaveAssets();
@@ -93,7 +96,7 @@ public class SkillTreeAsset : ScriptableObject
         AssetDatabase.SaveAssets();
     }
 
-    public void changeNodeSkillName(SkillTreeNodeAsset node, string newSkillName) {
+    public void ChangeNodeSkillName(SkillTreeNodeAsset node, string newSkillName) {
         RemoveNode(node);
         var newNode = AddNode(newSkillName);
         newNode.editorPosition = node.editorPosition;

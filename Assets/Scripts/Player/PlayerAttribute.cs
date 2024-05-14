@@ -6,9 +6,9 @@ using UnityEngine;
 public class PlayerAttribute : NetworkBehaviour
 {
     [SyncVar] public float HP;
-    public float MAXHP;
+    public float MAXHP = 100;
     [SyncVar] public float MP;
-    public float MAXMP;
+    public float MAXMP = 100;
     [SyncVar] public float CTP;// 连携攻击值
     [SyncVar] public bool isCT;// 连携攻击确认
     [SyncVar] public float MPConsume;

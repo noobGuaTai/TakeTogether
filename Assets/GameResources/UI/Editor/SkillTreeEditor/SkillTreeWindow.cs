@@ -55,9 +55,9 @@ public class SkillTreeWindow : EditorWindow
     {
         var selectedSkillTreeAsset = Selection.activeObject as SkillTreeAsset;
         if (selectedSkillTreeAsset != null) {
-            if (graphView == null || inspectorAsset == null)
+            if (graphView == null || inspectorAsset == null || inspectorNode == null)
             {
-                Debug.LogWarning($"SkillTreeWindow: g:[{graphView}],i:[{inspectorAsset}]");
+                Debug.LogWarning($"SkillTreeWindow: g:[{graphView}],ia:[{inspectorAsset}],in[{inspectorNode}]");
                 return;
             }
 
@@ -67,6 +67,9 @@ public class SkillTreeWindow : EditorWindow
 
             inspectorAsset.treeAsset = selectedSkillTreeAsset;
             inspectorAsset.Refresh();
+
+            inspectorNode.treeAsset = selectedSkillTreeAsset;
+            inspectorNode.Refresh();
         }
     }
 }

@@ -30,18 +30,20 @@ public class UIManager : NetworkBehaviour
             PlayerMove playerMove = player.GetComponent<PlayerMove>();
             if (playerMove != null && playerMove.HPUI == null)
             {
-                GameObject playerHPUI = Instantiate(playerHPPrefab, canvas);//本地生成UI
+                //GameObject playerHPUI = Instantiate(playerHPPrefab, canvas);//本地生成UI
+                GameObject playerHPUI = transform.Find("/UI/PlayerHPUI").gameObject;
                 playerMove.HPUI = playerHPUI;
 
-                RectTransform uiRectTransform = playerHPUI.GetComponent<RectTransform>();
-                if (uiRectTransform != null)
-                {
-                    Vector2 newPosition = new Vector2(initialPosition.x, nextYPosition);
-                    uiRectTransform.anchoredPosition = newPosition;
-
-                    // 更新下一个UI元素的位置
-                    nextYPosition -= uiRectTransform.rect.height + spacing;
-                }
+                // TODO: RectTransform (multiplayer) 
+                //RectTransform uiRectTransform = playerHPUI.GetComponent<RectTransform>();
+                //if (uiRectTransform != null)
+                //{
+                //    Vector2 newPosition = new Vector2(initialPosition.x, nextYPosition);
+                //    uiRectTransform.anchoredPosition = newPosition;
+                //
+                //    // 更新下一个UI元素的位置
+                //    nextYPosition -= uiRectTransform.rect.height + spacing;
+                //}
 
                 playerHPUI.GetComponent<PlayerHPUI>().player = player;
             }

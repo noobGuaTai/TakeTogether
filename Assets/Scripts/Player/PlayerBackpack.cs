@@ -33,6 +33,9 @@ public class PlayerBackpack : MonoBehaviour
         }
     }
 
+    public void BuySkill(string skillName, int cost) { 
+        
+    }
 
     private void OnTriggerExit2D(Collider2D collision)
     {

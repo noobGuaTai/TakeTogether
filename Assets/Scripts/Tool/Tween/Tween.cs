@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,9 +11,8 @@ using UnityEngine;
 public class Tween : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+
     }
 
     public enum TweenType
@@ -25,26 +25,34 @@ public class Tween : MonoBehaviour
         VECTOR3INT,
     }
 
-    public enum TweenState { 
+    public enum TweenState
+    {
         STOP,
         RUNNING
     }
 
-    public class TweeNodeBase {
+    public enum PlayMode
+    {
+        NORMAL,
+        REPEAT,
+    }
+
+    public class TweeNodeBase
+    {
         public TweenType type;
         public float time;
         public TransitionType transitionType = TransitionType.LINEAR;
         public EaseType easeType = EaseType.IN;
     }
 
-    public class TweenNode<T> : TweeNodeBase {
+    public class TweenNode<T> : TweeNodeBase
+    {
         public Action<T> setter;
         public T start;
         public T end;
-       
 
-        public TweenNode(TweenType type, Action<T> setter, T start, T end, float time)
-        {
+
+        public TweenNode(TweenType type, Action<T> setter, T start, T end, float time) {
             base.type = type;
             this.setter = setter;
             this.start = start;
@@ -52,22 +60,33 @@ public class Tween : MonoBehaviour
             base.time = time;
 
         }
-        
+
     }
 
     List<TweeNodeBase> tweenNodeList = new List<TweeNodeBase>();
     int tweenIndex = 0;
     float tweenTime = 0;
-    TweenState tweenState;
-    bool clearWhenEnd = true;
+    TweenState _tweenState;
+    PlayMode _playMode = PlayMode.NORMAL;
 
-    public void Clear()
-    {
-        tweenNodeList.Clear();
-        tweenState = TweenState.STOP;
+    public PlayMode playMode {
+        set {
+            _playMode = value;
+        }
+        get {
+            return _playMode;
+        }
     }
 
-    public TweenType GetTweenType<T>() { 
+    bool clearWhenEnd = true;
+
+
+    public void Clear() {
+        tweenNodeList.Clear();
+        _tweenState = TweenState.STOP;
+    }
+
+    public TweenType GetTweenType<T>() {
         var type = typeof(T);
         if (type == typeof(float))
             return Tween.TweenType.FLOAT;
@@ -75,30 +94,27 @@ public class Tween : MonoBehaviour
         else if (type == typeof(Vector3)) return Tween.TweenType.VECTOR3;
         else if (type == typeof(Vector2Int)) return Tween.TweenType.VECTOR2INT;
         else if (type == typeof(Vector3Int)) return Tween.TweenType.VECTOR3INT;
-        else
-        {
+        else {
             return Tween.TweenType.UNKNOWN;
         }
 
     }
 
     public void AddTween<T>(
-        Action<T> setter, T start, T end, float time, 
-        TransitionType transitionType=TransitionType.LINEAR, EaseType easeType=EaseType.IN){
-        if (tweenState == Tween.TweenState.RUNNING)
-        {
+        Action<T> setter, T start, T end, float time,
+        TransitionType transitionType = TransitionType.LINEAR, EaseType easeType = EaseType.IN) {
+        if (_tweenState == Tween.TweenState.RUNNING) {
             Debug.LogError("Try to call AddTween while tween is running");
             return;
         }
 
         TweenType type = GetTweenType<T>();
-        if(type == Tween.TweenType.UNKNOWN)
-        {
+        if (type == Tween.TweenType.UNKNOWN) {
             Debug.LogError("Try to AddTween with a unspport type");
             return;
         }
         var cTime = 0f;
-        if(tweenNodeList.Count > 0 )
+        if (tweenNodeList.Count > 0)
             cTime = tweenNodeList[tweenNodeList.Count - 1].time;
 
         var tweenNode = new TweenNode<T>(type, setter, start, end, time + cTime);
@@ -108,9 +124,9 @@ public class Tween : MonoBehaviour
     }
 
     public void Play() {
-        tweenState = Tween.TweenState.RUNNING;
+        _tweenState = Tween.TweenState.RUNNING;
         tweenIndex = 0;
-        tweenTime = 0; 
+        tweenTime = 0;
     }
 
     //void tweenCall<T>(TweenNode<T> tweenNode, float alpha)
@@ -120,7 +136,7 @@ public class Tween : MonoBehaviour
     //}
 
     void TweenProcess(TweeNodeBase tweenNodeBase, float alpha) {
-        switch (tweenNodeBase.type) { 
+        switch (tweenNodeBase.type) {
             case TweenType.UNKNOWN:
                 break;
             case TweenType.FLOAT:
@@ -144,36 +160,44 @@ public class Tween : MonoBehaviour
         }
     }
 
-   
-    
 
     // Update is called once per frame
-    void Update()
-    {
-        if (tweenState != TweenState.RUNNING)
+    public void Update() {
+        if (_tweenState != TweenState.RUNNING)
             return;
 
         var delTime = Time.deltaTime;
         tweenTime += delTime;
-        
-        while(tweenIndex < tweenNodeList.Count && tweenTime >= tweenNodeList[tweenIndex].time)
+
+        Action loopProcess = () =>
         {
-            TweenProcess(tweenNodeList[tweenIndex], 1);
-            tweenIndex++;
-        }
-        if(tweenIndex == tweenNodeList.Count)
-        {
-            tweenState = TweenState.STOP;
-            if (clearWhenEnd) 
-                Clear();
-            return;
+            while (tweenIndex < tweenNodeList.Count && tweenTime >= tweenNodeList[tweenIndex].time) {
+                TweenProcess(tweenNodeList[tweenIndex], 1);
+                tweenIndex++;
+            }
+        };
+        loopProcess();
+        if (tweenIndex == tweenNodeList.Count) {
+            switch (_playMode) {
+                case PlayMode.NORMAL:
+                    _tweenState = TweenState.STOP;
+                    if (clearWhenEnd)
+                        Clear();
+                    return;
+                case PlayMode.REPEAT:
+                    tweenIndex = 0;
+                    tweenTime -= tweenNodeList.Last().time;
+                    loopProcess();
+                    return;
+            }
+
         }
 
         float preTime = 0;
-        if(tweenIndex > 0)
+        if (tweenIndex > 0)
             preTime = tweenNodeList[tweenIndex - 1].time;
         float cntAlpha = (tweenTime - preTime) / (tweenNodeList[tweenIndex].time - preTime + 1e-6f);
-        var transitionType =  tweenNodeList[tweenIndex].transitionType;
+        var transitionType = tweenNodeList[tweenIndex].transitionType;
         var easeType = tweenNodeList[tweenIndex].easeType;
 
         cntAlpha = EaseAndTrainsitionProcess(cntAlpha, easeType, transitionType);
@@ -181,7 +205,8 @@ public class Tween : MonoBehaviour
         TweenProcess(tweenNodeList[tweenIndex], cntAlpha);
     }
 
-    public enum TransitionType { 
+    public enum TransitionType
+    {
         LINEAR,
         SIN,
         QUAD,
@@ -197,10 +222,8 @@ public class Tween : MonoBehaviour
         IN_OUT,
         OUT_IN,
     }
-    public static float TransitionProcess(float alpha, TransitionType type)
-    {
-        switch (type)
-        {
+    public static float TransitionProcess(float alpha, TransitionType type) {
+        switch (type) {
             case TransitionType.LINEAR:
                 return alpha;
             case TransitionType.SIN:
@@ -219,10 +242,8 @@ public class Tween : MonoBehaviour
     }
 
     public static float EaseAndTrainsitionProcess(
-        float alpha, EaseType easeType, TransitionType transitionType)
-    {
-        switch (easeType)
-        {
+        float alpha, EaseType easeType, TransitionType transitionType) {
+        switch (easeType) {
             case EaseType.IN:
                 return TransitionProcess(alpha, transitionType);
             case EaseType.OUT:
