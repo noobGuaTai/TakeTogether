@@ -14,14 +14,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorPosition:
     serializedVersion: 2
-    x: 46.28752
-    y: 392.20053
-    width: 221.99998
-    height: 77.00003
+    x: -22.58577
+    y: 332
+    width: 222
+    height: 77
   skillLevel: 0
   _keyName: '[Undefined] - (5)'
   inDegreeNodes:
   - {fileID: 6008973143688622766}
+  outDegressNodes: []
+  treeAsset: {fileID: 11400000}
+--- !u!114 &-7652492579470714693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: '[Undefined] - (1)'
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeNodeAsset
+  editorPosition:
+    serializedVersion: 2
+    x: 12.500034
+    y: 48.00003
+    width: 219
+    height: 77
+  skillLevel: 0
+  _keyName: '[Undefined] - (1)'
+  inDegreeNodes: []
   outDegressNodes: []
   treeAsset: {fileID: 11400000}
 --- !u!114 &-3449595453344363233
@@ -38,8 +61,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorPosition:
     serializedVersion: 2
-    x: -41
-    y: -20
+    x: -56.49998
+    y: -109.1993
     width: 288
     height: 77
   skillLevel: 0
@@ -49,6 +72,7 @@ MonoBehaviour:
   outDegressNodes:
   - {fileID: -2970745973401914413}
   - {fileID: -1084069286834766695}
+  - {fileID: 2776905361547778419}
   treeAsset: {fileID: 11400000}
 --- !u!114 &-2970745973401914413
 MonoBehaviour:
@@ -74,7 +98,7 @@ MonoBehaviour:
   - {fileID: -3449595453344363233}
   outDegressNodes: []
   treeAsset: {fileID: 11400000}
---- !u!114 &-1833193225981666046
+--- !u!114 &-1096483955292728305
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,44 +108,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 911c0cd2f6086754c8a783bfa8b36514, type: 3}
-  m_Name: BladeRushLightingAmount - (1)
+  m_Name: '#ROOT - (3)'
   m_EditorClassIdentifier: 
   editorPosition:
     serializedVersion: 2
-    x: 278
-    y: 169.51999
-    width: 369
-    height: 76.99997
+    x: -519.99994
+    y: 123.500015
+    width: 188
+    height: 77
   skillLevel: 0
-  _keyName: BladeRushLightingAmount - (1)
-  inDegreeNodes:
-  - {fileID: 2896881986892985285}
+  _keyName: '#ROOT - (3)'
+  inDegreeNodes: []
   outDegressNodes: []
-  treeAsset: {fileID: 11400000}
---- !u!114 &-1501855950045714423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 911c0cd2f6086754c8a783bfa8b36514, type: 3}
-  m_Name: '[Undefined] - (1)'
-  m_EditorClassIdentifier: 
-  editorPosition:
-    serializedVersion: 2
-    x: 36.799976
-    y: -196.65001
-    width: 218.99998
-    height: 76.999985
-  skillLevel: 0
-  _keyName: '[Undefined] - (1)'
-  inDegreeNodes:
-  - {fileID: 8601309996532166365}
-  outDegressNodes:
-  - {fileID: 2776905361547778419}
   treeAsset: {fileID: 11400000}
 --- !u!114 &-1084069286834766695
 MonoBehaviour:
@@ -173,14 +171,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorPosition:
     serializedVersion: 2
-    x: 325
-    y: -206.6
+    x: 518.5001
+    y: -239.15532
     width: 223
     height: 77
   skillLevel: 0
   _keyName: '[Undefined] - (4)'
   inDegreeNodes:
-  - {fileID: -1501855950045714423}
+  - {fileID: 0}
+  - {fileID: -3449595453344363233}
   outDegressNodes: []
   treeAsset: {fileID: 11400000}
 --- !u!114 &2896881986892985285
@@ -197,17 +196,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorPosition:
     serializedVersion: 2
-    x: 10
-    y: 200.36002
-    width: 205
+    x: 12.49998
+    y: 208.00002
+    width: 204.5
     height: 77
   skillLevel: 0
   _keyName: BladeRush - (1)
   inDegreeNodes:
   - {fileID: 8601309996532166365}
   - {fileID: 6008973143688622766}
-  outDegressNodes:
-  - {fileID: -1833193225981666046}
+  outDegressNodes: []
   treeAsset: {fileID: 11400000}
 --- !u!114 &6008973143688622766
 MonoBehaviour:
@@ -248,15 +246,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorPosition:
     serializedVersion: 2
-    x: -318.55008
-    y: -55.200005
-    width: 184.00005
+    x: -332
+    y: -29.000027
+    width: 184
     height: 77
   skillLevel: 0
   _keyName: '#ROOT - (1)'
   inDegreeNodes: []
   outDegressNodes:
-  - {fileID: -1501855950045714423}
   - {fileID: -3449595453344363233}
   - {fileID: 2896881986892985285}
+  - {fileID: 8811734405082750768}
+  treeAsset: {fileID: 11400000}
+--- !u!114 &8811734405082750768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 911c0cd2f6086754c8a783bfa8b36514, type: 3}
+  m_Name: BladeRushLighting - (2)
+  m_EditorClassIdentifier: 
+  editorPosition:
+    serializedVersion: 2
+    x: -56.499985
+    y: 27.46818
+    width: 291
+    height: 77
+  skillLevel: 0
+  _keyName: BladeRushLighting - (2)
+  inDegreeNodes:
+  - {fileID: 8601309996532166365}
+  outDegressNodes: []
   treeAsset: {fileID: 11400000}

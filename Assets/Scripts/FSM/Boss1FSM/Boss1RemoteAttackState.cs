@@ -107,14 +107,14 @@ public class Boss1RemoteAttackState : IState
 
     IEnumerator RushAttack()
     {
-        Vector2 targetPosition = parameters.closedPlayer.transform.position;
-        Vector2 startPosition = boss1FSM.transform.position;
+        Vector3 targetPosition = parameters.closedPlayer.transform.position;
+        Vector3 startPosition = boss1FSM.transform.position;
         float duration = 1.0f;
         float elapsed = 0;
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-            boss1FSM.transform.position = Vector2.Lerp(startPosition, targetPosition, t);
+            boss1FSM.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
             elapsed += Time.deltaTime;
             yield return null;
         }

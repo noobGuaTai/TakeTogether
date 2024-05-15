@@ -74,7 +74,7 @@ public class Boss1FSM : EnemyMove
                 else
                 {
                     parameters.isRemoteAttackDetected = false;
-                    parameters.closedPlayer = null;
+                    // parameters.closedPlayer = null;
                 }
 
                 currentState.OnUpdate();
