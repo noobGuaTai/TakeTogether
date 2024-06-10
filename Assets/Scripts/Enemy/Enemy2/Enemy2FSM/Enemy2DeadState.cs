@@ -24,6 +24,11 @@ public class Enemy2DeadState : IState
         parameters.rb.velocity = Vector2.zero;
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
 

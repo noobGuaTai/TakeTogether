@@ -24,6 +24,11 @@ public class Enemy1ChaseState : IState
         parameters.rb.velocity = Vector2.zero;
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
         if (enemy1FSM.isServer)

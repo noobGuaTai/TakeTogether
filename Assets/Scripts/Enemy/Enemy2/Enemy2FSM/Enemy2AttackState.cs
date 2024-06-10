@@ -86,4 +86,8 @@ public class Enemy2AttackState : IState
         return stateInfo.IsName(stateName) && stateInfo.normalizedTime >= 1.0f;
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
 }

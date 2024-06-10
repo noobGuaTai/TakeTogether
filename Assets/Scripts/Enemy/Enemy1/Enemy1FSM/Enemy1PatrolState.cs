@@ -29,6 +29,11 @@ public class Enemy1PatrolState : IState
 
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
         if (enemy1FSM.isServer)

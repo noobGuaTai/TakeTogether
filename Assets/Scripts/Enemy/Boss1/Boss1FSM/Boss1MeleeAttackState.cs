@@ -130,4 +130,8 @@ public class Boss1MeleeAttackState : IState
         underAttackCount = 0;
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
 }

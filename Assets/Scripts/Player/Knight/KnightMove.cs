@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using TMPro;
 using UnityEngine;
 
 public class KnightMove : PlayerMove
@@ -11,6 +12,8 @@ public class KnightMove : PlayerMove
     public float attackDuration = 0.3f; // 攻击动画持续时间
     public Material trailMaterial; // 用于残影的材质
     public float trailSpawnInterval = 0.05f; // 残影生成间隔时间
+    public GameObject CTcharsPrefab;
+    public RectTransform UI;
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
@@ -25,6 +28,7 @@ public class KnightMove : PlayerMove
     [SyncVar] public double lastRestoreMPTime;
     private float underAttackCooldownTime = 1.0f; // 受击冷却时间为1秒
     private double lastHitTime = 0.0f; // 上次被击中的时间
+    private char[] CTchars = { 'W', 'A', 'S', 'D', 'J', 'K', 'L' };
 
 
     void Start()
@@ -35,6 +39,7 @@ public class KnightMove : PlayerMove
         playerManager = GameObject.Find("PlayerManager").GetComponent<PlayerManager>();
         lastRestoreMPTime = NetworkTime.time;
         isPlayerInBossRoom = false;
+        UI = GameObject.Find("UI").GetComponent<RectTransform>();
     }
 
     void Update()
@@ -84,7 +89,7 @@ public class KnightMove : PlayerMove
         {
             StartCoroutine(Dash());
         }
-    } 
+    }
 
     IEnumerator Dash()
     {
@@ -190,16 +195,46 @@ public class KnightMove : PlayerMove
         playerAttribute.isCT = true;
         // playerAttribute.CTP -= 10f;
         yield return new WaitForSeconds(0.1f);
-        playerAttribute.isCT = false;
-        Time.timeScale = 1f;
+        // playerAttribute.isCT = false;
+        // Time.timeScale = 1f;
     }
 
     void StartAttack3()
     {
-        ShowPlayerAnimCommand("attack3", true);
-        isAttacking = true;
-        playerAttribute.isCT = false;
-        StartCoroutine(MoveToPosition(transform, playerManager.otherPlayer.transform.position, 0.1f));
+        // ShowPlayerAnimCommand("attack3", true);
+        // isAttacking = true;
+        // playerAttribute.isCT = false;
+        // StartCoroutine(MoveToPosition(transform, playerManager.otherPlayer.transform.position, 0.1f));
+        if(isServer)
+            CmdGenerateAndDisplayString();
+        // playerAttribute.isCT = false;
+
+    }
+
+    [Server]
+    void CmdGenerateAndDisplayString()
+    {
+        int length = UnityEngine.Random.Range(6, 10);
+        char[] result = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            result[i] = CTchars[UnityEngine.Random.Range(0, CTchars.Length)];
+        }
+        DisplayString(result);
+    }
+
+    void DisplayString(char[] result)
+    {
+        Vector3 startPosition = new Vector3(-200, 200, 0);
+        float spacing = 200f;
+        for (int i = 0; i < result.Length; i++)
+        {
+            GameObject charInstance = Instantiate(CTcharsPrefab, UI);
+            charInstance.GetComponent<TextMeshProUGUI>().text = result[i].ToString();
+            charInstance.GetComponent<RectTransform>().anchoredPosition = startPosition + new Vector3(spacing * i, 0, 0);
+            NetworkServer.Spawn(charInstance);
+        }
+        print(123);
     }
 
     IEnumerator MoveToPosition(Transform playerTransform, Vector3 targetPosition, float duration)

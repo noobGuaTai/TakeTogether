@@ -25,6 +25,11 @@ public class Enemy2IdleState : IState
 
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
         if (parameters.isAttacking)

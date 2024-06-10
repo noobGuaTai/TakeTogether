@@ -28,7 +28,7 @@ public class Boss1Barrage1 : EnemyMove
 
     void Update()
     {
-        Init();
+        // Init();
     }
 
     void Init()

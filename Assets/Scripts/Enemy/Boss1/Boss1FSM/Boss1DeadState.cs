@@ -23,6 +23,11 @@ public class Boss1DeadState : IState
         
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
         

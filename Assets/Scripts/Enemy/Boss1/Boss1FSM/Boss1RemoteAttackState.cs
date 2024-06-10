@@ -121,6 +121,8 @@ public class Boss1RemoteAttackState : IState
         boss1FSM.transform.position = targetPosition;
     }
 
-
-
+    public void OnFixedUpdate()
+    {
+        
+    }
 }

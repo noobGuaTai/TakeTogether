@@ -28,6 +28,11 @@ public class Enemy1IdleState : IState
 
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
         if (enemy1FSM.isServer)

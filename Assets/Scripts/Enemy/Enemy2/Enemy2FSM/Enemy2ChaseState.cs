@@ -24,6 +24,11 @@ public class Enemy2ChaseState : IState
 
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
         if (enemy2FSM.isServer)

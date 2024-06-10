@@ -23,6 +23,11 @@ public class Enemy1DeadState : IState
         
     }
 
+    public void OnFixedUpdate()
+    {
+        
+    }
+
     public void OnUpdate()
     {
         

@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 2630255944690882768}
   - component: {fileID: 7503977683181647192}
   - component: {fileID: 8116510583806733817}
+  - component: {fileID: -7639226509620763557}
   - component: {fileID: 3447527588840383791}
   - component: {fileID: 8899048498008746864}
   - component: {fileID: 7092387109832566789}
@@ -316,7 +317,7 @@ MonoBehaviour:
   bossHPUI: {fileID: 0}
   isReady: 0
   damageTextPrefab: {fileID: 4281288399244367145, guid: c0067bcb474f7bd488e0a22ea00d05a9, type: 3}
---- !u!114 &3447527588840383791
+--- !u!114 &-7639226509620763557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -325,6 +326,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 1861076680170244730}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0440a703889a8f94988ef00bc6379f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  HPUI: {fileID: 0}
+  isPlayerInBossRoom: 0
+  parameters:
+    moveSpeed: 120
+    dashSpeed: 400
+    dashTime: 0.2
+    attackDuration: 0.3
+    trailMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+    trailSpawnInterval: 0.05
+    CTcharsPrefab: {fileID: 292301467590033293, guid: 11b45995cbbfeb5478e0e8f3f2d33c82, type: 3}
+    UI: {fileID: 0}
+    rb: {fileID: 0}
+    moveInput: {x: 0, y: 0}
+    anim: {fileID: 0}
+    playerAttribute: {fileID: 0}
+    playerManager: {fileID: 0}
+    isDashing: 0
+    dashTimeLeft: 0
+    isAttacking: 0
+    restoreSpeedMP: 1
+    lastRestoreMPTime: 0
+    underAttackCoolDownTime: 1
+    lastHitTime: 0
+    CTchars: 57004100530044004a004b004c00
+--- !u!114 &3447527588840383791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861076680170244730}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 860e77afb4d69fe488d496fe4a87ca9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -332,12 +372,15 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   HPUI: {fileID: 0}
+  isPlayerInBossRoom: 0
   moveSpeed: 120
   dashSpeed: 400
   dashTime: 0.2
   attackDuration: 0.3
   trailMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   trailSpawnInterval: 0.05
+  CTcharsPrefab: {fileID: 292301467590033293, guid: 11b45995cbbfeb5478e0e8f3f2d33c82, type: 3}
+  UI: {fileID: 0}
   lastRestoreMPTime: 0
 --- !u!114 &8899048498008746864
 MonoBehaviour:

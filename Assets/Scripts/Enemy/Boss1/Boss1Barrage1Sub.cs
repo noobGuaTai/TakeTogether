@@ -10,7 +10,7 @@ public class Boss1Barrage1Sub : EnemyMove
     public float cooldownTime = 1.0f; // 冷却时间为1秒
     private double lastHitTime = 0.0f; // 上次被击中的时间
     private float atk = 0f;
-    void Start()
+    void Start()// 有bug，boss释放完弹幕后死亡，玩家受击会报空错误，atk获取不到
     {
         Init();
         Emission();
@@ -22,7 +22,7 @@ public class Boss1Barrage1Sub : EnemyMove
 
     void Update()
     {
-        Init();
+        // Init();
     }
 
     void Init()

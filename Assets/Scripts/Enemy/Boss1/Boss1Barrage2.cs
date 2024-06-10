@@ -24,14 +24,14 @@ public class Boss1Barrage2 : EnemyMove
 
     public void Update()
     {
-        Init();
+        // Init();
 
 
-        if (canEmission == true)
-        {
-            Emission();
-            canEmission = false;
-        }
+        // if (canEmission == true)
+        // {
+        //     Emission();
+        //     canEmission = false;
+        // }
     }
 
     void Init()
