@@ -26,7 +26,6 @@ public class KnightParameters
     public float attackDuration = 0.3f; // 攻击动画持续时间
     public Material trailMaterial; // 用于残影的材质
     public float trailSpawnInterval = 0.05f; // 残影生成间隔时间
-    public GameObject CTcharsPrefab;
     public RectTransform UI;
 
     public Rigidbody2D rb;
@@ -42,7 +41,8 @@ public class KnightParameters
     [SyncVar] public double lastRestoreMPTime;
     public float underAttackCoolDownTime = 1.0f; // 受击冷却时间为1秒
     public double lastHitTime = 0.0f; // 上次被击中的时间
-    public char[] CTchars = { 'W', 'A', 'S', 'D', 'J', 'K', 'L' };
+    public GameObject connectedAttackCharsPrefab;
+    public char[] connectedAttackChars = { 'W', 'A', 'S', 'D', 'J', 'K', 'L' };
 
 
 }
@@ -76,28 +76,28 @@ public class KnightFSM : PlayerMove
 
     void Update()
     {
-        if (isServer)
+        if (isLocalPlayer)
         {
             parameters.moveInput.x = Input.GetAxisRaw("Horizontal");
             parameters.moveInput.y = Input.GetAxisRaw("Vertical");
             parameters.moveInput.Normalize();
 
-            if (isLocalPlayer && NetworkTime.time - parameters.lastRestoreMPTime > parameters.restoreSpeedMP)
+            if (NetworkTime.time - parameters.lastRestoreMPTime > parameters.restoreSpeedMP)
             {
                 UpdateMP(1f);
                 parameters.lastRestoreMPTime = NetworkTime.time;
             }
-
             currentState.OnUpdate();
         }
     }
 
     void FixedUpdate()
     {
-        if (isServer)
+        if (isLocalPlayer)
         {
             currentState.OnFixedUpdate();
         }
+        
     }
 
     [Command]

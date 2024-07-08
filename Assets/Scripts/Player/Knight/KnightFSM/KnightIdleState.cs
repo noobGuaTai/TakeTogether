@@ -46,7 +46,7 @@ public class KnightIdleState : IState
             knightFSM.ChangeState(KnightStateType.Attack2);
         }
 
-        if (Input.GetButton("Attack") && parameters.playerAttribute.CTP >= 10f)
+        if (Input.GetButton("Attack") && parameters.playerAttribute.connectedAttackPoint >= 10f)
         {
             knightFSM.ChangeState(KnightStateType.Attack3);
         }

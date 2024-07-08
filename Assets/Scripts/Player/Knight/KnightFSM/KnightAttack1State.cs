@@ -30,8 +30,6 @@ public class KnightAttack1State : IState
 
     public void OnUpdate()
     {
-        if (!knightFSM.isLocalPlayer) return;
-        
         if(Input.GetButtonDown("Attack2") && !parameters.isAttacking && parameters.playerAttribute.MP >= parameters.playerAttribute.MPConsume)
         {
             knightFSM.ChangeState(KnightStateType.Attack2);

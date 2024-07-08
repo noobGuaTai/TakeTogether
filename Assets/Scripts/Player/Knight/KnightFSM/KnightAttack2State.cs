@@ -31,7 +31,7 @@ public class KnightAttack2State : IState
 
     public void OnUpdate()
     {
-        if (!knightFSM.isLocalPlayer) return;
+        
     }
 
     IEnumerator Dash()

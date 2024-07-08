@@ -9,8 +9,8 @@ public class PlayerAttribute : NetworkBehaviour
     public float MAXHP = 100;
     [SyncVar] public float MP;
     public float MAXMP = 100;
-    [SyncVar] public float CTP;// 连携攻击值
-    [SyncVar] public bool isCT;// 连携攻击确认
+    [SyncVar] public float connectedAttackPoint;// 连携攻击值
+    [SyncVar] public bool isConnectAttacked;// 连携攻击确认
     [SyncVar] public float MPConsume;
     [SyncVar] public float ATK;
     [SyncVar] public bool isInvincible;

@@ -16,12 +16,12 @@ public class KnightAttribute : PlayerAttribute
         MAXHP = 100f;
         MP = 10f;
         MAXMP = 10f;
-        CTP = 10f;
+        connectedAttackPoint = 10f;
         MPConsume = 3f;
         ATK = 60f;
         isInvincible = false;
         isReady = false;// true为开始游戏
-        isCT = false;
+        isConnectAttacked = false;
         UI = GameObject.Find("UI").transform;
         // DontDestroyOnLoad(gameObject);
     }

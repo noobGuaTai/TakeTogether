@@ -25,6 +25,11 @@ public class KnightMoveState : IState
 
     public void OnUpdate()
     {
+        if (parameters.moveInput.x == 0 && parameters.moveInput.y == 0)
+        {
+            knightFSM.ChangeState(KnightStateType.Idle);
+        }
+
         if (Input.GetButton("Attack"))
         {
             knightFSM.ChangeState(KnightStateType.Attack1);
@@ -35,14 +40,9 @@ public class KnightMoveState : IState
             knightFSM.ChangeState(KnightStateType.Attack2);
         }
 
-        if (Input.GetButton("Attack") && parameters.playerAttribute.CTP >= 10f)
+        if (Input.GetButton("Attack") && parameters.playerAttribute.connectedAttackPoint >= 10f)
         {
             knightFSM.ChangeState(KnightStateType.Attack3);
-        }
-
-        if (parameters.moveInput.x == 0 && parameters.moveInput.y == 0)
-        {
-            knightFSM.ChangeState(KnightStateType.Idle);
         }
     }
 

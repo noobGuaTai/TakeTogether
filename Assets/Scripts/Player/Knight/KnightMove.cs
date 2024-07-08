@@ -166,11 +166,11 @@ public class KnightMove : PlayerMove
     public override void Attack3()
     {
         if (!isLocalPlayer) return;
-        if (Input.GetButton("Attack3") && playerAttribute.CTP >= 10f)
+        if (Input.GetButton("Attack3") && playerAttribute.connectedAttackPoint >= 10f)
         {
             CommandForSlowTime();
         }
-        if (playerManager.otherPlayer != null && playerAttribute.isCT == true && playerManager.otherPlayer.GetComponent<PlayerAttribute>().isCT == true)
+        if (playerManager.otherPlayer != null && playerAttribute.isConnectAttacked == true && playerManager.otherPlayer.GetComponent<PlayerAttribute>().isConnectAttacked == true)
         {
             StartAttack3();
         }
@@ -192,7 +192,7 @@ public class KnightMove : PlayerMove
     IEnumerator SlowTime()
     {
         Time.timeScale = 0.3f;
-        playerAttribute.isCT = true;
+        playerAttribute.isConnectAttacked = true;
         // playerAttribute.CTP -= 10f;
         yield return new WaitForSeconds(0.1f);
         // playerAttribute.isCT = false;
